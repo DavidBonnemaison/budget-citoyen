@@ -96,29 +96,29 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MICRO-03 | Phase 2 | Pending |
 | MICRO-04 | Phase 2 | Pending |
 | MICRO-05 | Phase 2 | Pending |
-| MACRO-01 | Phase 3 | Pending |
-| MACRO-02 | Phase 3 | Pending |
-| MACRO-03 | Phase 3 | Pending |
-| MACRO-04 | Phase 3 | Pending |
-| MACRO-05 | Phase 3 | Pending |
-| UI-01 | Phase 4 | Pending |
-| UI-02 | Phase 4 | Pending |
-| UI-03 | Phase 4 | Pending |
-| UI-04 | Phase 4 | Pending |
-| UI-05 | Phase 4 | Pending |
-| UI-06 | Phase 4 | Pending |
-| UI-07 | Phase 4 | Pending |
-| UI-08 | Phase 4 | Pending |
-| A11Y-01 | Phase 4 | Pending |
-| A11Y-02 | Phase 4 | Pending |
-| A11Y-03 | Phase 4 | Pending |
-| A11Y-04 | Phase 4 | Pending |
-| A11Y-05 | Phase 4 | Pending |
-| A11Y-06 | Phase 4 | Pending |
-| EXP-01 | Phase 5 | Pending |
-| EXP-02 | Phase 5 | Pending |
+| MACRO-01 | Phase 2 | Pending |
+| MACRO-02 | Phase 2 | Pending |
+| MACRO-03 | Phase 2 | Pending |
+| MACRO-04 | Phase 2 | Pending |
+| MACRO-05 | Phase 2 | Pending |
+| UI-01 | Phase 3 | Pending |
+| UI-02 | Phase 3 | Pending |
+| UI-03 | Phase 3 | Pending |
+| UI-04 | Phase 3 | Pending |
+| UI-05 | Phase 3 | Pending |
+| UI-06 | Phase 3 | Pending |
+| UI-07 | Phase 3 | Pending |
+| UI-08 | Phase 3 | Pending |
+| A11Y-01 | Phase 3 | Pending |
+| A11Y-02 | Phase 3 | Pending |
+| A11Y-03 | Phase 3 | Pending |
+| A11Y-04 | Phase 3 | Pending |
+| A11Y-05 | Phase 3 | Pending |
+| A11Y-06 | Phase 3 | Pending |
+| EXP-01 | Phase 4 | Pending |
+| EXP-02 | Phase 4 | Pending |
 | EXP-03 | Phase 5 | Pending |
-| EXP-04 | Phase 5 | Pending |
+| EXP-04 | Phase 4 | Pending |
 
 **Coverage:**
 - v1 requirements: 32 total
@@ -127,4 +127,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-05-11*
-*Last updated: 2026-05-11 after initial definition*
+*Last updated: 2026-05-11 after roadmap creation (traceability corrected)*
