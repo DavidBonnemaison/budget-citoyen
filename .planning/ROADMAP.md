@@ -54,7 +54,7 @@ Plans:
 - [x] 02-01-PLAN.md — Environment setup, Rust toolchain install, Cargo workspace scaffolding, Phase 1 artifact generation, Parquet/WASM spike
 - [x] 02-02-PLAN.md — TDD: Profile validation & core types (Profile, LoadError, MicroResult, MacroResult)
 - [x] 02-03-PLAN.md — TDD: Parameter tree loading with date-based resolution & version checking
-- [ ] 02-04-PLAN.md — Code generator script (Python→Rust), full variable tree compilation, CI staleness check
+- [x] 02-04-PLAN.md — Code generator script (Python→Rust), full variable tree compilation, CI staleness check
 - [ ] 02-05-PLAN.md — TDD: Macro interpolation engine (ShockMatrix, interpn, convex hull, trajectory projection)
 - [ ] 02-06-PLAN.md — TDD: Bilingual tax validation & TaxBenefitSystem (32 canonical profiles, ≤1e-6 precision)
 - [ ] 02-07-PLAN.md — WASM boundary layers (MicroEngine + MacroEngine), boundary tests, core test verification
@@ -103,7 +103,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Data Foundation & Rules Engine | 5/5 | Complete | 2026-05-12 |
-| 2. Core Simulation Engines (WASM) | 0/8 | Not started | - |
+| 2. Core Simulation Engines (WASM) | 3/8 | Not started | - |
 | 3. Interactive Simulation Shell (MVP) | 0/TBD | Not started | - |
 | 4. Enhanced Data & Expert Mode | 0/TBD | Not started | - |
 | 5. Platform Expansion & Hardening | 0/TBD | Not started | - |

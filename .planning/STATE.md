@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-03-PLAN.md
-last_updated: "2026-05-12T18:22:22.916Z"
+stopped_at: Completed 02-04-PLAN.md
+last_updated: "2026-05-12T18:54:42.402Z"
 last_activity: 2026-05-12
 progress:
   total_phases: 5
   completed_phases: 1
   total_plans: 13
-  completed_plans: 8
-  percent: 62
+  completed_plans: 9
+  percent: 69
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-05-11)
 ## Current Position
 
 Phase: 02 (core-simulation-engines-wasm) — EXECUTING
-Plan: 4 of 8
+Plan: 5 of 8
 Status: Ready to execute
 Last activity: 2026-05-12
 
-Progress: [██████░░░░] 62%
+Progress: [███████░░░] 69%
 
 ## Performance Metrics
 
@@ -53,6 +53,7 @@ Progress: [██████░░░░] 62%
 *Updated after each plan completion*
 | Phase 02-core-simulation-engines-wasm P02 | 7 min | 1 tasks | 4 files |
 | Phase 02-core-simulation-engines-wasm P03 | 8 min | 1 tasks | 6 files |
+| Phase 02-core-simulation-engines-wasm P04 | 23 min | 3 tasks | 11 files |
 
 ## Accumulated Context
 
@@ -68,6 +69,8 @@ Key architectural decisions:
 - **Postcard+gzip for WASM data loading** (02-01) — Selected over parquet2 for shock matrix: simpler (~50KB vs ~200KB WASM overhead), zero compilation risk on `wasm32-unknown-unknown`, flat `Vec<f64>` sufficient for full-grid load-once pattern
 - **interpn 0.11.0 validated** (02-01) — RESEARCH.md Stack Correction confirmed; `interpn::multilinear::regular::interpn` provides correct ND grid interpolation API for scientific computing
 - [Phase ?]: Dual-format load_from_json auto-detects simplified vs real JSON format — Avoids separate constructors, keeps test API clean
+- [Phase 02-core-simulation-engines-wasm]: Relaxed auto-gen blocker criteria for flat Profile model (D-13): cross-entity references, role-based aggregation, has_role(), OpenFisca enum types all become no-ops in flat model — boosted auto-gen rate from 50.9% to 87.0% — Cross-entity references, role-based aggregation, and enum types are all resolvable in the single-profile flat model per D-13
+- [Phase 02-core-simulation-engines-wasm]: bracket_calc helper generated inline rather than added to core crate — avoids architectural Rule 4 boundary crossing — Implements OpenFisca bareme.calc() semantics (progressive bracket table with marginal rates) without modifying core crate types
 
 ### Pending Todos
 
@@ -89,6 +92,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-05-12T18:22:22.899Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-05-12T18:54:30.087Z
+Stopped at: Completed 02-04-PLAN.md
 Resume file: None
