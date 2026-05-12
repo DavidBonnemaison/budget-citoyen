@@ -13,11 +13,14 @@ compressed binary with sidecar metadata.
 """
 
 import json
+import logging
 import os
 from pathlib import Path
 from typing import Optional, Union
 
 import numpy as np
+
+logger = logging.getLogger(__name__)
 
 try:
     import pyarrow as pa
@@ -161,11 +164,12 @@ def export_shock_matrix(
 
     # D-09: Enforce size constraint
     compressed_size = Path(output_path).stat().st_size
-    assert compressed_size < MAX_COMPRESSED_SIZE, (
-        f"Shock matrix exceeds 5 MB limit (D-09): "
-        f"{compressed_size:,} bytes ({compressed_size / 1_000_000:.2f} MB). "
-        f"Reduce breakpoints (currently {grid_shape}) or use Smolyak sparse grid."
-    )
+    if compressed_size >= MAX_COMPRESSED_SIZE:
+        raise ValueError(
+            f"Shock matrix exceeds 5 MB limit (D-09): "
+            f"{compressed_size:,} bytes ({compressed_size / 1_000_000:.2f} MB). "
+            f"Reduce breakpoints (currently {grid_shape}) or use Smolyak sparse grid."
+        )
 
     return output_path
 
@@ -203,9 +207,9 @@ def _flatten_cartesian(
 
         for o in range(min(n_outputs, 4)):
             val = float(cell[o]) if o < n_outputs else float("nan")
-            val = (
-                0.0 if np.isnan(val) or np.isinf(val) else val
-            )
+            if np.isnan(val) or np.isinf(val):
+                logger.warning(f"NaN/Inf value at grid cell {indices}, output {output_names[o]}")
+                val = float("nan")  # Preserve, don't silently zero
             record[output_names[o]] = val
 
         records.append(record)
@@ -236,7 +240,9 @@ def _flatten_smolyak(
 
         for o in range(min(n_outputs, 4)):
             val = float(grid[i, n_spatial_dims + o]) if n_spatial_dims + o < grid.shape[1] else float("nan")
-            val = 0.0 if np.isnan(val) or np.isinf(val) else val
+            if np.isnan(val) or np.isinf(val):
+                logger.warning(f"NaN/Inf value at grid cell [{i}], output {output_names[o]}")
+                val = float("nan")  # Preserve, don't silently zero
             record[output_names[o]] = val
 
         records.append(record)
