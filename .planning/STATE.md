@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-05-12T18:03:43.112Z"
+stopped_at: Completed 02-03-PLAN.md
+last_updated: "2026-05-12T18:22:22.916Z"
 last_activity: 2026-05-12
 progress:
   total_phases: 5
   completed_phases: 1
   total_plans: 13
-  completed_plans: 7
-  percent: 54
+  completed_plans: 8
+  percent: 62
 ---
 
 # Project State
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-05-11)
 ## Current Position
 
 Phase: 02 (core-simulation-engines-wasm) — EXECUTING
-Plan: 3 of 8
+Plan: 4 of 8
 Status: Ready to execute
 Last activity: 2026-05-12
 
-Progress: [█████░░░░░] 54%
+Progress: [██████░░░░] 62%
 
 ## Performance Metrics
 
@@ -52,6 +52,7 @@ Progress: [█████░░░░░] 54%
 
 *Updated after each plan completion*
 | Phase 02-core-simulation-engines-wasm P02 | 7 min | 1 tasks | 4 files |
+| Phase 02-core-simulation-engines-wasm P03 | 8 min | 1 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -66,6 +67,7 @@ Key architectural decisions:
 - **Fork/adaptation d'OpenFisca** — Rules as Code ecosystem, auditable YAML, OpenFisca-compatible parameter tree
 - **Postcard+gzip for WASM data loading** (02-01) — Selected over parquet2 for shock matrix: simpler (~50KB vs ~200KB WASM overhead), zero compilation risk on `wasm32-unknown-unknown`, flat `Vec<f64>` sufficient for full-grid load-once pattern
 - **interpn 0.11.0 validated** (02-01) — RESEARCH.md Stack Correction confirmed; `interpn::multilinear::regular::interpn` provides correct ND grid interpolation API for scientific computing
+- [Phase ?]: Dual-format load_from_json auto-detects simplified vs real JSON format — Avoids separate constructors, keeps test API clean
 
 ### Pending Todos
 
@@ -87,6 +89,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-05-12T18:03:43.094Z
+Last session: 2026-05-12T18:22:22.899Z
 Stopped at: Completed 02-02-PLAN.md
 Resume file: None
