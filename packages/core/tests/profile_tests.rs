@@ -5,7 +5,6 @@
 use proptest::prelude::*;
 use budget_citoyen_core::types::{
     Profile, SituationFamiliale, TypeActivite, LoadError,
-    MicroResult, MacroResult, AidesResult,
 };
 
 // Helper to create a valid Profile for tests
@@ -121,9 +120,21 @@ proptest! {
         let deserialized: Profile = serde_json::from_str(&json).unwrap();
         prop_assert_eq!(profile.profile_id, deserialized.profile_id);
         prop_assert_eq!(profile.age, deserialized.age);
-        prop_assert!((profile.patrimoine - deserialized.patrimoine).abs() < 1e-10);
-        prop_assert!((profile.revenu_fiscal - deserialized.revenu_fiscal).abs() < 1e-10);
-        prop_assert!((profile.nombre_parts - deserialized.nombre_parts).abs() < 1e-10);
+        // Use relative tolerance for f64 round-trip: serde_json serializes
+        // f64 as text with limited precision; large values may differ by
+        // more than absolute epsilon.
+        prop_assert!(
+            (profile.patrimoine - deserialized.patrimoine).abs()
+                <= f64::EPSILON * profile.patrimoine.abs().max(1.0) * 10.0
+        );
+        prop_assert!(
+            (profile.revenu_fiscal - deserialized.revenu_fiscal).abs()
+                <= f64::EPSILON * profile.revenu_fiscal.abs().max(1.0) * 10.0
+        );
+        prop_assert!(
+            (profile.nombre_parts - deserialized.nombre_parts).abs()
+                <= f64::EPSILON * profile.nombre_parts.abs().max(1.0) * 10.0
+        );
         prop_assert_eq!(profile.nb_enfants, deserialized.nb_enfants);
     }
 }
