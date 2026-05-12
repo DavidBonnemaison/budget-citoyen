@@ -71,8 +71,13 @@ class TestConvexHullEdgeCases:
         result = compute_convex_hull(collinear)
 
         assert "is_degenerate" in result
-        # Collinear 2D points produce a degenerate hull (area = 0)
-        assert result["is_degenerate"] or result.get("volume", 1.0) == 0.0
+        # Collinear 2D points produce a degenerate hull (area ≈ 0).
+        # Qhull's QJ joggle option may produce a tiny non-zero volume
+        # due to floating-point jitter — use approximate comparison.
+        volume = result.get("volume", 1.0)
+        assert result["is_degenerate"] or volume < 1e-6, (
+            f"Collinear hull volume should be near-zero, got {volume}"
+        )
 
     def test_convex_hull_on_valid_points(self):
         """Convex hull on a simple rectangle computes correctly."""
@@ -102,7 +107,11 @@ class TestParquetExportConstraints:
 
     def test_export_shock_matrix_type_constraints(self, tmp_path):
         """export_shock_matrix enforces Float32 precision."""
-        from shock_matrix.export_parquet import export_shock_matrix
+        import pytest
+        from shock_matrix.export_parquet import export_shock_matrix, _HAS_PYARROW
+
+        if not _HAS_PYARROW:
+            pytest.skip("pyarrow not installed (Python >= 3.10 required)")
 
         # Create a small test grid
         grid = np.random.uniform(0.0, 1.0, size=(100, 4)).astype(np.float32)
@@ -118,7 +127,11 @@ class TestParquetExportConstraints:
 
     def test_export_sidecar_metadata_has_ref_year(self, tmp_path):
         """Sidecar metadata includes reference_year: 2025 (D-15)."""
-        from shock_matrix.export_parquet import export_sidecar_metadata, REFERENCE_YEAR
+        import pytest
+        from shock_matrix.export_parquet import export_sidecar_metadata, REFERENCE_YEAR, _HAS_PYARROW
+
+        if not _HAS_PYARROW:
+            pytest.skip("pyarrow not installed (Python >= 3.10 required)")
 
         meta_path = str(tmp_path / "test.meta.json")
         result = export_sidecar_metadata(

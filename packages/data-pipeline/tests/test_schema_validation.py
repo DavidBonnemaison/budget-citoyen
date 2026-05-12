@@ -48,23 +48,66 @@ class TestSchemaSelfValidation:
         validator = Draft202012Validator(schema)
 
         # A valid IR bareme structure (post-YAML→JSON conversion)
+        # OpenFisca bracket format: top-level 'brackets' array with
+        # threshold/rate sub-objects, each with date-keyed 'values'.
         valid_bareme = {
             "description": "Barème progressif de l'impôt sur le revenu — revenus 2024 déclarés en 2025",
             "metadata": {
                 "reference": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049695847",
-                "unit": "currency-EUR",
+                "unit": "/1",
             },
-            "values": {
-                "2025-01-01": {
-                    "brackets": [
-                        {"threshold": 0.0, "rate": 0.0},
-                        {"threshold": 11497.0, "rate": 0.11},
-                        {"threshold": 29315.0, "rate": 0.30},
-                        {"threshold": 83823.0, "rate": 0.41},
-                        {"threshold": 180294.0, "rate": 0.45},
-                    ]
-                }
-            },
+            "brackets": [
+                {
+                    "threshold": {
+                        "description": "Seuil de la tranche 1",
+                        "values": {"2025-01-01": {"value": 0}},
+                    },
+                    "rate": {
+                        "description": "Taux de la tranche 1",
+                        "values": {"2025-01-01": {"value": 0.0}},
+                    },
+                },
+                {
+                    "threshold": {
+                        "description": "Seuil de la tranche 2",
+                        "values": {"2025-01-01": {"value": 11497}},
+                    },
+                    "rate": {
+                        "description": "Taux de la tranche 2",
+                        "values": {"2025-01-01": {"value": 0.11}},
+                    },
+                },
+                {
+                    "threshold": {
+                        "description": "Seuil de la tranche 3",
+                        "values": {"2025-01-01": {"value": 29315}},
+                    },
+                    "rate": {
+                        "description": "Taux de la tranche 3",
+                        "values": {"2025-01-01": {"value": 0.30}},
+                    },
+                },
+                {
+                    "threshold": {
+                        "description": "Seuil de la tranche 4",
+                        "values": {"2025-01-01": {"value": 83823}},
+                    },
+                    "rate": {
+                        "description": "Taux de la tranche 4",
+                        "values": {"2025-01-01": {"value": 0.41}},
+                    },
+                },
+                {
+                    "threshold": {
+                        "description": "Seuil de la tranche 5",
+                        "values": {"2025-01-01": {"value": 180648}},
+                    },
+                    "rate": {
+                        "description": "Taux de la tranche 5",
+                        "values": {"2025-01-01": {"value": 0.45}},
+                    },
+                },
+            ],
         }
 
         errors = list(validator.iter_errors(valid_bareme))
