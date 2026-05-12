@@ -3,3 +3,7 @@ domain: tva
 parameters:
   - file: taux.yaml
     description: Taux de TVA — normal (20%), réduit (10%), super-réduit (5,5%), particulier (2,1%)
+  - file: franchise.yaml
+    description: Franchise en base de TVA — seuils de chiffre d'affaires pour exonération des petites entreprises
+  - file: exonerations.yaml
+    description: Exonérations TVA sectorielles — médical, enseignement, bancaire, assurance, logement

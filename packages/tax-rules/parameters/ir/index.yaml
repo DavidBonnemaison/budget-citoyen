@@ -6,4 +6,12 @@ parameters:
   - file: deductions.yaml
     description: Déductions et abattements (frais professionnels 10%, frais réels)
   - file: credits.yaml
-    description: Crédits et réductions d'impôt (emploi à domicile, dons, garde d'enfants)
+    description: Crédits et réductions d'impôt (25+ dispositifs avec références legifrance.gouv.fr)
+  - file: quotient_familial.yaml
+    description: Parts de quotient familial par situation familiale et nombre d'enfants
+  - file: decote.yaml
+    description: Mécanisme de décote pour élimination de l'IR des petits montants
+  - file: plafonnement_qf.yaml
+    description: Plafonnement de l'avantage fiscal lié au quotient familial par demi-part
+  - file: cehr.yaml
+    description: Contribution Exceptionnelle sur les Hauts Revenus (3% et 4%)

@@ -1,0 +1,19 @@
+description: Franchise en base de TVA — seuils de chiffre d'affaires pour exonération des petites entreprises
+metadata:
+  reference: https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049053130
+  unit: currency-EUR
+values:
+  2025-01-01:
+    value:
+      biens_livraisons:
+        seuil: 91900
+        tolerance: 101000
+        description: Franchise en base pour livraisons de biens — seuil 91 900 €, tolérance 101 000 € (art. 293 B CGI)
+      prestations_services:
+        seuil: 36800
+        tolerance: 39100
+        description: Franchise en base pour prestations de services — seuil 36 800 €, tolérance 39 100 € (art. 293 B CGI)
+      avocats_auteurs:
+        seuil: 47600
+        tolerance: 58600
+        description: Franchise en base spécifique pour avocats et auteurs — seuil 47 600 €, tolérance 58 600 €

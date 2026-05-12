@@ -1,0 +1,30 @@
+description: Exonérations d'Impôt sur les Sociétés — régimes dérogatoires par zone et catégorie d'entreprise
+metadata:
+  reference: https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049053112
+  unit: currency-EUR
+values:
+  2025-01-01:
+    value:
+      pme_nouvelle:
+        exoneration_plafond: 38120
+        description: Exonération d'IS sur les premiers 38 120 € de bénéfice pour les PME nouvelles (art. 44 sexies CGI)
+      jei:
+        exoneration_annee_1: 1.0
+        exoneration_annee_2: 0.50
+        description: Jeune Entreprise Innovante — exonération 100% du bénéfice la 1re année, 50% la 2e année (art. 44 sexies-0 A CGI)
+      zfu_te:
+        exoneration_annee_1_5: 1.0
+        exoneration_annee_6: 0.60
+        exoneration_annee_7: 0.40
+        exoneration_annee_8: 0.20
+        description: Zone Franche Urbaine — Territoire Entrepreneur — exonération 100% les 5 premières années puis dégressive (art. 44 octies A CGI)
+      zrr:
+        exoneration_taux: 0.50
+        plafond_effectif: 11
+        description: Zone de Revitalisation Rurale — exonération partielle plafonnée pour PME de moins de 11 salariés (art. 44 quindecies CGI)
+      ber:
+        exoneration_annee_1_3: 1.0
+        exoneration_annee_4: 0.75
+        exoneration_annee_5: 0.50
+        exoneration_annee_6: 0.25
+        description: Bassin d'Emploi à Redynamiser — exonération 100% les 3 premières années puis dégressive (art. 44 duodecies CGI)

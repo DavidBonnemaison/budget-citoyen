@@ -1,0 +1,35 @@
+description: Contribution Exceptionnelle sur les Hauts Revenus (CEHR) — impôt additionnel à l'IR
+metadata:
+  reference: https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049053002
+  unit: /1
+brackets:
+  - threshold:
+      description: Seuil de la tranche à 3% — célibataire/divorcé/veuf
+      values:
+        2025-01-01:
+          value: 250000
+    threshold_couple:
+      description: Seuil de la tranche à 3% — couple (soumis à imposition commune)
+      values:
+        2025-01-01:
+          value: 500000
+    rate:
+      description: Taux de la CEHR tranche 1
+      values:
+        2025-01-01:
+          value: 0.03
+  - threshold:
+      description: Seuil de la tranche à 4% — célibataire/divorcé/veuf
+      values:
+        2025-01-01:
+          value: 500000
+    threshold_couple:
+      description: Seuil de la tranche à 4% — couple (soumis à imposition commune)
+      values:
+        2025-01-01:
+          value: 1000000
+    rate:
+      description: Taux de la CEHR tranche 2
+      values:
+        2025-01-01:
+          value: 0.04

@@ -3,3 +3,9 @@ domain: is
 parameters:
   - file: taux.yaml
     description: Taux de l'IS — normal (25%), réduit PME (15%), contribution sociale (3,3%)
+  - file: exonerations.yaml
+    description: Exonérations d'IS — PME nouvelles, JEI, ZFU-TE, ZRR, BER
+  - file: report_deficits.yaml
+    description: Report des déficits fiscaux — carry-back 1 an, carry-forward illimité avec plafonnement
+  - file: CVAE.yaml
+    description: Cotisation sur la Valeur Ajoutée des Entreprises — trajectoire de suppression 2025-2028
