@@ -52,7 +52,7 @@ Every phase incorporates its pitfall prevention at the earliest design stage —
 
 Plans:
 - [x] 02-01-PLAN.md — Environment setup, Rust toolchain install, Cargo workspace scaffolding, Phase 1 artifact generation, Parquet/WASM spike
-- [ ] 02-02-PLAN.md — TDD: Profile validation & core types (Profile, LoadError, MicroResult, MacroResult)
+- [x] 02-02-PLAN.md — TDD: Profile validation & core types (Profile, LoadError, MicroResult, MacroResult)
 - [ ] 02-03-PLAN.md — TDD: Parameter tree loading with date-based resolution & version checking
 - [ ] 02-04-PLAN.md — Code generator script (Python→Rust), full variable tree compilation, CI staleness check
 - [ ] 02-05-PLAN.md — TDD: Macro interpolation engine (ShockMatrix, interpn, convex hull, trajectory projection)
