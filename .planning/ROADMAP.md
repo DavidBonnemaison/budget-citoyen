@@ -48,7 +48,17 @@ Every phase incorporates its pitfall prevention at the earliest design stage —
   3. Both engines run entirely client-side in separate Web Workers — no computation data, profile information, or intermediate results leave the browser; zero server round-trips are required for any simulation result
   4. A single-profile micro calculation completes in under 200ms (WASM execution + JS↔WASM serialization combined); a full macro interpolation completes in under 50ms
   5. Native Rust tests (`cargo test` with proptest property-based strategies) and WASM boundary tests (`wasm-pack test`) both pass in CI, confirming the `core`/`wasm` crate split prevents untestable logic
-**Plans**: TBD
+**Plans**: 8 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Environment setup, Rust toolchain install, Cargo workspace scaffolding, Phase 1 artifact generation, Parquet/WASM spike
+- [ ] 02-02-PLAN.md — TDD: Profile validation & core types (Profile, LoadError, MicroResult, MacroResult)
+- [ ] 02-03-PLAN.md — TDD: Parameter tree loading with date-based resolution & version checking
+- [ ] 02-04-PLAN.md — Code generator script (Python→Rust), full variable tree compilation, CI staleness check
+- [ ] 02-05-PLAN.md — TDD: Macro interpolation engine (ShockMatrix, interpn, convex hull, trajectory projection)
+- [ ] 02-06-PLAN.md — TDD: Bilingual tax validation & TaxBenefitSystem (32 canonical profiles, ≤1e-6 precision)
+- [ ] 02-07-PLAN.md — WASM boundary layers (MicroEngine + MacroEngine), boundary tests, core test verification
+- [ ] 02-08-PLAN.md — Web Workers (micro/macro workers, orchestrator, index-map), CI pipeline, release profile
 
 ### Phase 3: Interactive Simulation Shell (MVP)
 **Goal**: A citizen can visit the platform on any device, manipulate fiscal sliders, and see in real time (<200ms) the impact on a typical household's purchasing power and the national deficit/debt trajectory — all in accessible, vulgarized French, shareable via URL, and compliant with RGAA 4 core criteria. This is the first user-facing deliverable (Milestone 1).
@@ -93,7 +103,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Data Foundation & Rules Engine | 5/5 | Complete | 2026-05-12 |
-| 2. Core Simulation Engines (WASM) | 0/TBD | Not started | - |
+| 2. Core Simulation Engines (WASM) | 0/8 | Not started | - |
 | 3. Interactive Simulation Shell (MVP) | 0/TBD | Not started | - |
 | 4. Enhanced Data & Expert Mode | 0/TBD | Not started | - |
 | 5. Platform Expansion & Hardening | 0/TBD | Not started | - |
