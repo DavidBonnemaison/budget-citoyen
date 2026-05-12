@@ -58,7 +58,7 @@ Plans:
 - [x] 02-05-PLAN.md — TDD: Macro interpolation engine (ShockMatrix, interpn, convex hull, trajectory projection)
 - [x] 02-06-PLAN.md — TDD: Bilingual tax validation & TaxBenefitSystem (32 canonical profiles, ≤1e-6 precision)
 - [x] 02-07-PLAN.md — WASM boundary layers (MicroEngine + MacroEngine), boundary tests, core test verification
-- [ ] 02-08-PLAN.md — Web Workers (micro/macro workers, orchestrator, index-map), CI pipeline, release profile
+- [x] 02-08-PLAN.md — Web Workers (micro/macro workers, orchestrator, index-map), CI pipeline, release profile
 
 ### Phase 3: Interactive Simulation Shell (MVP)
 **Goal**: A citizen can visit the platform on any device, manipulate fiscal sliders, and see in real time (<200ms) the impact on a typical household's purchasing power and the national deficit/debt trajectory — all in accessible, vulgarized French, shareable via URL, and compliant with RGAA 4 core criteria. This is the first user-facing deliverable (Milestone 1).
