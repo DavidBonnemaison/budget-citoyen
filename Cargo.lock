@@ -80,7 +80,9 @@ name = "budget-citoyen-wasm-macro"
 version = "0.1.0"
 dependencies = [
  "budget-citoyen-core",
+ "console_error_panic_hook",
  "interpn",
+ "js-sys",
  "ndarray",
  "postcard",
  "serde",
@@ -96,6 +98,7 @@ dependencies = [
  "budget-citoyen-core",
  "chrono",
  "console_error_panic_hook",
+ "js-sys",
  "serde",
  "serde-wasm-bindgen",
  "serde_json",

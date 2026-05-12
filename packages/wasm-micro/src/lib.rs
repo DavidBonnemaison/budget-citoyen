@@ -43,6 +43,7 @@ pub mod simulation;
 /// - Results are serialized via `serde-wasm-bindgen::to_value` into typed
 ///   `JsValue` objects — no JSON.stringify overhead on the JS/WASM boundary.
 #[wasm_bindgen]
+#[derive(Debug)]
 pub struct MicroEngine {
     system: TaxBenefitSystem,
     state: SimulationState,

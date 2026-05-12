@@ -1,10 +1,188 @@
-// wasm-bindgen prelude imported for future WASM boundary work (Phase 02-07)
-#[allow(unused_imports)]
+// WASM boundary layer for the macroeconomic shock matrix engine.
+//
+// Exposes ShockMatrix + interpolation via typed #[wasm_bindgen] exports.
+// The matrix data is loaded once at initialization as postcard-encoded
+// binary (D-12). Interpolation queries return typed JsValue objects via
+// serde-wasm-bindgen (D-10) or JsValue::NULL for out-of-bounds points
+// (Pitfall 2 — no silent extrapolation).
+//
+// Decision D-02: All business logic stays in module files (matrix.rs,
+//                interpolate.rs, projection.rs). This file is a thin boundary.
+
 use wasm_bindgen::prelude::*;
+use serde_wasm_bindgen;
+use serde::Deserialize;
+
+use crate::matrix::ShockMatrix;
+use crate::interpolate::interpolate_at_point;
+use crate::projection::project_trajectory;
+
+// ── Module declarations ────────────────────────────────────────────────────
 
 pub mod matrix;
 pub mod interpolate;
 pub mod projection;
+
+// ── Postcard deserialization helper ────────────────────────────────────────
+
+/// Intermediate deserialization struct for the postcard binary format.
+///
+/// The Phase 1 data pipeline serializes a `ShockMatrixData` to postcard+gzip
+/// for HTTP transfer. On the WASM side, we deserialize this struct from the
+/// raw bytes and then construct a validated `ShockMatrix` from its fields.
+///
+/// All fields use `Vec<f64>` — the postcard format natively handles Vec<f64>
+/// with minimal overhead (~8 bytes per element + length prefix).
+#[derive(Deserialize)]
+struct ShockMatrixData {
+    tax_bp: Vec<f64>,
+    spend_bp: Vec<f64>,
+    horizon_bp: Vec<f64>,
+    grid: Vec<f64>,
+    hull_equations: Vec<Vec<f64>>,
+}
+
+// ── WASM Exports ───────────────────────────────────────────────────────────
+
+/// The macroeconomic shock matrix engine — typed WASM boundary.
+///
+/// Wraps a pre-computed `ShockMatrix` with convex hull boundary enforcement.
+/// Interpolation queries use multi-linear interpolation (interpn 0.11.0) over
+/// the 4D grid (tax × spend × horizon × output_feature).
+///
+/// # Input contract
+/// - `tax`, `spend`, `horizon` are `f64` values from JavaScript sliders.
+/// - All values must be finite (NaN/Infinity rejected per T-02-14).
+/// - The convex hull is checked before every interpolation call (Pitfall 2).
+///
+/// # Output contract (D-10)
+/// - Valid results are serialized `MacroResult` via `serde-wasm-bindgen`.
+/// - Out-of-bounds queries return `JsValue::NULL` — the JS side must check
+///   for null and display a "hors domaine" warning to the user.
+#[wasm_bindgen]
+pub struct MacroEngine {
+    matrix: ShockMatrix,
+}
+
+#[wasm_bindgen]
+impl MacroEngine {
+    /// Initializes the macro engine from postcard-encoded binary data.
+    ///
+    /// # D-12 — Data arrives via main thread transfer at init time
+    ///
+    /// The shock matrix is loaded once at initialization as postcard+gzip
+    /// binary (typically 3-5 KB for a 10×10×5 grid). After construction,
+    /// all interpolation queries are zero-allocation lookups.
+    ///
+    /// # Binary format
+    ///
+    /// The `matrix_bytes` slice must be a postcard-encoded `ShockMatrixData`
+    /// struct containing: `tax_bp`, `spend_bp`, `horizon_bp`, `grid`,
+    /// and `hull_equations` fields.
+    ///
+    /// # Errors
+    ///
+    /// Returns `JsValue` error string if:
+    /// - The binary data is malformed (postcard deserialization fails)
+    /// - The grid dimensions don't match (ShockMatrix::new panics → caught
+    ///   by panic hook, returns Err in production)
+    #[wasm_bindgen(constructor)]
+    pub fn new(matrix_bytes: &[u8]) -> Result<MacroEngine, JsValue> {
+        let data: ShockMatrixData = postcard::from_bytes(matrix_bytes)
+            .map_err(|e| JsValue::from_str(&format!(
+                "Erreur de désérialisation des données de la matrice : {}",
+                e
+            )))?;
+
+        let matrix = ShockMatrix::new(
+            data.tax_bp,
+            data.spend_bp,
+            data.horizon_bp,
+            data.grid,
+            data.hull_equations,
+        );
+
+        Ok(MacroEngine { matrix })
+    }
+
+    /// Interpolates the macroeconomic impact at a single (tax, spend, horizon)
+    /// point using multi-linear interpolation.
+    ///
+    /// # T-02-14 — NaN/Infinity rejection
+    ///
+    /// All inputs are validated for finiteness. NaN or Infinity values fail
+    /// the hull containment check and return `JsValue::NULL`.
+    ///
+    /// # Pitfall 2 — No silent extrapolation
+    ///
+    /// If the query point lies outside the convex hull, this method returns
+    /// `JsValue::NULL`. The JavaScript frontend MUST check for null and
+    /// display a "hors domaine de la matrice" warning to the user. Never
+    /// silently extrapolate beyond the pre-computed grid.
+    ///
+    /// # Returns
+    ///
+    /// - `JsValue` object (serialized `MacroResult`) if the point is in-bounds
+    /// - `JsValue::NULL` if the point is out-of-bounds or inputs are invalid
+    pub fn interpolate(&self, tax: f64, spend: f64, horizon: f64) -> JsValue {
+        let result = interpolate_at_point(&self.matrix, tax, spend, horizon);
+
+        match result {
+            Some(macro_result) => {
+                serde_wasm_bindgen::to_value(&macro_result)
+                    .unwrap_or(JsValue::NULL)
+            }
+            None => JsValue::NULL,
+        }
+    }
+
+    /// Projects a macroeconomic trajectory over `years` horizon by
+    /// interpolating each year independently.
+    ///
+    /// # Parameters
+    ///
+    /// - `tax`: Tax rate multiplier (must be within convex hull bounds)
+    /// - `spend`: Spending level multiplier (must be within convex hull bounds)
+    /// - `years`: Number of years to project (1–5 for standard grid)
+    ///
+    /// # Returns
+    ///
+    /// - `JsValue` object (serialized `MacroResult` with trajectory vectors
+    ///   of length `years`) if all per-year interpolations succeed
+    /// - `JsValue::NULL` if any year falls outside the convex hull
+    ///   No partial results are returned — the projection is all-or-nothing.
+    pub fn project(&self, tax: f64, spend: f64, years: usize) -> JsValue {
+        let result = project_trajectory(&self.matrix, tax, spend, years);
+
+        match result {
+            Some(macro_result) => {
+                serde_wasm_bindgen::to_value(&macro_result)
+                    .unwrap_or(JsValue::NULL)
+            }
+            None => JsValue::NULL,
+        }
+    }
+}
+
+// ── Panic Hook (ASVS V7) ───────────────────────────────────────────────────
+
+/// Initialize the panic hook with debug-aware behavior.
+///
+/// **ASVS V7 compliance:** Production builds must not expose panic messages
+/// to the browser console. Debug builds get readable stack traces from
+/// `console_error_panic_hook`.
+#[wasm_bindgen(start)]
+fn init_panic_hook() {
+    if cfg!(debug_assertions) {
+        console_error_panic_hook::set_once();
+    } else {
+        std::panic::set_hook(Box::new(|_info| {
+            // Suppress all panic output in production (ASVS V7).
+        }));
+    }
+}
+
+// ── Unit Tests (native cargo test) ─────────────────────────────────────────
 
 #[cfg(test)]
 mod tests {
