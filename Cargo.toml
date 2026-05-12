@@ -5,3 +5,10 @@ members = [
     "packages/wasm-macro",
 ]
 resolver = "2"
+
+[profile.release]
+opt-level = "s"       # Optimize for size (s = size, not z = aggressive size)
+debug = false         # Strip debug symbols (ASVS V7 — no stack traces in production)
+lto = true            # Link-time optimization — critical for WASM binary size reduction
+panic = "abort"       # Abort on panic (reduces binary size; ASVS V7 — no unwinding with memory exposure)
+codegen-units = 1     # Single codegen unit for better LTO
