@@ -2,18 +2,11 @@
 // RED phase: these tests MUST fail because the types module and Profile
 // struct do not exist yet.
 
+use budget_citoyen_core::types::{LoadError, Profile, SituationFamiliale, TypeActivite};
 use proptest::prelude::*;
-use budget_citoyen_core::types::{
-    Profile, SituationFamiliale, TypeActivite, LoadError,
-};
 
 // Helper to create a valid Profile for tests
-fn valid_profile(
-    age: u8,
-    patrimoine: f64,
-    revenu_fiscal: f64,
-    nombre_parts: f64,
-) -> Profile {
+fn valid_profile(age: u8, patrimoine: f64, revenu_fiscal: f64, nombre_parts: f64) -> Profile {
     Profile {
         profile_id: format!("test-{}", age),
         age,
