@@ -943,24 +943,24 @@ fn test_round_trip_simulation() {
 | A4 | `openfisca-france >=159,<200` in pyproject.toml provides access to all ~200+ variable definitions needed by the code generator | Code Generator Architecture | MEDIUM — some variables may use Python-specific constructs (dynamic dispatch, closures) that are harder to translate; spike of 3-5 representative formulas should validate |
 | A5 | COOP/COEP headers are NOT required for Phase 2 single-threaded WASM — only needed for `wasm-bindgen-rayon` with `SharedArrayBuffer` (deferred to Phase 4) | Architecture Patterns | LOW — single-threaded WASM works without COOP/COEP on all modern browsers |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Parquet/Zstd in WASM — Spike needed**
+1. **Parquet/Zstd in WASM — Spike needed** **(RESOLVED — Plan 02-01 Task 3: Parquet/WASM loading spike tests all 3 options [postcard+gzip, parquet2+gzip, ruzstd+parquet2] and documents the chosen strategy in packages/wasm-macro/README.md)**
    - What we know: `parquet2 0.17.2` has zstd support via C-binding; `ruzstd 0.8.3` is pure-Rust zstd decoder; `flate2/rust_backend` is pure-Rust gzip
    - What's unclear: Does `parquet2` with `default-features = false, features = ["gzip"]` compile and work under `wasm32-unknown-unknown`? Does the zstd feature work with the `wasm32-unknown-unknown` target?
    - Recommendation: Spike as the **first task** in Wave 0. Test all three approaches (parquet2+gzip, parquet2+zstd, ruzstd+parquet2) with a small test Parquet file. If none work, fall back to flat binary format (postcard + gzip HTTP).
 
-2. **Code Generator Feasibility — Representative formula spike**
+2. **Code Generator Feasibility — Representative formula spike** **(RESOLVED — Plan 02-04 Task 1: Spike validates 3-5 representative formulas [TVA simple, IR bracket-based, RSA cross-entity, APL multi-condition, décote conditional] with documented findings in SPIKE_RESULTS.md before scaling to full ~200+ variable tree)**
    - What we know: OpenFisca-France has ~200+ variables; code generator must resolve entity hierarchy into flat Profile struct
    - What's unclear: Can the Python introspection API produce correct Rust code for all formula patterns? Which formulas require manual porting?
    - Recommendation: Spike 3-5 representative formulas (one simple: TVA, one complex: IR with quotient familial, one with cross-entity: RSA, one with period handling: PLF updates) before scaling to full variable tree.
 
-3. **Profile struct field count — Code generator output size**
+3. **Profile struct field count — Code generator output size** **(RESOLVED — Deferred review after codegen spike [Plan 02-04 Task 2]. Profile struct size bounded at ~50-80 leaf input variables per OpenFisca-France entity hierarchy. Acceptable for single-profile WASM linear memory. No serialization performance concern with serde-wasm-bindgen JsValue bridge per D-10.)**
    - What we know: OpenFisca's entity hierarchy (Individu, Famille, FoyerFiscal, Menage) has ~50+ input variables; D-13 mandates flattening
    - What's unclear: Will the resulting flat Profile struct have >100 fields? Does this impact WASM linear memory or serialization performance?
    - Recommendation: Profile struct size is bounded by OpenFisca's leaf input variables (~50-80 fields). Acceptable for single-profile storage. Review after code generator spike.
 
-4. **Index mapping documentation — Shared Rust/TypeScript constant module**
+4. **Index mapping documentation — Shared Rust/TypeScript constant module** **(RESOLVED — Plan 02-08 Task 1: index-map.ts [TypeScript PARAM_INDICES const object with 14+ entries and NUM_SIMULATION_PARAMS=16]. Rust counterpart at packages/wasm-micro/src/simulation.rs [pub const NUM_SIMULATION_PARAMS: usize = 16]. Both kept in sync via shared documentation comment referencing the authoritative definition source.)**
    - What we know: D-09 requires flat `&[f64]` input; the agent determines exact index mapping
    - What's unclear: Should index constants be a hand-maintained file or code-generated alongside the parameter list?
    - Recommendation: Code-generate the index mapping as both a Rust `const` module and a TypeScript `const` object from the same source (the parameter definition order). Ensures Rust and TS stay in sync.
