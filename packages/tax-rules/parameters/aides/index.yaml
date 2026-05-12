@@ -1,0 +1,11 @@
+description: Paramètres des aides sociales
+domain: aides
+parameters:
+  - file: rsa.yaml
+    description: Revenu de Solidarité Active — montant forfaitaire 635,71 €, majoration isolement, forfait logement
+  - file: apl.yaml
+    description: Aides Personnalisées au Logement — loyers plafonds par zone géographique, participation minimale
+  - file: allocations_familiales.yaml
+    description: Allocations familiales — modulation selon revenus (3 tranches), majoration pour âge
+  - file: prime_activite.yaml
+    description: Prime d'activité — montant forfaitaire 622,63 €, bonification individuelle, taux de cumul 61%

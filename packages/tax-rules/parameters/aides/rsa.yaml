@@ -1,0 +1,23 @@
+description: Revenu de Solidarité Active (RSA) — montants et calcul
+metadata:
+  reference: https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006074069/LEGISCTA000006157614
+  unit: currency-EUR
+values:
+  2025-01-01:
+    value:
+      montant_forfaitaire_personne_seule:
+        value: 635.71
+        description: Montant forfaitaire mensuel pour une personne seule
+      majoration_isolement:
+        taux: 0.50
+        description: Majoration de 50% pour parent isolé (isolement + enfant à charge)
+      forfait_logement:
+        une_personne: 76.29
+        deux_personnes: 152.57
+        trois_personnes_plus: 188.79
+        description: Forfait logement déduit du RSA si aide au logement perçue
+      taux_cumul_revenus:
+        value: 0.38
+        description: Taux de cumul — le RSA est réduit de 38% des revenus d'activité du foyer
+      formule_calcul:
+        description: "RSA = (Montant forfaitaire + majorations) - (0,38 × revenus d'activité) - forfait logement - autres ressources"

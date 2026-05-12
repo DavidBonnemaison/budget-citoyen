@@ -1,0 +1,9 @@
+description: Paramètres de l'Impôt sur le Revenu (IR)
+domain: ir
+parameters:
+  - file: bareme.yaml
+    description: Barème progressif par tranches de l'IR (5 tranches, taux de 0% à 45%)
+  - file: deductions.yaml
+    description: Déductions et abattements (frais professionnels 10%, frais réels)
+  - file: credits.yaml
+    description: Crédits et réductions d'impôt (emploi à domicile, dons, garde d'enfants)

@@ -1,0 +1,22 @@
+description: Crédits et réductions d'impôt sur le revenu
+metadata:
+  reference: https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049052888
+  unit: /1
+values:
+  2025-01-01:
+    value:
+      emploi_domicile:
+        taux: 0.50
+        plafond: 12000
+        description: Crédit d'impôt pour emploi d'un salarié à domicile (50%, plafond 12 000 €)
+        reference: https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049052924
+      dons_associations:
+        taux: 0.66
+        plafond_pct_rfr: 0.20
+        description: Réduction d'impôt pour dons aux associations (66%, plafond 20% du RFR)
+        reference: https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049052888
+      garde_enfants:
+        taux: 0.50
+        plafond: 2300
+        description: Crédit d'impôt pour frais de garde d'enfants de moins de 6 ans (50%, plafond 2 300 €)
+        reference: https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049052930

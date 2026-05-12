@@ -1,0 +1,5 @@
+description: Paramètres de la Taxe sur la Valeur Ajoutée (TVA)
+domain: tva
+parameters:
+  - file: taux.yaml
+    description: Taux de TVA — normal (20%), réduit (10%), super-réduit (5,5%), particulier (2,1%)

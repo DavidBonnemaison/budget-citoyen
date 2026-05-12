@@ -1,0 +1,18 @@
+description: Taux de l'Impôt sur les Sociétés (IS)
+metadata:
+  reference: https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049052888
+  unit: /1
+values:
+  2025-01-01:
+    value:
+      taux_normal:
+        value: 0.25
+        description: Taux normal de l'IS (25% depuis la LFI 2022, applicable pleinement en 2025)
+      taux_reduit_pme:
+        value: 0.15
+        plafond_benefice: 42500
+        description: Taux réduit PME (15% sur les premiers 42 500 € de bénéfice, conditions CA < 10 M€ et capital détenu à 75% par des personnes physiques)
+      contribution_sociale:
+        taux: 0.033
+        seuil: 763000
+        description: Contribution sociale de 3,3% sur l'IS dû au-delà de 763 000 €

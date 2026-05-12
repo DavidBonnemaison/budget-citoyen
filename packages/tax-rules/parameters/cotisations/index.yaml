@@ -1,0 +1,9 @@
+description: Paramètres des cotisations sociales
+domain: cotisations
+parameters:
+  - file: salariales.yaml
+    description: Cotisations salariales — vieillesse, retraite complémentaire, maladie, chômage
+  - file: patronales.yaml
+    description: Cotisations patronales — vieillesse, maladie, allocations familiales, chômage, retraite complémentaire
+  - file: csg_crds.yaml
+    description: CSG (9,20%) et CRDS (0,50%) sur les revenus d'activité — assiette à 98,25% du brut

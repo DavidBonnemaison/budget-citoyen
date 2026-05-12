@@ -1,0 +1,5 @@
+description: Paramètres de l'Impôt sur les Sociétés (IS)
+domain: is
+parameters:
+  - file: taux.yaml
+    description: Taux de l'IS — normal (25%), réduit PME (15%), contribution sociale (3,3%)
