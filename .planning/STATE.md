@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-stopped_at: Phase 2 context gathered
-last_updated: "2026-05-12T15:52:19.078Z"
+status: executing
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-05-12T17:53:00Z"
 last_activity: 2026-05-12
 progress:
   total_phases: 5
   completed_phases: 1
-  total_plans: 5
-  completed_plans: 5
-  percent: 100
+  total_plans: 13
+  completed_plans: 6
+  percent: 46
 ---
 
 # Project State
@@ -21,34 +21,34 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-11)
 
 **Core value:** Permettre à tout citoyen de comprendre en temps réel l'impact budgétaire et macroéconomique d'une réforme fiscale sur son foyer et sur l'économie nationale, sans vocabulaire comptable complexe et sans jamais transmettre ses données personnelles.
-**Current focus:** Phase 1 — data-foundation-rules-engine
+**Current focus:** Phase 02 — core-simulation-engines-wasm
 
 ## Current Position
 
-Phase: 1 (data-foundation-rules-engine) — COMPLETE (Gap Closure)
-Plan: 5 of 5
-Status: Phase complete — 5 plans executed, UAT gaps closed
+Phase: 02 (core-simulation-engines-wasm) — EXECUTING
+Plan: 2 of 8
+Status: Ready to execute
 Last activity: 2026-05-12
 
-Progress: [██████████] 100%
+Progress: [█████░░░░░] 46%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 0
-- Average duration: N/A
-- Total execution time: 0 hours
+- Total plans completed: 1
+- Average duration: 41 min/plan
+- Total execution time: 0.7 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 02-core-simulation-engines-wasm | 1 | 41 min | 41 min |
 
 **Recent Trend:**
 
-- No plans executed yet
+- 02-01: 41 min (47 files, 3 tasks) — workspace bootstrap + artifacts
 
 *Updated after each plan completion*
 
@@ -63,6 +63,8 @@ Key architectural decisions:
 - **Matrice des chocs pré-calculée** — Multi-linear interpolation over pre-computed grid rather than real-time Mésange solving
 - **Données synthétiques** — CopulaGAN-generated profiles with differential privacy (ε ≤ 1.0) for RGPD/CNIL compliance
 - **Fork/adaptation d'OpenFisca** — Rules as Code ecosystem, auditable YAML, OpenFisca-compatible parameter tree
+- **Postcard+gzip for WASM data loading** (02-01) — Selected over parquet2 for shock matrix: simpler (~50KB vs ~200KB WASM overhead), zero compilation risk on `wasm32-unknown-unknown`, flat `Vec<f64>` sufficient for full-grid load-once pattern
+- **interpn 0.11.0 validated** (02-01) — RESEARCH.md Stack Correction confirmed; `interpn::multilinear::regular::interpn` provides correct ND grid interpolation API for scientific computing
 
 ### Pending Todos
 
@@ -84,6 +86,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-05-12T15:52:19.051Z
-Stopped at: Phase 2 context gathered
-Resume file: .planning/phases/02-core-simulation-engines-wasm/02-CONTEXT.md
+Last session: 2026-05-12T17:48:38Z
+Stopped at: Completed 02-01-PLAN.md
+Resume file: None

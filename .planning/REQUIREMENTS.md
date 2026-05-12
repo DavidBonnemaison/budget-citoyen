@@ -16,17 +16,17 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Microsimulation Engine
 
-- [ ] **MICRO-01**: Le moteur de microsimulation calcule l'impôt sur le revenu (IR) pour un profil type, exécuté en WASM dans le navigateur
-- [ ] **MICRO-02**: Le moteur couvre les variables fiscales majeures : TVA, impôt sur les sociétés (IS), cotisations sociales
-- [ ] **MICRO-03**: Le moteur calcule les aides sociales de l'État (prestations, allocations) pour un profil type
+- [x] **MICRO-01**: Le moteur de microsimulation calcule l'impôt sur le revenu (IR) pour un profil type, exécuté en WASM dans le navigateur
+- [x] **MICRO-02**: Le moteur couvre les variables fiscales majeures : TVA, impôt sur les sociétés (IS), cotisations sociales
+- [x] **MICRO-03**: Le moteur calcule les aides sociales de l'État (prestations, allocations) pour un profil type
 - [ ] **MICRO-04**: Le calcul microéconomique s'exécute intégralement côté client sans transfert de données personnelles vers le serveur
 - [ ] **MICRO-05**: Le temps de réponse du moteur micro est inférieur à 200ms pour un calcul sur profil type
 
 ### Macroeconomic Engine
 
-- [ ] **MACRO-01**: L'interpolation multi-linéaire estime la trajectoire du déficit public à partir de la matrice des chocs et des curseurs utilisateur
-- [ ] **MACRO-02**: L'interpolation estime la trajectoire de la dette souveraine
-- [ ] **MACRO-03**: L'interpolation estime les projections de croissance (PIB) et d'emploi
+- [x] **MACRO-01**: L'interpolation multi-linéaire estime la trajectoire du déficit public à partir de la matrice des chocs et des curseurs utilisateur
+- [x] **MACRO-02**: L'interpolation estime la trajectoire de la dette souveraine
+- [x] **MACRO-03**: L'interpolation estime les projections de croissance (PIB) et d'emploi
 - [ ] **MACRO-04**: Les résultats macroéconomiques s'affichent en moins de 200ms après modification d'un curseur
 - [ ] **MACRO-05**: Les taux d'intérêt utilisés sont des taux lissés constants (pas de variation en temps réel avec les marchés)
 
@@ -91,14 +91,14 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-02 | Phase 1 | Complete |
 | DATA-03 | Phase 1 | Complete |
 | DATA-04 | Phase 1 | Complete |
-| MICRO-01 | Phase 2 | Pending |
-| MICRO-02 | Phase 2 | Pending |
-| MICRO-03 | Phase 2 | Pending |
+| MICRO-01 | Phase 2 | Complete |
+| MICRO-02 | Phase 2 | Complete |
+| MICRO-03 | Phase 2 | Complete |
 | MICRO-04 | Phase 2 | Pending |
 | MICRO-05 | Phase 2 | Pending |
-| MACRO-01 | Phase 2 | Pending |
-| MACRO-02 | Phase 2 | Pending |
-| MACRO-03 | Phase 2 | Pending |
+| MACRO-01 | Phase 2 | Complete |
+| MACRO-02 | Phase 2 | Complete |
+| MACRO-03 | Phase 2 | Complete |
 | MACRO-04 | Phase 2 | Pending |
 | MACRO-05 | Phase 2 | Pending |
 | UI-01 | Phase 3 | Pending |
