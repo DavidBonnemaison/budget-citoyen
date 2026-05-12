@@ -1,0 +1,53 @@
+{
+  "description": "Prestation d'Accueil du Jeune Enfant (PAJE) — prime naissance, allocation de base, CMG, PreParE",
+  "metadata": {
+    "reference": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049053160",
+    "unit": "currency-EUR"
+  },
+  "values": {
+    "2025-01-01": {
+      "value": {
+        "prime_naissance": {
+          "value": 1019.43,
+          "description": "Prime de naissance versée au 7e mois de grossesse (1 019,43 € en 2025)"
+        },
+        "prime_adoption": {
+          "value": 2038.86,
+          "description": "Prime d'adoption (2 038,86 € en 2025)"
+        },
+        "allocation_base_taux_plein": {
+          "value": 189.39,
+          "description": "Allocation de base à taux plein — par mois (189,39 €/mois en 2025)"
+        },
+        "allocation_base_taux_partiel": {
+          "value": 94.7,
+          "description": "Allocation de base à taux partiel — par mois (94,70 €/mois en 2025)"
+        },
+        "plafond_rfr_taux_plein_couple_1_revenu": {
+          "value": 33904,
+          "description": "Plafond RFR pour taux plein, couple avec 1 revenu, enfant né avant 2025"
+        },
+        "plafond_rfr_taux_partiel_couple_1_revenu": {
+          "value": 45394,
+          "description": "Plafond RFR pour taux partiel, couple avec 1 revenu, enfant né avant 2025"
+        },
+        "cmg_moins_3_ans_taux_plein": {
+          "value": 507.67,
+          "description": "Complément de libre choix du Mode de Garde (CMG) — enfant < 3 ans, taux plein (max 507,67 €/mois)"
+        },
+        "cmg_3_6_ans_taux_plein": {
+          "value": 253.83,
+          "description": "CMG — enfant de 3 à 6 ans, taux plein (max 253,83 €/mois)"
+        },
+        "prepare_arret_total": {
+          "value": 422.21,
+          "description": "Prestation Partagée d'Éducation de l'Enfant (PreParE) — arrêt total d'activité (422,21 €/mois)"
+        },
+        "prepare_temps_partiel_50pc": {
+          "value": 272.83,
+          "description": "PreParE — temps partiel ≤ 50% (272,83 €/mois)"
+        }
+      }
+    }
+  }
+}

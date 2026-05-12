@@ -1,0 +1,88 @@
+{
+  "description": "Parts de quotient familial pour le calcul de l'impôt sur le revenu",
+  "metadata": {
+    "reference": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049052191",
+    "unit": "/1"
+  },
+  "values": {
+    "2025-01-01": {
+      "value": {
+        "celibataire_divorce_veuf": {
+          "value": 1.0,
+          "description": "1 part de base pour personne seule"
+        },
+        "celibataire_1_enfant": {
+          "value": 1.5,
+          "description": "1 part + 0,5 pour le 1er enfant (parent isolé = 2,0 parts pour le 1er enfant)"
+        },
+        "celibataire_2_enfants": {
+          "value": 2.0,
+          "description": "1 part + 0,5 pour les 2 premiers enfants (1 part par enfant à partir du 3e)"
+        },
+        "celibataire_3_enfants": {
+          "value": 2.5,
+          "description": "1 part + 0,5 + 0,5 + 0,5 (chaque enfant = 1 part à partir du 3e)"
+        },
+        "celibataire_4_enfants": {
+          "value": 3.0,
+          "description": "1 part + 0,5 × 4 enfants"
+        },
+        "couple_marie_pacse": {
+          "value": 2.0,
+          "description": "2 parts de base pour couple marié ou pacsé"
+        },
+        "couple_1_enfant": {
+          "value": 2.5,
+          "description": "2 parts + 0,5 pour le 1er enfant"
+        },
+        "couple_2_enfants": {
+          "value": 3.0,
+          "description": "2 parts + 0,5 pour les 2 premiers enfants"
+        },
+        "couple_3_enfants": {
+          "value": 4.0,
+          "description": "2 parts + 0,5 + 0,5 + 1,0 pour le 3e enfant"
+        },
+        "couple_4_enfants": {
+          "value": 5.0,
+          "description": "2 parts + 0,5 × 4 enfants"
+        },
+        "parent_isole_1_enfant": {
+          "value": 2.0,
+          "description": "1 part + 0,5 majoration parent isolé + 0,5 pour le 1er enfant"
+        },
+        "personne_invalide_majoration": {
+          "value": 0.5,
+          "description": "Majoration de 0,5 part supplémentaire par personne titulaire de la carte mobilité inclusion (invalidité)"
+        },
+        "ancien_combattant_majoration": {
+          "value": 0.5,
+          "description": "Majoration de 0,5 part pour ancien combattant de plus de 74 ans ou titulaire de la carte du combattant"
+        },
+        "veuf_avec_enfant": {
+          "value": 2.5,
+          "description": "Veuf avec enfant à charge — parts identiques au couple marié (2 parts + 0,5 par enfant)"
+        },
+        "plafond_avantage_fiscal": {
+          "value": 1759,
+          "description": "Plafond général de l'avantage fiscal par demi-part (1 759 € en 2025)"
+        },
+        "plafond_parent_isole_1er_enfant": {
+          "value": 4149,
+          "description": "Plafond spécifique pour la part entière du 1er enfant de parent isolé (4 149 €)"
+        },
+        "plafond_veuf_enfant": {
+          "value": 4149,
+          "description": "Plafond spécifique pour veuf avec enfant à charge (4 149 €)"
+        },
+        "plafond_invalidite": {
+          "value": 3512,
+          "description": "Plafond de l'avantage lié à la demi-part invalidité (3 512 €)"
+        },
+        "formule": {
+          "description": "Nb parts = parts base situation familiale + 0,5 par enfant (1ers 2 enfants comptent 0,5 chacun, 3e+ comptent 1 part chacun) + majorations"
+        }
+      }
+    }
+  }
+}

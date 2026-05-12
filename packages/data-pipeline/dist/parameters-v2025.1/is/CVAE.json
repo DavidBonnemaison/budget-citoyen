@@ -1,0 +1,39 @@
+{
+  "description": "Cotisation sur la Valeur Ajoutée des Entreprises (CVAE) — trajectoire de suppression progressive",
+  "metadata": {
+    "reference": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049053116",
+    "unit": "/1"
+  },
+  "values": {
+    "2025-01-01": {
+      "value": {
+        "taux_effectif": {
+          "value": 0.0028,
+          "description": "Taux effectif CVAE 2025 (0,28% — en baisse par rapport à 0,75% avant la réforme)"
+        },
+        "degrevement_plafond_pct_va": {
+          "value": 0.02,
+          "description": "Plafonnement de la CVAE à 2% de la valeur ajoutée (dégrèvement)"
+        },
+        "chiffre_affaires_minimum": {
+          "value": 152500,
+          "description": "Chiffre d'affaires minimum pour être assujetti à la CVAE (152 500 €)"
+        },
+        "plafond_ca": {
+          "value": 50000000,
+          "description": "Plafond de chiffre d'affaires au-delà duquel le dégrèvement est nul (50 000 000 €)"
+        },
+        "abolition_path": {
+          "taux_2025": 0.0028,
+          "taux_2026": 0.0019,
+          "taux_2027": 0.0009,
+          "taux_2028": 0.0,
+          "description": "Trajectoire de suppression de la CVAE — 0,28% en 2025 → 0,19% en 2026 → 0,09% en 2027 → 0% en 2028"
+        },
+        "degrevement_calcul": {
+          "description": "Dégrèvement = (CVAE_brute × (Plafond_CA - CA_réel) / (Plafond_CA - CA_minimum)) — plafonné à CVAE_brute"
+        }
+      }
+    }
+  }
+}

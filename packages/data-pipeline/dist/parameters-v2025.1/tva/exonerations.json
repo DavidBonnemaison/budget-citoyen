@@ -1,0 +1,45 @@
+{
+  "description": "Exonérations de TVA sectorielles — opérations exonérées par nature (art. 261 et suivants CGI)",
+  "metadata": {
+    "reference": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049053132",
+    "unit": "/1"
+  },
+  "values": {
+    "2025-01-01": {
+      "value": {
+        "medical_paramedical": {
+          "value": true,
+          "description": "Soins médicaux et paramédicaux dispensés par des professionnels de santé réglementés (art. 261-4-1° CGI)"
+        },
+        "enseignement_scolaire_universitaire": {
+          "value": true,
+          "description": "Enseignement scolaire, universitaire et formation professionnelle continue (art. 261-4-4° CGI)"
+        },
+        "operations_bancaires_financieres": {
+          "value": true,
+          "description": "Opérations bancaires et financières — crédit, change, dépôts, virement (art. 261 C CGI)"
+        },
+        "operations_assurance_reassurance": {
+          "value": true,
+          "description": "Opérations d'assurance et de réassurance (art. 261 C CGI)"
+        },
+        "services_postaux_universels": {
+          "value": true,
+          "description": "Services postaux universels fournis par le prestataire désigné (art. 261-4-6° CGI)"
+        },
+        "location_logements_nus_usage_habitation": {
+          "value": true,
+          "description": "Location de logements nus à usage d'habitation principale (art. 261 D CGI)"
+        },
+        "livraisons_immeubles_plus_5_ans": {
+          "value": true,
+          "description": "Livraisons d'immeubles achevés depuis plus de 5 ans (art. 261-5-2° CGI)"
+        },
+        "organismes_sans_but_lucratif": {
+          "value": true,
+          "description": "Opérations réalisées par des organismes sans but lucratif (sous conditions — art. 261-7-1° CGI)"
+        }
+      }
+    }
+  }
+}

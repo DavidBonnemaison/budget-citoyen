@@ -1,0 +1,1084 @@
+{
+  "test_fixtures": [
+    {
+      "name": "celibataire_smic",
+      "description": "Célibataire au SMIC, sans patrimoine — référence de base pour le bas de l'échelle des revenus",
+      "input": {
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+          "salaires": [
+            18801.0
+          ],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": []
+        },
+        "patrimoine": {
+          "immobilier": 0.0,
+          "financier": 0.0
+        },
+        "zone_residence": "zone2"
+      },
+      "expected": {
+        "ir": 596.63,
+        "cotisations_salariales": 4136.22,
+        "csg_crds": 1699.42,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 2352.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 14720.73
+      }
+    },
+    {
+      "name": "celibataire_cadre",
+      "description": "Cadre célibataire à 80K, épargne financière — test du taux marginal supérieur et CSG/CRDS",
+      "input": {
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+          "salaires": [
+            80000.0
+          ],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": []
+        },
+        "patrimoine": {
+          "immobilier": 0.0,
+          "financier": 50000.0
+        },
+        "zone_residence": "zone1"
+      },
+      "expected": {
+        "ir": 14765.48,
+        "cotisations_salariales": 17600.0,
+        "csg_crds": 7231.2,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 0.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 40403.32
+      }
+    },
+    {
+      "name": "celibataire_retraite",
+      "description": "Retraité célibataire, pension 24K, propriétaire de sa résidence — test de l'abattement 10 % et taxe foncière",
+      "input": {
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+          "salaires": [],
+          "pensions": [
+            24000.0
+          ],
+          "bnc": [],
+          "fonciers": []
+        },
+        "patrimoine": {
+          "immobilier": 200000.0,
+          "financier": 30000.0
+        },
+        "zone_residence": "zone2"
+      },
+      "expected": {
+        "ir": 1111.33,
+        "cotisations_salariales": 0.0,
+        "csg_crds": 0.0,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 2352.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 25240.67
+      }
+    },
+    {
+      "name": "etudiant",
+      "description": "Étudiant avec job à temps partiel 8K, sans patrimoine — test exonération IR et non-assujettissement TH",
+      "input": {
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+          "salaires": [
+            8000.0
+          ],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": []
+        },
+        "patrimoine": {
+          "immobilier": 0.0,
+          "financier": 0.0
+        },
+        "zone_residence": "zone2"
+      },
+      "expected": {
+        "ir": 0.0,
+        "cotisations_salariales": 1760.0,
+        "csg_crds": 723.12,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 2352.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 4103.0
+        },
+        "revenu_disponible": 11971.88
+      }
+    },
+    {
+      "name": "chomeur",
+      "description": "Chômeur percevant 18K d'allocations — test du traitement fiscal des allocations chômage et RSA",
+      "input": {
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+          "salaires": [
+            0.0
+          ],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": [],
+          "allocations_chomage": 18000.0
+        },
+        "patrimoine": {
+          "immobilier": 0.0,
+          "financier": 2000.0
+        },
+        "zone_residence": "zone2"
+      },
+      "expected": {
+        "ir": 0.0,
+        "cotisations_salariales": 0.0,
+        "csg_crds": 0.0,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 2352.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 20352.0
+      }
+    },
+    {
+      "name": "couple_bi_actif",
+      "description": "Couple marié bi-actif avec 2 enfants (40K + 35K) — test quotient familial (2.5 parts)",
+      "input": {
+        "situation_familiale": "marie",
+        "nb_enfants": 2,
+        "revenus": {
+          "salaires": [
+            40000.0,
+            35000.0
+          ],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": []
+        },
+        "patrimoine": {
+          "immobilier": 250000.0,
+          "financier": 20000.0
+        },
+        "zone_residence": "zone2"
+      },
+      "expected": {
+        "ir": 3630.99,
+        "cotisations_salariales": 16500.0,
+        "csg_crds": 6779.25,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 0.0,
+          "allocations_familiales": 851.94,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 48941.7
+      }
+    },
+    {
+      "name": "couple_mono_actif",
+      "description": "Couple marié mono-actif avec 3 enfants (55K) — test quotient familial (3 parts) et demi-part supplémentaire",
+      "input": {
+        "situation_familiale": "marie",
+        "nb_enfants": 3,
+        "revenus": {
+          "salaires": [
+            55000.0
+          ],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": []
+        },
+        "patrimoine": {
+          "immobilier": 220000.0,
+          "financier": 15000.0
+        },
+        "zone_residence": "zone3"
+      },
+      "expected": {
+        "ir": 386.32,
+        "cotisations_salariales": 12100.0,
+        "csg_crds": 4971.45,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 0.0,
+          "allocations_familiales": 3878.88,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 41421.11
+      }
+    },
+    {
+      "name": "couple_retraite",
+      "description": "Couple de retraités, pension combinée 45K — test abattement couple et décote éventuelle",
+      "input": {
+        "situation_familiale": "marie",
+        "nb_enfants": 0,
+        "revenus": {
+          "salaires": [],
+          "pensions": [
+            25000.0,
+            20000.0
+          ],
+          "bnc": [],
+          "fonciers": []
+        },
+        "patrimoine": {
+          "immobilier": 300000.0,
+          "financier": 80000.0
+        },
+        "zone_residence": "zone1"
+      },
+      "expected": {
+        "ir": 1925.66,
+        "cotisations_salariales": 0.0,
+        "csg_crds": 0.0,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 0.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 43074.34
+      }
+    },
+    {
+      "name": "pacse_sans_enfant",
+      "description": "Couple pacsé bi-actif sans enfant — test imposition commune PACS et absence de parts enfants",
+      "input": {
+        "situation_familiale": "pacse",
+        "nb_enfants": 0,
+        "revenus": {
+          "salaires": [
+            50000.0,
+            42000.0
+          ],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": []
+        },
+        "patrimoine": {
+          "immobilier": 350000.0,
+          "financier": 45000.0
+        },
+        "zone_residence": "zone1"
+      },
+      "expected": {
+        "ir": 11170.96,
+        "cotisations_salariales": 20240.0,
+        "csg_crds": 8315.88,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 0.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 52273.16
+      }
+    },
+    {
+      "name": "famille_nombreuse",
+      "description": "Famille nombreuse : couple marié, 4 enfants, revenu unique 30K — test allocations familiales, RSA, prime d'activité, quotient familial",
+      "input": {
+        "situation_familiale": "marie",
+        "nb_enfants": 4,
+        "revenus": {
+          "salaires": [
+            30000.0
+          ],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": []
+        },
+        "patrimoine": {
+          "immobilier": 150000.0,
+          "financier": 5000.0
+        },
+        "zone_residence": "zone2"
+      },
+      "expected": {
+        "ir": 0.0,
+        "cotisations_salariales": 6600.0,
+        "csg_crds": 2711.7,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 2352.0,
+          "allocations_familiales": 6053.88,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 29094.18
+      }
+    },
+    {
+      "name": "famille_monoparentale",
+      "description": "Parent divorcé avec 2 enfants, revenu 18K — test demi-part parent isolé, ASF, RSA majoré",
+      "input": {
+        "situation_familiale": "divorce",
+        "nb_enfants": 2,
+        "revenus": {
+          "salaires": [
+            18000.0
+          ],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": []
+        },
+        "patrimoine": {
+          "immobilier": 0.0,
+          "financier": 1000.0
+        },
+        "zone_residence": "zone3"
+      },
+      "expected": {
+        "ir": 0.0,
+        "cotisations_salariales": 3960.0,
+        "csg_crds": 1627.02,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 1680.0,
+          "allocations_familiales": 1703.88,
+          "prime_activite": 303.0
+        },
+        "revenu_disponible": 16099.86
+      }
+    },
+    {
+      "name": "independant_bnc",
+      "description": "Indépendant BNC (profession libérale), revenu variable 60K — test régime micro-BNC, abattement 34 %, cotisations",
+      "input": {
+        "situation_familiale": "marie",
+        "nb_enfants": 1,
+        "revenus": {
+          "salaires": [],
+          "pensions": [],
+          "bnc": [
+            60000.0
+          ],
+          "fonciers": []
+        },
+        "patrimoine": {
+          "immobilier": 280000.0,
+          "financier": 35000.0
+        },
+        "zone_residence": "zone1"
+      },
+      "expected": {
+        "ir": 0.0,
+        "cotisations_salariales": 0.0,
+        "csg_crds": 0.0,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 0.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 60000.0
+      }
+    },
+    {
+      "name": "independant_bic",
+      "description": "Indépendant BIC (commerçant), revenu 45K — test régime micro-BIC, abattement 50 %, cotisations",
+      "input": {
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+          "salaires": [],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": [],
+          "bic": 45000.0
+        },
+        "patrimoine": {
+          "immobilier": 0.0,
+          "financier": 20000.0
+        },
+        "zone_residence": "zone2"
+      },
+      "expected": {
+        "ir": 0.0,
+        "cotisations_salariales": 0.0,
+        "csg_crds": 0.0,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 0.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 45000.0
+      }
+    },
+    {
+      "name": "multi_proprietaire",
+      "description": "Couple avec 3 propriétés (revenus fonciers + résidence principale) — test régime réel, IFI, déficit foncier",
+      "input": {
+        "situation_familiale": "marie",
+        "nb_enfants": 2,
+        "revenus": {
+          "salaires": [
+            70000.0,
+            45000.0
+          ],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": [
+            18000.0,
+            12000.0
+          ]
+        },
+        "patrimoine": {
+          "immobilier": 800000.0,
+          "financier": 120000.0
+        },
+        "zone_residence": "zone1"
+      },
+      "expected": {
+        "ir": 10546.44,
+        "cotisations_salariales": 25300.0,
+        "csg_crds": 10394.85,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 0.0,
+          "allocations_familiales": 425.97,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 99184.68
+      }
+    },
+    {
+      "name": "etranger_resident",
+      "description": "Résident fiscal non-citoyen — test résidence fiscale, convention bilatérale, pas de différence théorique avec citoyen",
+      "input": {
+        "situation_familiale": "marie",
+        "nb_enfants": 1,
+        "revenus": {
+          "salaires": [
+            55000.0,
+            48000.0
+          ],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": []
+        },
+        "patrimoine": {
+          "immobilier": 350000.0,
+          "financier": 60000.0
+        },
+        "zone_residence": "zone1"
+      },
+      "expected": {
+        "ir": 10723.7,
+        "cotisations_salariales": 22660.0,
+        "csg_crds": 9310.17,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 0.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 60306.13
+      }
+    },
+    {
+      "name": "haut_revenu",
+      "description": "Très haut revenu 500K — test CEHR (contribution exceptionnelle sur les hauts revenus), taux marginal maximal",
+      "input": {
+        "situation_familiale": "marie",
+        "nb_enfants": 2,
+        "revenus": {
+          "salaires": [
+            500000.0
+          ],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": []
+        },
+        "patrimoine": {
+          "immobilier": 1200000.0,
+          "financier": 500000.0
+        },
+        "zone_residence": "zone1"
+      },
+      "expected": {
+        "ir": 136334.85,
+        "cotisations_salariales": 110000.0,
+        "csg_crds": 45195.0,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 0.0,
+          "allocations_familiales": 425.97,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 208896.12
+      }
+    },
+    {
+      "name": "fam_monoparentale_1_enfant",
+      "description": "Parent isolé avec 1 enfant à charge — configuration monoparentale la plus courante en France, test 1.5 parts QF et allocations",
+      "input": {
+        "situation_familiale": "divorce",
+        "nb_enfants": 1,
+        "revenus": {
+          "salaires": [
+            22000.0
+          ],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": []
+        },
+        "patrimoine": {
+          "immobilier": 0.0,
+          "financier": 2000.0
+        },
+        "zone_residence": "zone2"
+      },
+      "expected": {
+        "ir": 0.0,
+        "cotisations_salariales": 4840.0,
+        "csg_crds": 1988.58,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 2352.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 17523.42
+      }
+    },
+    {
+      "name": "celibataire_250k_cehr",
+      "description": "Seuil exact CEHR 3% célibataire — test déclenchement contribution exceptionnelle hauts revenus (D-12)",
+      "input": {
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+          "salaires": [
+            250000.0
+          ],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": []
+        },
+        "patrimoine": {
+          "immobilier": 500000.0,
+          "financier": 200000.0
+        },
+        "zone_residence": "zone1"
+      },
+      "expected": {
+        "ir": 77983.19,
+        "cotisations_salariales": 55000.0,
+        "csg_crds": 22597.5,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 0.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 94419.31
+      }
+    },
+    {
+      "name": "couple_1_enfant",
+      "description": "Couple bi-actif avec 1 enfant — test 2.5 parts QF, plafonnement QF non déclenché",
+      "input": {
+        "situation_familiale": "marie",
+        "nb_enfants": 1,
+        "revenus": {
+          "salaires": [
+            45000.0,
+            35000.0
+          ],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": []
+        },
+        "patrimoine": {
+          "immobilier": 280000.0,
+          "financier": 25000.0
+        },
+        "zone_residence": "zone2"
+      },
+      "expected": {
+        "ir": 4758.32,
+        "cotisations_salariales": 17600.0,
+        "csg_crds": 7231.2,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 0.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 50410.48
+      }
+    },
+    {
+      "name": "couple_500k_cehr",
+      "description": "Seuil exact CEHR 4% couple — test plafonnement QF et taux marginal maximal couple",
+      "input": {
+        "situation_familiale": "marie",
+        "nb_enfants": 0,
+        "revenus": {
+          "salaires": [
+            250000.0,
+            250000.0
+          ],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": []
+        },
+        "patrimoine": {
+          "immobilier": 800000.0,
+          "financier": 400000.0
+        },
+        "zone_residence": "zone1"
+      },
+      "expected": {
+        "ir": 155966.38,
+        "cotisations_salariales": 110000.0,
+        "csg_crds": 45195.0,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 0.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 188838.62
+      }
+    },
+    {
+      "name": "celibataire_smic_zone3",
+      "description": "SMIC en zone détendue — test différentiel APL zone3 vs zone2, taux d'effort logement",
+      "input": {
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+          "salaires": [
+            18801.0
+          ],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": []
+        },
+        "patrimoine": {
+          "immobilier": 0.0,
+          "financier": 0.0
+        },
+        "zone_residence": "zone3"
+      },
+      "expected": {
+        "ir": 596.63,
+        "cotisations_salariales": 4136.22,
+        "csg_crds": 1699.42,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 1680.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 14048.73
+      }
+    },
+    {
+      "name": "retraite_modeste_zone3",
+      "description": "Petite retraite en zone3 — test ASPA éligibilité, taxe foncière modeste, exonération TH",
+      "input": {
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+          "salaires": [],
+          "pensions": [
+            15000.0
+          ],
+          "bnc": [],
+          "fonciers": []
+        },
+        "patrimoine": {
+          "immobilier": 120000.0,
+          "financier": 8000.0
+        },
+        "zone_residence": "zone3"
+      },
+      "expected": {
+        "ir": 220.33,
+        "cotisations_salariales": 0.0,
+        "csg_crds": 0.0,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 1680.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 16459.67
+      }
+    },
+    {
+      "name": "independant_bic_zone3",
+      "description": "Commerçant en zone rurale — test cotisations minimales, différentiel CFE zone3, micro-BIC",
+      "input": {
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+          "salaires": [],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": [],
+          "bic": 35000.0
+        },
+        "patrimoine": {
+          "immobilier": 80000.0,
+          "financier": 15000.0
+        },
+        "zone_residence": "zone3"
+      },
+      "expected": {
+        "ir": 0.0,
+        "cotisations_salariales": 0.0,
+        "csg_crds": 0.0,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 1680.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 36680.0
+      }
+    },
+    {
+      "name": "rentier_foncier",
+      "description": "Gros patrimoine immobilier locatif — test IFI, revenus fonciers au réel, déficit foncier imputation",
+      "input": {
+        "situation_familiale": "marie",
+        "nb_enfants": 1,
+        "revenus": {
+          "salaires": [
+            70000.0
+          ],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": [
+            25000.0,
+            15000.0,
+            10000.0
+          ]
+        },
+        "patrimoine": {
+          "immobilier": 1500000.0,
+          "financier": 150000.0
+        },
+        "zone_residence": "zone1"
+      },
+      "expected": {
+        "ir": 3768.32,
+        "cotisations_salariales": 15400.0,
+        "csg_crds": 6327.3,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 0.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 94504.38
+      }
+    },
+    {
+      "name": "jeune_patrimoine_financier",
+      "description": "Jeune cadre avec patrimoine financier uniquement — test flat tax (30% PFU), prélèvements sociaux sur revenus du capital",
+      "input": {
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+          "salaires": [
+            50000.0
+          ],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": []
+        },
+        "patrimoine": {
+          "immobilier": 0.0,
+          "financier": 200000.0
+        },
+        "zone_residence": "zone1"
+      },
+      "expected": {
+        "ir": 6665.48,
+        "cotisations_salariales": 11000.0,
+        "csg_crds": 4519.5,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 0.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 27815.02
+      }
+    },
+    {
+      "name": "agriculteur_zone3",
+      "description": "Exploitant agricole — test régime BA (bénéfice agricole), cotisations MSA, moyenne triennale",
+      "input": {
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+          "salaires": [],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": [],
+          "benefice_agricole": [
+            28000.0
+          ]
+        },
+        "patrimoine": {
+          "immobilier": 180000.0,
+          "financier": 12000.0
+        },
+        "zone_residence": "zone3"
+      },
+      "expected": {
+        "ir": 0.0,
+        "cotisations_salariales": 0.0,
+        "csg_crds": 0.0,
+        "aides": {
+          "rsa": 7628.52,
+          "apl": 1680.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 9308.52
+      }
+    },
+    {
+      "name": "auto_entrepreneur",
+      "description": "Micro-entrepreneur — test versement libératoire IR, micro-social, chiffre d'affaires vs bénéfice",
+      "input": {
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+          "salaires": [],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": [],
+          "micro_bic": 25000.0,
+          "versement_liberatoire": true
+        },
+        "patrimoine": {
+          "immobilier": 0.0,
+          "financier": 5000.0
+        },
+        "zone_residence": "zone2"
+      },
+      "expected": {
+        "ir": 0.0,
+        "cotisations_salariales": 0.0,
+        "csg_crds": 0.0,
+        "aides": {
+          "rsa": 7628.52,
+          "apl": 2352.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 9980.52
+      }
+    },
+    {
+      "name": "handicape_aah",
+      "description": "Bénéficiaire AAH à taux plein — test allocation adulte handicapé, couverture santé solidaire, exonération taxe habitation",
+      "input": {
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+          "salaires": [
+            0.0
+          ],
+          "pensions": [
+            0.0
+          ],
+          "bnc": [],
+          "fonciers": [],
+          "allocations_chomage": 0.0,
+          "aa_h": 12192.0
+        },
+        "patrimoine": {
+          "immobilier": 0.0,
+          "financier": 1000.0
+        },
+        "zone_residence": "zone2"
+      },
+      "expected": {
+        "ir": 0.0,
+        "cotisations_salariales": 0.0,
+        "csg_crds": 0.0,
+        "aides": {
+          "rsa": 7628.52,
+          "apl": 2352.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 9980.52
+      }
+    },
+    {
+      "name": "senior_aspa",
+      "description": "Bénéficiaire ASPA seul — test minimum vieillesse, couverture maladie universelle, récupération sur succession potentielle (ASPA = complément différentiel, ressources portées à 12 144 €)",
+      "input": {
+        "situation_familiale": "veuf",
+        "nb_enfants": 0,
+        "revenus": {
+          "salaires": [],
+          "pensions": [
+            5000.0
+          ],
+          "bnc": [],
+          "fonciers": []
+        },
+        "patrimoine": {
+          "immobilier": 80000.0,
+          "financier": 3000.0
+        },
+        "zone_residence": "zone3"
+      },
+      "expected": {
+        "ir": 0.0,
+        "cotisations_salariales": 0.0,
+        "csg_crds": 0.0,
+        "aides": {
+          "rsa": 2628.52,
+          "apl": 1680.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 9308.52
+      }
+    },
+    {
+      "name": "jeune_precaire",
+      "description": "Jeune en emploi partiel + chômage — test cumul salaire-ARE, prime d'activité jeunes, RSA jeune actif (< 25 ans, condition d'activité)",
+      "input": {
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+          "salaires": [
+            10000.0
+          ],
+          "pensions": [],
+          "bnc": [],
+          "fonciers": [],
+          "allocations_chomage": 8000.0
+        },
+        "patrimoine": {
+          "immobilier": 0.0,
+          "financier": 500.0
+        },
+        "zone_residence": "zone2"
+      },
+      "expected": {
+        "ir": 0.0,
+        "cotisations_salariales": 2200.0,
+        "csg_crds": 903.9,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 2352.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 3343.0
+        },
+        "revenu_disponible": 20591.1
+      }
+    },
+    {
+      "name": "retraite_proprietaire_modeste",
+      "description": "Couple retraité propriétaire modeste — test croisé retraite × patrimoine, décote IR, exonération taxe foncière (âge)",
+      "input": {
+        "situation_familiale": "marie",
+        "nb_enfants": 0,
+        "revenus": {
+          "salaires": [],
+          "pensions": [
+            18000.0,
+            12000.0
+          ],
+          "bnc": [],
+          "fonciers": []
+        },
+        "patrimoine": {
+          "immobilier": 200000.0,
+          "financier": 30000.0
+        },
+        "zone_residence": "zone2"
+      },
+      "expected": {
+        "ir": 440.66,
+        "cotisations_salariales": 0.0,
+        "csg_crds": 0.0,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 2352.0,
+          "allocations_familiales": 0.0,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 31911.34
+      }
+    },
+    {
+      "name": "independant_famille_3enfants",
+      "description": "Croisé indépendant × famille nombreuse en zone détendue — test cumul allocations familiales, ARS, Paje, crédits d'impôt garde + scolarité, et cotisations minimales",
+      "input": {
+        "situation_familiale": "marie",
+        "nb_enfants": 3,
+        "revenus": {
+          "salaires": [],
+          "pensions": [],
+          "bnc": [
+            45000.0
+          ],
+          "fonciers": []
+        },
+        "patrimoine": {
+          "immobilier": 220000.0,
+          "financier": 20000.0
+        },
+        "zone_residence": "zone3"
+      },
+      "expected": {
+        "ir": 0.0,
+        "cotisations_salariales": 0.0,
+        "csg_crds": 0.0,
+        "aides": {
+          "rsa": 0.0,
+          "apl": 0.0,
+          "allocations_familiales": 3878.88,
+          "prime_activite": 0.0
+        },
+        "revenu_disponible": 48878.88
+      }
+    }
+  ],
+  "reference_year": 2025,
+  "generated_at": "2026-05-12T17:38:13.012167+00:00",
+  "openfisca_version": "openfisca_france.france_taxbenefitsystem",
+  "total_fixtures": 32
+}

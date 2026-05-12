@@ -1,0 +1,29 @@
+{
+  "description": "Déductions et abattements sur les revenus (frais professionnels)",
+  "metadata": {
+    "reference": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049052736",
+    "unit": "currency-EUR"
+  },
+  "values": {
+    "2025-01-01": {
+      "value": {
+        "abattement_frais_professionnels": {
+          "taux": 0.1,
+          "description": "Abattement forfaitaire de 10% pour frais professionnels"
+        },
+        "plafond_salaries": {
+          "value": 14329,
+          "description": "Plafond de la déduction forfaitaire pour les salariés"
+        },
+        "plafond_multipensionnes": {
+          "value": 20123,
+          "description": "Plafond de la déduction forfaitaire pour les multi-pensionnés"
+        },
+        "frais_reels": {
+          "description": "Option pour les frais réels (sur justificatifs)",
+          "value": null
+        }
+      }
+    }
+  }
+}

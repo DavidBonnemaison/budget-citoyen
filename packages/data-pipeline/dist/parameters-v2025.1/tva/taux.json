@@ -1,0 +1,29 @@
+{
+  "description": "Taux de la Taxe sur la Valeur Ajoutée (TVA)",
+  "metadata": {
+    "reference": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049051222",
+    "unit": "/1"
+  },
+  "values": {
+    "2025-01-01": {
+      "value": {
+        "taux_normal": {
+          "value": 0.2,
+          "description": "Taux normal de 20% applicable à la majorité des biens et services"
+        },
+        "taux_reduit": {
+          "value": 0.1,
+          "description": "Taux réduit de 10% — restauration, transports de voyageurs, travaux de rénovation, hébergement"
+        },
+        "taux_super_reduit": {
+          "value": 0.055,
+          "description": "Taux super-réduit de 5,5% — produits alimentaires, énergie (électricité, gaz), équipements pour personnes handicapées"
+        },
+        "taux_particulier": {
+          "value": 0.021,
+          "description": "Taux particulier de 2,1% — presse, médicaments remboursables par la Sécurité sociale, redevance télévision"
+        }
+      }
+    }
+  }
+}

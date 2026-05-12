@@ -1,0 +1,33 @@
+{
+  "description": "Taux de la CSG et CRDS sur les revenus d'activité",
+  "metadata": {
+    "reference": "https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006073189/LEGISCTA000006156160",
+    "unit": "/1"
+  },
+  "values": {
+    "2025-01-01": {
+      "value": {
+        "assiette_pct_salaire": {
+          "value": 0.9825,
+          "description": "Assiette CSG/CRDS — 98,25% du salaire brut après abattement pour frais professionnels"
+        },
+        "csg_deductible": {
+          "taux": 0.068,
+          "description": "CSG déductible du revenu imposable (6,80% sur 98,25% du salaire brut)"
+        },
+        "csg_non_deductible": {
+          "taux": 0.024,
+          "description": "CSG non déductible (2,40% sur 98,25% du salaire brut)"
+        },
+        "crds": {
+          "taux": 0.005,
+          "description": "Contribution au Remboursement de la Dette Sociale (0,50% sur 98,25% du salaire brut)"
+        },
+        "total_csg_crds": {
+          "taux": 0.097,
+          "description": "Taux global CSG + CRDS (9,70% sur 98,25% du salaire brut, soit ~9,53% du salaire brut)"
+        }
+      }
+    }
+  }
+}

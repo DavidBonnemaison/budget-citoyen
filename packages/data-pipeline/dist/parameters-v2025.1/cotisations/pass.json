@@ -1,0 +1,40 @@
+{
+  "description": "Plafond Annuel de la Sécurité Sociale (PASS) — valeurs 2025 pour le calcul des cotisations plafonnées",
+  "metadata": {
+    "reference": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049053144",
+    "unit": "currency-EUR"
+  },
+  "values": {
+    "2025-01-01": {
+      "value": {
+        "pass_annuel": {
+          "value": 47100,
+          "description": "Plafond annuel de la Sécurité Sociale (47 100 € en 2025)"
+        },
+        "pass_mensuel": {
+          "value": 3925,
+          "description": "Plafond mensuel (47 100 / 12 = 3 925 €)"
+        },
+        "pass_trimestriel": {
+          "value": 11775,
+          "description": "Plafond trimestriel (3 × 3 925 = 11 775 €)"
+        },
+        "pass_quinzenal": {
+          "value": 1963,
+          "description": "Plafond par quinzaine (3 925 / 2 = 1 963 €)"
+        },
+        "pass_hebdomadaire": {
+          "value": 906,
+          "description": "Plafond hebdomadaire (3 925 × 12 / 52 = 906 €)"
+        },
+        "pass_journalier": {
+          "value": 216,
+          "description": "Plafond journalier (3 925 / 18 ≈ 216 € — base 218 jours travaillés)"
+        },
+        "usage": {
+          "description": "Plafond de référence pour les cotisations plafonnées (vieillesse, AGIRC-ARRCO T1, prévoyance) et les seuils de nombreuses prestations sociales"
+        }
+      }
+    }
+  }
+}

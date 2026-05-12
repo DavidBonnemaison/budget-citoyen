@@ -1,0 +1,33 @@
+{
+  "description": "Report des déficits fiscaux — carry-back et carry-forward pour l'Impôt sur les Sociétés",
+  "metadata": {
+    "reference": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049053114",
+    "unit": "currency-EUR"
+  },
+  "values": {
+    "2025-01-01": {
+      "value": {
+        "carryback_duree": {
+          "value": 1,
+          "unite": "an",
+          "description": "Report en arrière des déficits (carry-back) sur 1 an — créance d'impôt imputable sur les 5 exercices suivants"
+        },
+        "carryforward_duree": {
+          "value": null,
+          "description": "Report en avant illimité des déficits (carry-forward)"
+        },
+        "carryforward_plafond_fixe": {
+          "value": 1000000,
+          "description": "Plafond fixe de base pour l'imputation des déficits antérieurs (1 000 000 €)"
+        },
+        "carryforward_plafond_pct_excedent": {
+          "value": 0.5,
+          "description": "Pourcentage du bénéfice excédant 1 000 000 € imputable sur les déficits antérieurs (50%)"
+        },
+        "formule": {
+          "description": "Déficit imputable = min(Déficit reportable, 1 000 000 + 0,50 × max(0, Bénéfice - 1 000 000))"
+        }
+      }
+    }
+  }
+}

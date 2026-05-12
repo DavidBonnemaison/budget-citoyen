@@ -1,0 +1,7 @@
+[workspace]
+members = [
+    "packages/core",
+    "packages/wasm-micro",
+    "packages/wasm-macro",
+]
+resolver = "2"

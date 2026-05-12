@@ -1,0 +1,45 @@
+{
+  "description": "Complémentaire Santé Solidaire (CSS) — plafonds de ressources et participations par âge",
+  "metadata": {
+    "reference": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049053154",
+    "unit": "currency-EUR"
+  },
+  "values": {
+    "2025-01-01": {
+      "value": {
+        "css_gratuite_plafond_annuel": {
+          "value": 10166,
+          "description": "Plafond annuel pour la CSS gratuite (1 personne — 10 166 € en 2025)"
+        },
+        "css_participative_plafond_annuel": {
+          "value": 13724,
+          "description": "Plafond annuel pour la CSS participative à 1 €/jour (1 personne — 13 724 € en 2025)"
+        },
+        "participation_age_moins_29_ans": {
+          "value": 8,
+          "description": "Participation mensuelle pour les moins de 29 ans (8 €/mois)"
+        },
+        "participation_age_30_49_ans": {
+          "value": 14,
+          "description": "Participation mensuelle pour les 30-49 ans (14 €/mois)"
+        },
+        "participation_age_50_59_ans": {
+          "value": 21,
+          "description": "Participation mensuelle pour les 50-59 ans (21 €/mois)"
+        },
+        "participation_age_60_69_ans": {
+          "value": 25,
+          "description": "Participation mensuelle pour les 60-69 ans (25 €/mois)"
+        },
+        "participation_age_70_ans_plus": {
+          "value": 30,
+          "description": "Participation mensuelle pour les 70 ans et plus (30 €/mois)"
+        },
+        "majoration_plafond_par_personne_supplementaire": {
+          "value": 0.5,
+          "description": "Majoration de 50% du plafond par personne supplémentaire dans le foyer"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "description": "Allocation de Rentrée Scolaire (ARS) — montants par âge et plafonds de ressources",
+  "metadata": {
+    "reference": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049053158",
+    "unit": "currency-EUR"
+  },
+  "values": {
+    "2025-01-01": {
+      "value": {
+        "montant_6_10_ans": {
+          "value": 416.4,
+          "description": "Montant ARS pour enfant de 6 à 10 ans (416,40 € en 2025)"
+        },
+        "montant_11_14_ans": {
+          "value": 439.38,
+          "description": "Montant ARS pour enfant de 11 à 14 ans (439,38 € en 2025)"
+        },
+        "montant_15_18_ans": {
+          "value": 454.6,
+          "description": "Montant ARS pour enfant de 15 à 18 ans (454,60 € en 2025)"
+        },
+        "plafond_rfr_1_enfant": {
+          "value": 27141,
+          "description": "Plafond de RFR pour 1 enfant à charge (27 141 € en 2025)"
+        },
+        "plafond_rfr_par_enfant_supplementaire": {
+          "value": 6264,
+          "description": "Majoration du plafond RFR par enfant supplémentaire (+ 6 264 € par enfant)"
+        },
+        "condition_age": {
+          "description": "Enfant de 6 à 18 ans scolarisé ou en apprentissage (rémunération ≤ 55% SMIC)"
+        }
+      }
+    }
+  }
+}

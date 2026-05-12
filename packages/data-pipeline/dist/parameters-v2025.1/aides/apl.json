@@ -1,0 +1,44 @@
+{
+  "description": "Aides Personnalisées au Logement (APL) — paramètres 2025",
+  "metadata": {
+    "reference": "https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006074096/LEGISCTA000006157625",
+    "unit": "currency-EUR"
+  },
+  "values": {
+    "2025-01-01": {
+      "value": {
+        "zones_geographiques": {
+          "description": "Paramètres variant selon la zone géographique (1 = Île-de-France, 2 = grandes agglomérations, 3 = reste du territoire)"
+        },
+        "participation_minimale": {
+          "description": "Participation minimale du bénéficiaire au loyer",
+          "value": 38.0
+        },
+        "loyers_plafonds": {
+          "zone_1": {
+            "personne_seule": 313.14,
+            "couple": 412.96,
+            "par_enfant": 79.87
+          },
+          "zone_2": {
+            "personne_seule": 273.56,
+            "couple": 358.21,
+            "par_enfant": 69.65
+          },
+          "zone_3": {
+            "personne_seule": 255.45,
+            "couple": 334.14,
+            "par_enfant": 64.91
+          }
+        },
+        "taux_participation_familiale": {
+          "description": "Taux de participation du ménage au loyer (paramétrage progressif)",
+          "value": null
+        },
+        "formule": {
+          "description": "APL = Loyer plafond - (Taux participation × Ressources) - Participation minimale"
+        }
+      }
+    }
+  }
+}

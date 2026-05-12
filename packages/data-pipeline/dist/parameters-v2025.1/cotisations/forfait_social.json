@@ -1,0 +1,36 @@
+{
+  "description": "Forfait social sur les contributions patronales — taux et assiette par catégorie",
+  "metadata": {
+    "reference": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049053142",
+    "unit": "/1"
+  },
+  "values": {
+    "2025-01-01": {
+      "value": {
+        "taux_normal": {
+          "value": 0.2,
+          "description": "Taux normal du forfait social (20% — taux de base applicable aux contributions patronales)"
+        },
+        "taux_reduit_epargne_salariale_pme_premier_accord": {
+          "value": 0.0,
+          "description": "Exonération de forfait social pour le premier accord d'intéressement ou de participation dans les PME de moins de 50 salariés"
+        },
+        "taux_reduit_interessement_pme": {
+          "value": 0.08,
+          "description": "Taux réduit à 8% pour l'intéressement dans les PME de moins de 250 salariés"
+        },
+        "taux_retraite_supplementaire": {
+          "value": 0.2,
+          "description": "Taux du forfait social applicable aux contributions patronales de retraite supplémentaire (20%)"
+        },
+        "taux_prevoyance": {
+          "value": 0.2,
+          "description": "Taux du forfait social applicable aux contributions patronales de prévoyance complémentaire (20%)"
+        },
+        "assiette": {
+          "description": "Contributions patronales de prévoyance complémentaire, retraite supplémentaire, intéressement, participation, abondements PEE/PERCO — sauf exonérations spécifiques"
+        }
+      }
+    }
+  }
+}

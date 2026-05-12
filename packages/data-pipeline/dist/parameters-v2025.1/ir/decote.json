@@ -1,0 +1,32 @@
+{
+  "description": "Mécanisme de décote pour élimination de l'impôt sur le revenu des petits montants",
+  "metadata": {
+    "reference": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049052191",
+    "unit": "currency-EUR"
+  },
+  "values": {
+    "2025-01-01": {
+      "value": {
+        "celibataire_plafond": {
+          "value": 873,
+          "description": "Plafond de décote pour personne seule — IR brut en dessous duquel la décote élimine l'impôt (873 € en 2025)"
+        },
+        "celibataire_taux": {
+          "value": 0.4525,
+          "description": "Taux de décote pour personne seule (45,25% de l'IR brut)"
+        },
+        "couple_plafond": {
+          "value": 1449,
+          "description": "Plafond de décote pour couple (1 449 € en 2025)"
+        },
+        "couple_taux": {
+          "value": 0.4525,
+          "description": "Taux de décote pour couple (45,25% de l'IR brut)"
+        },
+        "formule": {
+          "description": "Décote = plafond_categorie - taux_categorie × IR_brut. Si IR_brut - décote ≤ 0 alors IR_net = 0. Sinon IR_net = IR_brut - décote."
+        }
+      }
+    }
+  }
+}

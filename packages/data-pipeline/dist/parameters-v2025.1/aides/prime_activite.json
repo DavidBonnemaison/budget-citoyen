@@ -1,0 +1,29 @@
+{
+  "description": "Prime d'activité — montants et calcul 2025",
+  "metadata": {
+    "reference": "https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006074069/LEGISCTA000031087308",
+    "unit": "currency-EUR"
+  },
+  "values": {
+    "2025-01-01": {
+      "value": {
+        "montant_forfaitaire": {
+          "value": 622.63,
+          "description": "Montant forfaitaire mensuel de base"
+        },
+        "bonification_individuelle": {
+          "value": 181.87,
+          "description": "Bonification individuelle (condition: revenu d'activité ≥ 0,5 SMIC sur 3 mois)",
+          "seuil_smic": 0.5
+        },
+        "taux_cumul": {
+          "value": 0.61,
+          "description": "Taux de cumul — 61% des revenus professionnels sont pris en compte dans le calcul"
+        },
+        "formule_calcul": {
+          "description": "Prime d'activité = Montant forfaitaire + Bonification individuelle + Forfait logement - (0,61 × Revenus d'activité) - Autres ressources"
+        }
+      }
+    }
+  }
+}

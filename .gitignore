@@ -3,9 +3,14 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 dist/
+!packages/data-pipeline/dist/
 build/
 .eggs/
 *.egg
+*.parquet
+*.meta.json
+!packages/data-pipeline/dist/*.parquet
+!packages/data-pipeline/dist/*.meta.json
 
 # Virtual environments
 .venv/
@@ -24,9 +29,8 @@ env/
 .DS_Store
 Thumbs.db
 
-# Data pipeline outputs
-*.parquet
-*.meta.json
+# Rust
+target/
 
 # Node (future frontend)
 node_modules/

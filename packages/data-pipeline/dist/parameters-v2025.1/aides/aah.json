@@ -1,0 +1,39 @@
+{
+  "description": "Allocation aux Adultes Handicapés (AAH) — montants, plafonds de ressources et conditions d'éligibilité",
+  "metadata": {
+    "reference": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049053150",
+    "unit": "currency-EUR"
+  },
+  "values": {
+    "2025-01-01": {
+      "value": {
+        "montant_mensuel_maximal": {
+          "value": 1016.05,
+          "description": "Montant mensuel maximal de l'AAH à taux plein (1 016,05 € en 2025)"
+        },
+        "plafond_ressources_celibataire": {
+          "value": 11656,
+          "description": "Plafond de ressources annuel pour une personne seule (11 656 €)"
+        },
+        "plafond_ressources_couple": {
+          "value": 23312,
+          "description": "Plafond de ressources annuel pour un couple (23 312 €)"
+        },
+        "taux_incapacite_minimum": {
+          "value": 0.8,
+          "description": "Taux d'incapacité minimum — ≥ 80% ou 50-79% avec RSDAE (Restriction Substantielle et Durable d'Accès à l'Emploi)"
+        },
+        "abattement_revenus_activite": {
+          "description": "Abattement dégressif sur les revenus d'activité (mécanisme de cumul AAH-salaire inspiré du RSA)"
+        },
+        "majoration_vie_autonome": {
+          "value": 335.3,
+          "description": "Majoration pour vie autonome — supplément mensuel pour les bénéficiaires en logement indépendant (335,30 €/mois)"
+        },
+        "cumul_aah_salaire": {
+          "description": "Dégressive — AAH réduite progressivement à mesure que les revenus d'activité augmentent, avec abattement et neutralisation partielle"
+        }
+      }
+    }
+  }
+}

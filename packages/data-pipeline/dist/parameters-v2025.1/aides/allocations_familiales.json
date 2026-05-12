@@ -1,0 +1,40 @@
+{
+  "description": "Allocations familiales — montants et modulation selon les revenus",
+  "metadata": {
+    "reference": "https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006073189/LEGISCTA000006156224",
+    "unit": "currency-EUR"
+  },
+  "values": {
+    "2025-01-01": {
+      "value": {
+        "modulation": {
+          "description": "Modulation des allocations familiales selon le revenu net imposable du foyer (pour 2 enfants)",
+          "tranche_1": {
+            "seuil_max": 74946,
+            "montant_par_enfant": 71.56,
+            "description": "Taux plein — revenu ≤ 74 946 €"
+          },
+          "tranche_2": {
+            "seuil_min": 74946,
+            "seuil_max": 99971,
+            "montant_par_enfant": 35.78,
+            "description": "Taux réduit — revenu entre 74 946 € et 99 971 €"
+          },
+          "tranche_3": {
+            "seuil_min": 99971,
+            "montant_par_enfant": 17.89,
+            "description": "Taux minimum — revenu > 99 971 €"
+          }
+        },
+        "majoration_age": {
+          "description": "Majoration pour enfant de 14 ans et plus",
+          "montant": 35.78
+        },
+        "plafond_neutralisation": {
+          "description": "Plafond de neutralisation (maintien du taux plein si dépassement modeste)",
+          "value": 0.02
+        }
+      }
+    }
+  }
+}
