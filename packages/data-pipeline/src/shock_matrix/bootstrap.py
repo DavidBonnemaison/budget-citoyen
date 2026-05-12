@@ -124,7 +124,7 @@ def generate_placeholder_shocks(
                 mean = base + effect
 
             elif output_name == "debt_to_gdp_ratio":
-                multiplier = 1.5  # Debt accumulates deficit effects
+                multiplier = -1.5  # tax increase → lower debt
                 horizon_profile = np.array(
                     [1.0, 1.8, 2.5, 3.0, 3.5][:horizon_years]
                 )
@@ -175,7 +175,7 @@ def generate_placeholder_shocks(
                 mean = base + effect
 
             elif output_name == "debt_to_gdp_ratio":
-                multiplier = -1.5
+                multiplier = 1.5  # spend increase → higher debt
                 horizon_profile = np.array(
                     [1.0, 1.8, 2.5, 3.0, 3.5][:horizon_years]
                 )
