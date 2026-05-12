@@ -171,7 +171,7 @@ def _compute_quotient_familial(profile: Dict[str, Any]) -> float:
             return 3.0
         else:
             return 3.0 + (nb_enfants - 2)
-    elif situation == "divorce" and nb_enfants > 0:
+    elif situation in ("divorce", "veuf") and nb_enfants > 0:
         # Parent isolé : 1 part + 0.5 part supplémentaire + 0.5 par enfant
         return 1.0 + 0.5 + (nb_enfants * 0.5)
     else:
