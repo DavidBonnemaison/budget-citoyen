@@ -67,10 +67,19 @@ class TestPreprocess:
     def test_build_metadata_returns_correct_type(self):
         """build_metadata returns a SingleTableMetadata object."""
         from sdv.metadata import SingleTableMetadata
-        from synthetic_pop.preprocess import build_metadata, COLUMNS
+        from synthetic_pop.preprocess import build_metadata
 
-        metadata = build_metadata(COLUMNS)
-
+        df = pd.DataFrame({
+            "age": [25, 40],
+            "patrimoine": [10000.0, 200000.0],
+            "revenu_fiscal": [20000.0, 50000.0],
+            "situation_familiale": ["celibataire", "marie"],
+            "nombre_parts": [1.0, 2.0],
+            "type_activite": ["salarie", "independant"],
+            "zone_residence": ["zone2", "zone1"],
+            "profile_id": [1, 2],
+        })
+        metadata = build_metadata(df)
         assert isinstance(metadata, SingleTableMetadata)
 
 
