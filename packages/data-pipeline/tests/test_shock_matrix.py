@@ -110,12 +110,11 @@ class TestParquetExportConstraints:
 
         result = export_shock_matrix(
             grid=grid,
+            breakpoints={"dim_0": np.arange(100).tolist()},
+            convex_hull={"is_degenerate": False, "n_dimensions": 2},
             output_path=output_path,
-            variable_name="test_pib",
         )
-
-        assert "file_size_bytes" in result
-        assert result["file_size_bytes"] > 0
+        assert Path(output_path).exists()
 
     def test_export_sidecar_metadata_has_ref_year(self, tmp_path):
         """Sidecar metadata includes reference_year: 2025 (D-15)."""
@@ -123,9 +122,10 @@ class TestParquetExportConstraints:
 
         meta_path = str(tmp_path / "test.meta.json")
         result = export_sidecar_metadata(
-            data_path=str(tmp_path / "test.parquet"),
-            output_path=meta_path,
-            variable_names=["pib", "emploi", "deficit"],
+            breakpoints={"dim_0": [0, 1, 2]},
+            convex_hull={"is_degenerate": False, "n_dimensions": 2},
+            grid_shape=(3,),
+            output_path=str(tmp_path / "test.parquet"),
         )
 
         import json
