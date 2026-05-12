@@ -241,16 +241,33 @@ fn trajectory_projection_horizon_2years() {
     //   Output 3: (0.7+1.5+2.3+3.1)/4 = 7.6/4 = 1.9
 
     let eps = 1e-10;
-    // Year 1 values (same as test 2)
-    assert!((m.gdp_growth_trajectory[0] - 1.4).abs() < eps);
-    assert!((m.employment_trajectory[0] - 1.5).abs() < eps);
-    assert!((m.deficit_trajectory[0] - 1.6).abs() < eps);
-    assert!((m.debt_trajectory[0] - 1.7).abs() < eps);
-    // Year 2 values
-    assert!((m.gdp_growth_trajectory[1] - 1.6).abs() < eps);
-    assert!((m.employment_trajectory[1] - 1.7).abs() < eps);
-    assert!((m.deficit_trajectory[1] - 1.8).abs() < eps);
-    assert!((m.debt_trajectory[1] - 1.9).abs() < eps);
+    // Year 1: horizon=1.0 → frac_h=0.0, only h=0 corners contribute
+    // Average of 4 corners at h=0 for each feature:
+    // f=0 (gdp): (0.0+0.8+1.6+2.4)/4 = 1.2
+    // f=1 (empl): (0.1+0.9+1.7+2.5)/4 = 1.3
+    // f=2 (def):  (0.2+1.0+1.8+2.6)/4 = 1.4
+    // f=3 (debt): (0.3+1.1+1.9+2.7)/4 = 1.5
+    assert!((m.gdp_growth_trajectory[0] - 1.2).abs() < eps,
+        "year 1 gdp {:.10} != 1.2", m.gdp_growth_trajectory[0]);
+    assert!((m.employment_trajectory[0] - 1.3).abs() < eps,
+        "year 1 empl {:.10} != 1.3", m.employment_trajectory[0]);
+    assert!((m.deficit_trajectory[0] - 1.4).abs() < eps,
+        "year 1 def {:.10} != 1.4", m.deficit_trajectory[0]);
+    assert!((m.debt_trajectory[0] - 1.5).abs() < eps,
+        "year 1 debt {:.10} != 1.5", m.debt_trajectory[0]);
+    // Year 2: horizon=2.0 → frac_h=1.0, only h=1 corners contribute
+    // f=0 (gdp): (0.4+1.2+2.0+2.8)/4 = 1.6
+    // f=1 (empl): (0.5+1.3+2.1+2.9)/4 = 1.7
+    // f=2 (def):  (0.6+1.4+2.2+3.0)/4 = 1.8
+    // f=3 (debt): (0.7+1.5+2.3+3.1)/4 = 1.9
+    assert!((m.gdp_growth_trajectory[1] - 1.6).abs() < eps,
+        "year 2 gdp {:.10} != 1.6", m.gdp_growth_trajectory[1]);
+    assert!((m.employment_trajectory[1] - 1.7).abs() < eps,
+        "year 2 empl {:.10} != 1.7", m.employment_trajectory[1]);
+    assert!((m.deficit_trajectory[1] - 1.8).abs() < eps,
+        "year 2 def {:.10} != 1.8", m.deficit_trajectory[1]);
+    assert!((m.debt_trajectory[1] - 1.9).abs() < eps,
+        "year 2 debt {:.10} != 1.9", m.debt_trajectory[1]);
 }
 
 // ── Test 10: Projection propagates None ─────────────────────────────────────

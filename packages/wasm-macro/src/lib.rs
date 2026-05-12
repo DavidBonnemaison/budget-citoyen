@@ -1,5 +1,9 @@
 use wasm_bindgen::prelude::*;
 
+pub mod matrix;
+pub mod interpolate;
+pub mod projection;
+
 #[cfg(test)]
 mod tests {
     use ndarray::Array3;
