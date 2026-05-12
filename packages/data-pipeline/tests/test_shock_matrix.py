@@ -130,7 +130,7 @@ class TestParquetExportConstraints:
 
         import json
 
-        with open(meta_path, "r") as f:
+        with open(str(tmp_path / "test.parquet") + ".meta.json", "r") as f:
             meta = json.load(f)
 
         assert meta["reference_year"] == REFERENCE_YEAR

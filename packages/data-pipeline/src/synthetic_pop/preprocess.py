@@ -203,11 +203,11 @@ def build_metadata(df: pd.DataFrame) -> SingleTableMetadata:
     metadata.add_column("type_activite", sdtype="categorical")
     metadata.add_column("zone_residence", sdtype="categorical")
 
-    # Set primary key
-    metadata.set_primary_key("profile_id")
-
     # Detect remaining properties from the dataframe
     metadata.detect_from_dataframe(df)
+
+    # Set primary key
+    metadata.set_primary_key("profile_id")
 
     logger.info(
         f"Metadata built: {len(metadata.columns)} columns, "
