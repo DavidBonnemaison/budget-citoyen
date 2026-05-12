@@ -3,7 +3,7 @@
 // RED phase: these tests MUST fail because the parameters module and
 // Parameters struct do not exist yet.
 
-use budget_citoyen_core::parameters::{Bracket, ParameterValue, Parameters};
+use budget_citoyen_core::parameters::Parameters;
 use budget_citoyen_core::types::LoadError;
 use chrono::NaiveDate;
 
