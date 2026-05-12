@@ -20,7 +20,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **MICRO-02**: Le moteur couvre les variables fiscales majeures : TVA, impôt sur les sociétés (IS), cotisations sociales
 - [x] **MICRO-03**: Le moteur calcule les aides sociales de l'État (prestations, allocations) pour un profil type
 - [x] **MICRO-04**: Le calcul microéconomique s'exécute intégralement côté client sans transfert de données personnelles vers le serveur
-- [ ] **MICRO-05**: Le temps de réponse du moteur micro est inférieur à 200ms pour un calcul sur profil type
+- [x] **MICRO-05**: Le temps de réponse du moteur micro est inférieur à 200ms pour un calcul sur profil type
 
 ### Macroeconomic Engine
 
@@ -95,7 +95,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MICRO-02 | Phase 2 | Complete |
 | MICRO-03 | Phase 2 | Complete |
 | MICRO-04 | Phase 2 | Complete |
-| MICRO-05 | Phase 2 | Pending |
+| MICRO-05 | Phase 2 | Complete |
 | MACRO-01 | Phase 2 | Complete |
 | MACRO-02 | Phase 2 | Complete |
 | MACRO-03 | Phase 2 | Complete |

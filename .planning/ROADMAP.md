@@ -57,7 +57,7 @@ Plans:
 - [x] 02-04-PLAN.md — Code generator script (Python→Rust), full variable tree compilation, CI staleness check
 - [x] 02-05-PLAN.md — TDD: Macro interpolation engine (ShockMatrix, interpn, convex hull, trajectory projection)
 - [x] 02-06-PLAN.md — TDD: Bilingual tax validation & TaxBenefitSystem (32 canonical profiles, ≤1e-6 precision)
-- [ ] 02-07-PLAN.md — WASM boundary layers (MicroEngine + MacroEngine), boundary tests, core test verification
+- [x] 02-07-PLAN.md — WASM boundary layers (MicroEngine + MacroEngine), boundary tests, core test verification
 - [ ] 02-08-PLAN.md — Web Workers (micro/macro workers, orchestrator, index-map), CI pipeline, release profile
 
 ### Phase 3: Interactive Simulation Shell (MVP)
