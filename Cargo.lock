@@ -94,6 +94,7 @@ name = "budget-citoyen-wasm-micro"
 version = "0.1.0"
 dependencies = [
  "budget-citoyen-core",
+ "chrono",
  "serde",
  "serde-wasm-bindgen",
  "serde_json",

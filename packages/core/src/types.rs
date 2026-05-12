@@ -10,6 +10,11 @@
 
 use serde::{Deserialize, Serialize};
 
+// Re-export Bracket from parameters for generated code compatibility.
+// The codegen outputs `budget_citoyen_core::types::Bracket` but Bracket
+// is defined in parameters.rs. This re-export resolves the path.
+pub use crate::parameters::Bracket;
+
 // ── Enumerations ────────────────────────────────────────────────────────────
 
 /// Situation familiale du foyer fiscal (quotient familial).
