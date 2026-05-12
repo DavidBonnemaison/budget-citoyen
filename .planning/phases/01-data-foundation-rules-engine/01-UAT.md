@@ -1,12 +1,10 @@
 ---
-status: complete
+status: diagnosed
 phase: 01-data-foundation-rules-engine
 source: 01-01-SUMMARY.md, 01-02-SUMMARY.md, 01-03-SUMMARY.md, 01-04-SUMMARY.md
 started: 2026-05-12T10:00:00Z
-updated: 2026-05-12T10:00:00Z
+updated: 2026-05-12T13:15:00Z
 ---
-
-## Current Test
 
 ## Current Test
 
@@ -57,6 +55,7 @@ passed: 6
 issues: 2
 pending: 0
 skipped: 0
+blocked: 0
 
 ## Gaps
 
@@ -65,12 +64,44 @@ skipped: 0
   reason: "User reported: why are there so few tax niches ? and more parameters overall ? weren't we supposed to implement all rules ?"
   severity: major
   test: 1
-  artifacts: []
-  missing: []
+  root_cause: "Scope mismatch between broad DATA-01 requirement text and plan-level starter-skeleton scope. PLAN intentionally limited to 12 parameter files covering most visible items per domain, establishing YAML format/pipeline infrastructure. Acceptance criteria validated structural quality only (14+ files, legifrance references, date keys), not semantic completeness. Critical IR gaps: quotient_familial, décote, plafonnement_qf, CEHR. Aides gaps: AAH, ASPA, CSS, ARE. Only 3 tax credits out of ~474 dépenses fiscales."
+  artifacts:
+    - path: "packages/tax-rules/parameters/ir/"
+      issue: "Missing: quotient_familial.yaml, decote.yaml, plafonnement_qf.yaml, cehr.yaml, etc."
+    - path: "packages/tax-rules/parameters/aides/"
+      issue: "Missing: aah.yaml, aspa.yaml, css.yaml, cheque_energie.yaml, allocation_rentree_scolaire.yaml, paje.yaml, are.yaml"
+    - path: "packages/tax-rules/parameters/cotisations/"
+      issue: "Missing: allegements_fillon.yaml, forfait_social.yaml, PASS standalone parameter, etc."
+    - path: ".planning/REQUIREMENTS.md:12"
+      issue: "DATA-01 requirement text ambiguous — reads as comprehensive but technically satisfied by any non-empty set per domain"
+    - path: ".planning/phases/01-data-foundation-rules-engine/01-01-PLAN.md"
+      issue: "Plan intentionally scoped to 12 files. Acceptance criteria never validated semantic sufficiency for Phase 2 computation"
+  missing:
+    - "Add quotient_familial.yaml (parts fiscales) — IR cannot be computed without it"
+    - "Add decote.yaml and plafonnement_qf.yaml"
+    - "Add AAH, ASPA parameters (critical social benefits)"
+    - "Add allègements Fillon (réductions générales cotisations patronales)"
+    - "Expand tax credits from 3 to 25-30 entries"
+    - "Clarify DATA-01 requirement text in REQUIREMENTS.md with explicit scope tiers"
+  debug_session: ".planning/debug/uat-01-yaml-parameter-gap.md"
 - truth: "16 canonical household profiles exist with name, description, situation_familiale, nb_enfants, revenus, patrimoine, and zone_residence fields. All D-12 edge cases are represented."
   status: failed
   reason: "User reported: 16 might be too low, let's try 32 to cover more cases, with finer granularity"
   severity: major
   test: 6
-  artifacts: []
-  missing: []
+  root_cause: "Same pattern as GAP #1 — scope definition issue. PLAN scoped to 10-20 profiles (delivered 16) to establish validation framework. D-12 wording set low floor. 16 profiles nominally cover all 8 D-12 edge cases but 7 of 8 cases have only 1-2 profiles. Only 9 distinct income levels, no profiles at CEHR thresholds/QF caps/IR bracket boundaries. zone3 tested at only 2 income points. Cross-category combinations absent."
+  artifacts:
+    - path: "packages/data-pipeline/src/validation/canonical_profiles.py"
+      issue: "Only 16 profiles. Missing systematic income stratification, family structure × income intersection, zone3 coverage, cross-category combinations"
+    - path: "packages/data-pipeline/tests/test_validation.py"
+      issue: "Acceptance criteria floor (≥14) too low — should be ≥30 after expansion"
+    - path: ".planning/phases/01-data-foundation-rules-engine/01-CONTEXT.md"
+      issue: "D-12 wording '10-20 canonical profiles' is the root constraint enabling this gap"
+  missing:
+    - "Add 16+ profiles expanding total to 32 across 7 dimensions (income stratification, family structures, zone residence, asset profiles, profession types, social benefit edge cases, cross-category combinations)"
+    - "Add profiles at CEHR thresholds (250K/500K), IR bracket boundaries, QF caps, décote thresholds"
+    - "Add single-parent+1-child (France's most common single-parent config)"
+    - "Add zone3 profiles for célibataire, retraité modeste, indépendant (>6 per zone)"
+    - "Add cross-category: retraité+propriétaire, indépendant+famille, handicapé+revenu modeste"
+    - "Update test_profile_count_at_least_fourteen threshold to ≥30"
+  debug_session: ".planning/debug/uat-01-canonical-profiles-gap.md"
