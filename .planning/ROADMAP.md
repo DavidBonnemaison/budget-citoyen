@@ -14,7 +14,7 @@ Every phase incorporates its pitfall prevention at the earliest design stage —
 ## Phases
 
 - [ ] **Phase 1: Data Foundation & Rules Engine** — OpenFisca-compatible YAML tax rules, synthetic population pipeline (50K profiles, DP ε ≤ 1.0), Mésange shock matrix pre-computation
-- [ ] **Phase 2: Core Simulation Engines (WASM)** — Rust/WASM microsim engine + macro interpolation engine, batch interfaces, bilingual validation against OpenFisca Python reference
+- [x] **Phase 2: Core Simulation Engines (WASM)** — Rust/WASM microsim engine + macro interpolation engine, batch interfaces, bilingual validation against OpenFisca Python reference
 - [ ] **Phase 3: Interactive Simulation Shell (MVP)** — Citizen Explorer UI with sliders, real-time feedback (<200ms), household impact, macro charts, shareable URLs, RGAA 4 core, responsive layout
 - [ ] **Phase 4: Enhanced Data & Expert Mode** — Full 50K profile distributional analysis, expert mode with multi-reform stacking, calculation tree transparency, data exports
 - [ ] **Phase 5: Platform Expansion & Hardening** — REST API, security/privacy audit, human RGAA 4 audit, performance hardening
@@ -103,7 +103,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Data Foundation & Rules Engine | 5/5 | Complete | 2026-05-12 |
-| 2. Core Simulation Engines (WASM) | 3/8 | Not started | - |
+| 2. Core Simulation Engines (WASM) | 8/8 | Complete | 2026-05-12 |
 | 3. Interactive Simulation Shell (MVP) | 0/TBD | Not started | - |
 | 4. Enhanced Data & Expert Mode | 0/TBD | Not started | - |
 | 5. Platform Expansion & Hardening | 0/TBD | Not started | - |
