@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://budget-citoyen.fr/schemas/parameter.schema.json",
+  "title": "OpenFisca Parameter",
+  "description": "Schema for a single OpenFisca-compatible tax/social parameter file. Validates description, metadata, values (date-keyed), and brackets structures.",
+  "type": "object",
+  "required": ["description"],
+  "properties": {
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable description of the parameter"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Legislation reference and unit metadata",
+      "properties": {
+        "reference": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL to the legislation source on legifrance.gouv.fr"
+        },
+        "unit": {
+          "type": "string",
+          "description": "Unit of measurement (e.g., /1 for rate, currency-EUR for amounts, year)"
+        }
+      }
+    },
+    "values": {
+      "type": "object",
+      "description": "Date-keyed values (each key is a date in YYYY-MM-DD format)",
+      "patternProperties": {
+        "^\\d{4}-\\d{2}-\\d{2}$": {
+          "type": "object",
+          "required": ["value"],
+          "properties": {
+            "value": {
+              "type": ["number", "null", "object"],
+              "description": "The parameter value at this date. Can be a scalar, null, or a nested object for complex parameters."
+            },
+            "metadata": {
+              "type": "object",
+              "description": "Optional per-date metadata (e.g., specific legislation reference for this value)",
+              "properties": {
+                "reference": {
+                  "type": "string",
+                  "description": "Specific legislation reference for this date's value"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "brackets": {
+      "type": "array",
+      "description": "Brackets for progressive parameters (e.g., income tax brackets). Each bracket has threshold and rate sub-parameters.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["threshold", "rate"],
+        "properties": {
+          "threshold": {
+            "type": "object",
+            "description": "Threshold parameter for this bracket",
+            "properties": {
+              "description": { "type": "string" },
+              "values": {
+                "type": "object",
+                "patternProperties": {
+                  "^\\d{4}-\\d{2}-\\d{2}$": {
+                    "type": "object",
+                    "required": ["value"],
+                    "properties": {
+                      "value": { "type": ["number", "null"] },
+                      "metadata": { "type": "object" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "rate": {
+            "type": "object",
+            "description": "Rate parameter for this bracket",
+            "properties": {
+              "description": { "type": "string" },
+              "values": {
+                "type": "object",
+                "patternProperties": {
+                  "^\\d{4}-\\d{2}-\\d{2}$": {
+                    "type": "object",
+                    "required": ["value"],
+                    "properties": {
+                      "value": { "type": ["number", "null"] },
+                      "metadata": { "type": "object" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "anyOf": [
+    { "required": ["values"] },
+    { "required": ["brackets"] }
+  ]
+}

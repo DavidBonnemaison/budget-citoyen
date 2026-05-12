@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://budget-citoyen.fr/schemas/tax_benefit_system.schema.json",
+  "title": "Tax Benefit System",
+  "description": "Schema for the complete tax benefit system — a collection of all parameters organized by domain. This is the top-level rules bundle consumed by the WASM engine.",
+  "type": "object",
+  "required": ["ir", "is", "tva", "cotisations", "aides"],
+  "properties": {
+    "ir": {
+      "type": "object",
+      "description": "Impôt sur le Revenu parameters",
+      "properties": {
+        "bareme": {
+          "type": "object",
+          "description": "Income tax brackets",
+          "required": ["brackets"]
+        },
+        "deductions": {
+          "type": "object",
+          "description": "Deductions and allowances",
+          "required": ["values"]
+        },
+        "credits": {
+          "type": "object",
+          "description": "Tax credits and reductions",
+          "required": ["values"]
+        }
+      }
+    },
+    "is": {
+      "type": "object",
+      "description": "Impôt sur les Sociétés parameters",
+      "properties": {
+        "taux": {
+          "type": "object",
+          "description": "Corporate tax rates",
+          "required": ["values"]
+        }
+      }
+    },
+    "tva": {
+      "type": "object",
+      "description": "Taxe sur la Valeur Ajoutée parameters",
+      "properties": {
+        "taux": {
+          "type": "object",
+          "description": "VAT rates",
+          "required": ["values"]
+        }
+      }
+    },
+    "cotisations": {
+      "type": "object",
+      "description": "Social security contributions",
+      "properties": {
+        "salariales": {
+          "type": "object",
+          "description": "Employee contributions",
+          "required": ["values"]
+        },
+        "patronales": {
+          "type": "object",
+          "description": "Employer contributions",
+          "required": ["values"]
+        },
+        "csg_crds": {
+          "type": "object",
+          "description": "CSG and CRDS rates",
+          "required": ["values"]
+        }
+      }
+    },
+    "aides": {
+      "type": "object",
+      "description": "Social benefits and welfare",
+      "properties": {
+        "rsa": {
+          "type": "object",
+          "description": "Revenu de Solidarité Active",
+          "required": ["values"]
+        },
+        "apl": {
+          "type": "object",
+          "description": "Aides Personnalisées au Logement",
+          "required": ["values"]
+        },
+        "allocations_familiales": {
+          "type": "object",
+          "description": "Family allowances",
+          "required": ["values"]
+        },
+        "prime_activite": {
+          "type": "object",
+          "description": "Activity bonus",
+          "required": ["values"]
+        }
+      }
+    }
+  }
+}
