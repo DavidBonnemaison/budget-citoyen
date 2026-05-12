@@ -55,7 +55,7 @@ Plans:
 - [x] 02-02-PLAN.md — TDD: Profile validation & core types (Profile, LoadError, MicroResult, MacroResult)
 - [x] 02-03-PLAN.md — TDD: Parameter tree loading with date-based resolution & version checking
 - [x] 02-04-PLAN.md — Code generator script (Python→Rust), full variable tree compilation, CI staleness check
-- [ ] 02-05-PLAN.md — TDD: Macro interpolation engine (ShockMatrix, interpn, convex hull, trajectory projection)
+- [x] 02-05-PLAN.md — TDD: Macro interpolation engine (ShockMatrix, interpn, convex hull, trajectory projection)
 - [ ] 02-06-PLAN.md — TDD: Bilingual tax validation & TaxBenefitSystem (32 canonical profiles, ≤1e-6 precision)
 - [ ] 02-07-PLAN.md — WASM boundary layers (MicroEngine + MacroEngine), boundary tests, core test verification
 - [ ] 02-08-PLAN.md — Web Workers (micro/macro workers, orchestrator, index-map), CI pipeline, release profile

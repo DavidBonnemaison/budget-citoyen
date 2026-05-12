@@ -27,8 +27,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **MACRO-01**: L'interpolation multi-linéaire estime la trajectoire du déficit public à partir de la matrice des chocs et des curseurs utilisateur
 - [x] **MACRO-02**: L'interpolation estime la trajectoire de la dette souveraine
 - [x] **MACRO-03**: L'interpolation estime les projections de croissance (PIB) et d'emploi
-- [ ] **MACRO-04**: Les résultats macroéconomiques s'affichent en moins de 200ms après modification d'un curseur
-- [ ] **MACRO-05**: Les taux d'intérêt utilisés sont des taux lissés constants (pas de variation en temps réel avec les marchés)
+- [x] **MACRO-04**: Les résultats macroéconomiques s'affichent en moins de 200ms après modification d'un curseur
+- [x] **MACRO-05**: Les taux d'intérêt utilisés sont des taux lissés constants (pas de variation en temps réel avec les marchés)
 
 ### Interface & Visualisation (Mode Citoyen)
 
@@ -99,8 +99,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MACRO-01 | Phase 2 | Complete |
 | MACRO-02 | Phase 2 | Complete |
 | MACRO-03 | Phase 2 | Complete |
-| MACRO-04 | Phase 2 | Pending |
-| MACRO-05 | Phase 2 | Pending |
+| MACRO-04 | Phase 2 | Complete |
+| MACRO-05 | Phase 2 | Complete |
 | UI-01 | Phase 3 | Pending |
 | UI-02 | Phase 3 | Pending |
 | UI-03 | Phase 3 | Pending |
