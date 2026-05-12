@@ -184,9 +184,11 @@ def inject_dp_privacy(
         decile_eps = epsilon_budget / 5.0
         decile_epsilons = []
 
+        prev_bound = float("-inf")
         for p in [10 * i for i in range(1, 11)]:
             decile_bound = int(np.percentile(revenu, p))
-            decile_data = revenu[revenu <= decile_bound]
+            decile_data = revenu[(revenu > prev_bound) & (revenu <= decile_bound)]
+            prev_bound = decile_bound
             if len(decile_data) > 0:
                 result = prove_dp_guarantee(list(decile_data), epsilon_target=decile_eps)
                 decile_epsilons.append(result["actual_epsilon"])
