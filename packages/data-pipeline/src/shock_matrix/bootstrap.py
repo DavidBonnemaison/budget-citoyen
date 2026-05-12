@@ -12,7 +12,7 @@ All shock vectors are labeled as placeholder or Mesange-derived in metadata.
 """
 
 import numpy as np
-from typing import Optional, Union
+from typing import Optional
 
 # statsmodels is optional — the VAR bootstrap requires it, but the fallback
 # placeholder shocks work without it. Pipelines that have Mesange data access
