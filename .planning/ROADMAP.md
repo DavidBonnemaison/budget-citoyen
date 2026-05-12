@@ -30,12 +30,13 @@ Every phase incorporates its pitfall prevention at the earliest design stage —
   2. A synthetic population of 50,000 profiles is generated with statistically valid multi-variable correlations (âge ↔ patrimoine ↔ revenus), and a formal differential privacy guarantee of ε ≤ 1.0 is proven (not estimated) via the OpenDP framework
   3. The Mésange-derived shock matrix is pre-computed as a compressed 3D look-up table (tax × spend × horizon) under 5 MB with convex hull boundaries documented — out-of-bounds regions are explicitly identified
      4. A bilingual Python→Rust validation framework confirms that 10-20 canonical household profiles produce identical results against the official impots.gouv.fr simulator; all data artifacts are version-locked to the same reference year with CI gate enforcement
-**Plans**: 4 plans
+**Plans**: 5 plans
 
 - [x] 01-01-PLAN.md — YAML tax rules (IR, IS, TVA, cotisations, aides sociales), project foundation (pyproject.toml), JSON Schema definitions, YAML→JSON conversion + validation pipeline (DATA-01)
 - [x] 01-02-PLAN.md — Synthetic population pipeline: CopulaGAN training, OpenDP differential privacy (ε ≤ 1.0), SDMetrics quality evaluation, JSON export with integrity hashes (DATA-02, DATA-03)
 - [x] 01-03-PLAN.md — Shock matrix pre-computation: VAR bootstrap, 3D grid construction (max 4 dims, 10-15 breakpoints), convex hull bounds, Parquet/Zstd export under 5 MB (DATA-04)
 - [x] 01-04-PLAN.md — Bilingual validation framework (10-20 canonical profiles, openfisca-france reference, JSON test fixtures), CI pipeline with version consistency gate and artifact integrity checks
+- [ ] 01-GAP-CLOSURE-PLAN.md — UAT gap closure: YAML parameter completeness (12→30+ files across IR/IS/TVA/cotisations/aides, credits 3→25+ entries), canonical profiles depth (16→32 with systematic 7-dimension coverage)
 
 ### Phase 2: Core Simulation Engines (WASM)
 **Goal**: Both the microeconomic engine (IR, IS, TVA, cotisations, aides sociales) and macroeconomic engine (multi-linear interpolation over shock matrix) execute correctly in the browser via WebAssembly Web Workers, with batch interfaces avoiding serialization overhead, and pass bilingual validation against the OpenFisca Python reference — this is the computational heart of the platform.
@@ -91,7 +92,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Data Foundation & Rules Engine | 0/4 | Not started | - |
+| 1. Data Foundation & Rules Engine | 4/5 | Gaps open | UAT diagnosed 2 gaps |
 | 2. Core Simulation Engines (WASM) | 0/TBD | Not started | - |
 | 3. Interactive Simulation Shell (MVP) | 0/TBD | Not started | - |
 | 4. Enhanced Data & Expert Mode | 0/TBD | Not started | - |
