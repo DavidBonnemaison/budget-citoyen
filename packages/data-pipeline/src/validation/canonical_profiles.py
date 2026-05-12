@@ -361,6 +361,356 @@ CANONICAL_PROFILES: List[Dict[str, Any]] = [
             "openfisca_reference": {},
         },
     },
+    # ── Expanded profiles (gap closure #2: +16 profiles for dimensional coverage) ──
+    # ── Income stratification (threshold gaps at CEHR and IR boundaries) ─────────
+    {
+        "name": "fam_monoparentale_1_enfant",
+        "description": "Parent isolé avec 1 enfant à charge — configuration monoparentale la plus courante en France, test 1.5 parts QF et allocations",
+        "situation_familiale": "divorce",
+        "nb_enfants": 1,
+        "revenus": {
+            "salaires": [22000.0],
+            "pensions": [],
+            "bnc": [],
+            "fonciers": [],
+        },
+        "patrimoine": {
+            "immobilier": 0.0,
+            "financier": 2000.0,
+        },
+        "zone_residence": "zone2",
+        "expected_results": {
+            "impots_gouv_fr": {},
+            "openfisca_reference": {},
+        },
+    },
+    {
+        "name": "celibataire_250k_cehr",
+        "description": "Seuil exact CEHR 3% célibataire — test déclenchement contribution exceptionnelle hauts revenus (D-12)",
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+            "salaires": [250000.0],
+            "pensions": [],
+            "bnc": [],
+            "fonciers": [],
+        },
+        "patrimoine": {
+            "immobilier": 500000.0,
+            "financier": 200000.0,
+        },
+        "zone_residence": "zone1",
+        "expected_results": {
+            "impots_gouv_fr": {},
+            "openfisca_reference": {},
+        },
+    },
+    {
+        "name": "couple_1_enfant",
+        "description": "Couple bi-actif avec 1 enfant — test 2.5 parts QF, plafonnement QF non déclenché",
+        "situation_familiale": "marie",
+        "nb_enfants": 1,
+        "revenus": {
+            "salaires": [45000.0, 35000.0],
+            "pensions": [],
+            "bnc": [],
+            "fonciers": [],
+        },
+        "patrimoine": {
+            "immobilier": 280000.0,
+            "financier": 25000.0,
+        },
+        "zone_residence": "zone2",
+        "expected_results": {
+            "impots_gouv_fr": {},
+            "openfisca_reference": {},
+        },
+    },
+    {
+        "name": "couple_500k_cehr",
+        "description": "Seuil exact CEHR 4% couple — test plafonnement QF et taux marginal maximal couple",
+        "situation_familiale": "marie",
+        "nb_enfants": 0,
+        "revenus": {
+            "salaires": [250000.0, 250000.0],
+            "pensions": [],
+            "bnc": [],
+            "fonciers": [],
+        },
+        "patrimoine": {
+            "immobilier": 800000.0,
+            "financier": 400000.0,
+        },
+        "zone_residence": "zone1",
+        "expected_results": {
+            "impots_gouv_fr": {},
+            "openfisca_reference": {},
+        },
+    },
+    # ── Zone residence (zone3 coverage at multiple income points) ──────────────
+    {
+        "name": "celibataire_smic_zone3",
+        "description": "SMIC en zone détendue — test différentiel APL zone3 vs zone2, taux d'effort logement",
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+            "salaires": [18801.0],
+            "pensions": [],
+            "bnc": [],
+            "fonciers": [],
+        },
+        "patrimoine": {
+            "immobilier": 0.0,
+            "financier": 0.0,
+        },
+        "zone_residence": "zone3",
+        "expected_results": {
+            "impots_gouv_fr": {},
+            "openfisca_reference": {},
+        },
+    },
+    {
+        "name": "retraite_modeste_zone3",
+        "description": "Petite retraite en zone3 — test ASPA éligibilité, taxe foncière modeste, exonération TH",
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+            "salaires": [],
+            "pensions": [15000.0],
+            "bnc": [],
+            "fonciers": [],
+        },
+        "patrimoine": {
+            "immobilier": 120000.0,
+            "financier": 8000.0,
+        },
+        "zone_residence": "zone3",
+        "expected_results": {
+            "impots_gouv_fr": {},
+            "openfisca_reference": {},
+        },
+    },
+    {
+        "name": "independant_bic_zone3",
+        "description": "Commerçant en zone rurale — test cotisations minimales, différentiel CFE zone3, micro-BIC",
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+            "salaires": [],
+            "pensions": [],
+            "bnc": [],
+            "fonciers": [],
+            "bic": 35000.0,
+        },
+        "patrimoine": {
+            "immobilier": 80000.0,
+            "financier": 15000.0,
+        },
+        "zone_residence": "zone3",
+        "expected_results": {
+            "impots_gouv_fr": {},
+            "openfisca_reference": {},
+        },
+    },
+    # ── Asset profiles (IFI/big wealth, pure financial wealth) ─────────────────
+    {
+        "name": "rentier_foncier",
+        "description": "Gros patrimoine immobilier locatif — test IFI, revenus fonciers au réel, déficit foncier imputation",
+        "situation_familiale": "marie",
+        "nb_enfants": 1,
+        "revenus": {
+            "salaires": [70000.0],
+            "pensions": [],
+            "bnc": [],
+            "fonciers": [25000.0, 15000.0, 10000.0],
+        },
+        "patrimoine": {
+            "immobilier": 1500000.0,
+            "financier": 150000.0,
+        },
+        "zone_residence": "zone1",
+        "expected_results": {
+            "impots_gouv_fr": {},
+            "openfisca_reference": {},
+        },
+    },
+    {
+        "name": "jeune_patrimoine_financier",
+        "description": "Jeune cadre avec patrimoine financier uniquement — test flat tax (30% PFU), prélèvements sociaux sur revenus du capital",
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+            "salaires": [50000.0],
+            "pensions": [],
+            "bnc": [],
+            "fonciers": [],
+        },
+        "patrimoine": {
+            "immobilier": 0.0,
+            "financier": 200000.0,
+        },
+        "zone_residence": "zone1",
+        "expected_results": {
+            "impots_gouv_fr": {},
+            "openfisca_reference": {},
+        },
+    },
+    # ── Profession types (agricole, micro-entrepreneur) ─────────────────────────
+    {
+        "name": "agriculteur_zone3",
+        "description": "Exploitant agricole — test régime BA (bénéfice agricole), cotisations MSA, moyenne triennale",
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+            "salaires": [],
+            "pensions": [],
+            "bnc": [],
+            "fonciers": [],
+            "benefice_agricole": [28000.0],
+        },
+        "patrimoine": {
+            "immobilier": 180000.0,
+            "financier": 12000.0,
+        },
+        "zone_residence": "zone3",
+        "expected_results": {
+            "impots_gouv_fr": {},
+            "openfisca_reference": {},
+        },
+    },
+    {
+        "name": "auto_entrepreneur",
+        "description": "Micro-entrepreneur — test versement libératoire IR, micro-social, chiffre d'affaires vs bénéfice",
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+            "salaires": [],
+            "pensions": [],
+            "bnc": [],
+            "fonciers": [],
+            "micro_bic": 25000.0,
+            "versement_liberatoire": True,
+        },
+        "patrimoine": {
+            "immobilier": 0.0,
+            "financier": 5000.0,
+        },
+        "zone_residence": "zone2",
+        "expected_results": {
+            "impots_gouv_fr": {},
+            "openfisca_reference": {},
+        },
+    },
+    # ── Social benefit edge cases ─────────────────────────────────────────────
+    {
+        "name": "handicape_aah",
+        "description": "Bénéficiaire AAH à taux plein — test allocation adulte handicapé, couverture santé solidaire, exonération taxe habitation",
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+            "salaires": [0.0],
+            "pensions": [0.0],
+            "bnc": [],
+            "fonciers": [],
+            "allocations_chomage": 0.0,
+            "aa_h": 12192.0,
+        },
+        "patrimoine": {
+            "immobilier": 0.0,
+            "financier": 1000.0,
+        },
+        "zone_residence": "zone2",
+        "expected_results": {
+            "impots_gouv_fr": {},
+            "openfisca_reference": {},
+        },
+    },
+    {
+        "name": "senior_aspa",
+        "description": "Bénéficiaire ASPA seul — test minimum vieillesse, couverture maladie universelle, récupération sur succession potentielle (ASPA = complément différentiel, ressources portées à 12 144 €)",
+        "situation_familiale": "veuf",
+        "nb_enfants": 0,
+        "revenus": {
+            "salaires": [],
+            "pensions": [5000.0],
+            "bnc": [],
+            "fonciers": [],
+        },
+        "patrimoine": {
+            "immobilier": 80000.0,
+            "financier": 3000.0,
+        },
+        "zone_residence": "zone3",
+        "expected_results": {
+            "impots_gouv_fr": {},
+            "openfisca_reference": {},
+        },
+    },
+    {
+        "name": "jeune_precaire",
+        "description": "Jeune en emploi partiel + chômage — test cumul salaire-ARE, prime d'activité jeunes, RSA jeune actif (< 25 ans, condition d'activité)",
+        "situation_familiale": "celibataire",
+        "nb_enfants": 0,
+        "revenus": {
+            "salaires": [10000.0],
+            "pensions": [],
+            "bnc": [],
+            "fonciers": [],
+            "allocations_chomage": 8000.0,
+        },
+        "patrimoine": {
+            "immobilier": 0.0,
+            "financier": 500.0,
+        },
+        "zone_residence": "zone2",
+        "expected_results": {
+            "impots_gouv_fr": {},
+            "openfisca_reference": {},
+        },
+    },
+    # ── Cross-category combinations ──────────────────────────────────────────
+    {
+        "name": "retraite_proprietaire_modeste",
+        "description": "Couple retraité propriétaire modeste — test croisé retraite × patrimoine, décote IR, exonération taxe foncière (âge)",
+        "situation_familiale": "marie",
+        "nb_enfants": 0,
+        "revenus": {
+            "salaires": [],
+            "pensions": [18000.0, 12000.0],
+            "bnc": [],
+            "fonciers": [],
+        },
+        "patrimoine": {
+            "immobilier": 200000.0,
+            "financier": 30000.0,
+        },
+        "zone_residence": "zone2",
+        "expected_results": {
+            "impots_gouv_fr": {},
+            "openfisca_reference": {},
+        },
+    },
+    {
+        "name": "independant_famille_3enfants",
+        "description": "Croisé indépendant × famille nombreuse en zone détendue — test cumul allocations familiales, ARS, Paje, crédits d'impôt garde + scolarité, et cotisations minimales",
+        "situation_familiale": "marie",
+        "nb_enfants": 3,
+        "revenus": {
+            "salaires": [],
+            "pensions": [],
+            "bnc": [45000.0],
+            "fonciers": [],
+        },
+        "patrimoine": {
+            "immobilier": 220000.0,
+            "financier": 20000.0,
+        },
+        "zone_residence": "zone3",
+        "expected_results": {
+            "impots_gouv_fr": {},
+            "openfisca_reference": {},
+        },
+    },
 ]
 
 

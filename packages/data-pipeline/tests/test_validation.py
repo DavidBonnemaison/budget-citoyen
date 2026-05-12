@@ -16,13 +16,13 @@ if str(SRC_DIR) not in sys.path:
 class TestCanonicalProfiles:
     """Tests for canonical household profile definitions."""
 
-    def test_profile_count_at_least_fourteen(self):
-        """At least 14 profiles defined (D-12 lower bound)."""
+    def test_profile_count_at_least_thirty(self):
+        """At least 30 profiles defined (expanded from 14 per gap closure UAT #2)."""
         from validation.canonical_profiles import CANONICAL_PROFILES
 
         count = len(CANONICAL_PROFILES)
-        assert count >= 14, (
-            f"Expected at least 14 canonical profiles, got {count}"
+        assert count >= 30, (
+            f"Expected at least 30 canonical profiles, got {count}"
         )
 
     def test_all_profiles_have_required_fields(self):
@@ -171,4 +171,4 @@ class TestExportFixtures:
 
         assert "test_fixtures" in doc
         assert doc["reference_year"] == 2025
-        assert len(doc["test_fixtures"]) >= 14
+        assert len(doc["test_fixtures"]) >= 30
