@@ -9,3 +9,17 @@ parameters:
     description: Allocations familiales — modulation selon revenus (3 tranches), majoration pour âge
   - file: prime_activite.yaml
     description: Prime d'activité — montant forfaitaire 622,63 €, bonification individuelle, taux de cumul 61%
+  - file: aah.yaml
+    description: Allocation aux Adultes Handicapés — 1 016,05 €/mois, plafonds de ressources, cumul salaire
+  - file: aspa.yaml
+    description: Allocation de Solidarité aux Personnes Âgées — minimum vieillesse, 1 012,02 € personne seule
+  - file: css.yaml
+    description: Complémentaire Santé Solidaire — plafonds gratuit/participatif, participation par âge
+  - file: cheque_energie.yaml
+    description: Chèque énergie — 48 à 277 € selon RFR/UC (4 tranches)
+  - file: allocation_rentree_scolaire.yaml
+    description: Allocation de Rentrée Scolaire — 416-455 € par enfant, plafonds de ressources
+  - file: paje.yaml
+    description: Prestation d'Accueil du Jeune Enfant — prime naissance, allocation base, CMG, PreParE
+  - file: are.yaml
+    description: Allocation d'Aide au Retour à l'Emploi — calcul SJR, durées, plafonds

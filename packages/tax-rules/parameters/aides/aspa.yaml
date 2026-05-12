@@ -1,0 +1,27 @@
+description: Allocation de Solidarité aux Personnes Âgées (ASPA) — minimum vieillesse, plafonds et conditions
+metadata:
+  reference: https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049053152
+  unit: currency-EUR
+values:
+  2025-01-01:
+    value:
+      montant_mensuel_personne_seule:
+        value: 1012.02
+        description: Montant mensuel ASPA pour une personne seule (1 012,02 € en 2025)
+      montant_mensuel_couple:
+        value: 1571.16
+        description: Montant mensuel ASPA pour un couple (1 571,16 € en 2025)
+      plafond_ressources_personne_seule:
+        value: 12144.24
+        description: Plafond de ressources annuel pour une personne seule (12 144,24 € = 1 012,02 × 12)
+      plafond_ressources_couple:
+        value: 18853.92
+        description: Plafond de ressources annuel pour un couple (18 853,92 € = 1 571,16 × 12)
+      age_minimum:
+        value: 65
+        description: Âge minimum d'éligibilité (65 ans, sauf inaptitude au travail)
+      condition_residence:
+        description: Résidence stable et régulière en France au moins 6 mois par an
+      recuperation_succession:
+        seuil_actif_net: 39000
+        description: "Récupérable sur succession si actif net ≥ 39 000 € (plafond de récupération annuel)"

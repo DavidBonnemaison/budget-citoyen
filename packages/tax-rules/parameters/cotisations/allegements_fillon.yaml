@@ -1,0 +1,28 @@
+description: Réduction générale des cotisations patronales (ex-réduction Fillon) — allègements de cotisations sur les bas salaires
+metadata:
+  reference: https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000049053140
+  unit: /1
+values:
+  2025-01-01:
+    value:
+      coefficient_max_moins_50:
+        value: 0.4257
+        description: Coefficient maximum T pour les entreprises de moins de 50 salariés (0,4257 en 2025)
+      coefficient_max_plus_50:
+        value: 0.4284
+        description: Coefficient maximum T pour les entreprises de 50 salariés et plus (0,4284 en 2025)
+      smic_annuel_151_67h:
+        value: 21621.60
+        description: SMIC annualisé pour 151,67 heures par mois (21 621,60 € en 2025)
+      plafond_remuneration_smic_mult:
+        value: 1.6
+        description: Plafond de rémunération en multiple du SMIC (1,6 × SMIC = 34 594,56 € annuel)
+      cas_particuliers:
+        alsace_moselle:
+          description: Coefficient modifié pour le régime Alsace-Moselle (cotisations maladie et retraite différentes)
+        temps_partiel:
+          description: SMIC annualisé proratisé selon la durée contractuelle du travail
+      cumul_autres_exonerations:
+        description: La réduction est calculée après déduction des autres exonérations de cotisations patronales
+      formule:
+        description: "Coefficient = (T / 0,6) × (1,6 × SMIC annuel / Rémunération annuelle - 1). Réduction = Coefficient × Rémunération annuelle."
