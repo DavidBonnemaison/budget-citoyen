@@ -28,8 +28,8 @@ COLUMNS = [
 ]
 
 # Valid categorical values
-SITUATION_FAMILIALE_VALUES = ["celibataire", "marie", "pacse", "veuf", "divorce"]
-TYPE_ACTIVITE_VALUES = ["salarie", "independant", "retraite", "chomeur", "etudiant", "inactif"]
+SITUATION_FAMILIALE_VALUES = ["celibataire", "marie", "pacse", "veuf", "divorce", "separe"]
+TYPE_ACTIVITE_VALUES = ["salarie", "independant", "fonctionnaire", "retraite", "chomeur", "etudiant", "inactif"]
 ZONE_RESIDENCE_VALUES = ["zone1", "zone2", "zone3"]
 
 
