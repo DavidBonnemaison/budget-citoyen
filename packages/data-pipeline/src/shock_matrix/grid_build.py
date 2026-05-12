@@ -310,9 +310,6 @@ def _smolyak_clenshaw_curtis(
             return 1
         return (1 << (i - 1)) + 1  # 2^{i-1} + 1
 
-    # Collect all unique points
-    points_set = set()
-
     # Iterate over all index vectors with sum between q-d+1 and q
     # For practical use: level 2 with 4 dims → q=6, index sums 3..6
     min_sum = max(n_dims, q - n_dims + 1)
