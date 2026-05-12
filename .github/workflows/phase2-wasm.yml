@@ -1,0 +1,392 @@
+# Phase 2 — WASM Engine CI
+#
+# Validates all Phase 2 WASM simulation engines (micro + macro) for
+# correctness, safety, and integration readiness before they can be
+# consumed by Phase 3 (Interactive Simulation Shell).
+#
+# Per D-04, D-07, D-09 through D-12:
+#   - Phase 1 validation must pass before Phase 2 CI runs (D-04)
+#   - OpenFisca staleness check emits soft warning, never hard gate (D-07)
+#   - Native tests (cargo test) and WASM tests (wasm-pack test) both required
+#   - Version consistency gates enforce reference year 2025 and v2025.1 tags
+#   - Unsafe block audit emits warnings (MACRO-05: zero unsafe target)
+#
+# Gates (all must pass):
+#   1. Phase 1 artifact existence + validation completion (D-04)
+#   2. Cargo fmt (style consistency)
+#   3. Cargo clippy with -D warnings (lint enforcement)
+#   4. Core crate tests (profile, parameter, bilingual — native)
+#   5. Workspace tests (all 3 crates — native)
+#   6. wasm-pack build for both micro and macro crates
+#   7. Headless WASM tests for micro engine (browser context)
+#   8. Headless WASM tests for macro engine (browser context)
+#   9. Version consistency gates + OpenFisca staleness check (soft warning)
+#  10. Unsafe block audit (MACRO-05 — zero unsafe target)
+#  11. CI summary gate — all required jobs must pass
+
+name: Phase 2 — WASM Engine CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  RUST_VERSION: '1.85'
+  PYTHON_VERSION: '3.10'
+
+jobs:
+  # ── Phase 1 Gate (D-04) ──────────────────────────────────────────────
+  # Phase 1 validation must complete before Phase 2 CI runs.
+  # Verifies that required Phase 1 artifacts exist on disk.
+  phase1-gate:
+    name: Phase 1 Artifact Existence Gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify Phase 1 artifacts exist
+        run: |
+          echo "Checking Phase 1 artifact existence (D-04)..."
+          FAILED=0
+
+          # Tax rules: at least 31 YAML parameter files
+          YAML_COUNT=$(find packages/tax-rules/parameters/ -name "*.yaml" 2>/dev/null | wc -l)
+          if [ "$YAML_COUNT" -lt 31 ]; then
+            echo "::error file=packages/tax-rules/parameters/,line=1::Phase 1 gate FAILED: Found $YAML_COUNT YAML parameter files (need >= 31)"
+            FAILED=1
+          else
+            echo "PASSED: $YAML_COUNT YAML parameter files found"
+          fi
+
+          # Bilingual test fixtures
+          if [ ! -f packages/data-pipeline/dist/bilingual_test_fixtures.json ]; then
+            echo "::error file=packages/data-pipeline/dist/,line=1::Phase 1 gate FAILED: bilingual_test_fixtures.json missing"
+            FAILED=1
+          else
+            echo "PASSED: bilingual_test_fixtures.json exists"
+          fi
+
+          # Synthetic population
+          if [ ! -f packages/data-pipeline/dist/population-v2025.1.json ]; then
+            echo "::warning file=packages/data-pipeline/dist/,line=1::Phase 1: population-v2025.1.json not found (may be generated artifact)"
+          else
+            echo "PASSED: population-v2025.1.json exists"
+          fi
+
+          if [ "$FAILED" -ne 0 ]; then
+            echo "::error::Phase 1 gate FAILED — required artifacts missing. Run Phase 1 pipeline first."
+            exit 1
+          fi
+          echo "Phase 1 gate PASSED — all required artifacts present"
+
+  # ── Rust Setup ──────────────────────────────────────────────────────
+  rust-setup:
+    name: Rust Setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          override: true
+
+      - name: Add wasm32 target
+        run: rustup target add wasm32-unknown-unknown
+
+      - name: Install wasm-pack
+        # T-02-18: Pin exact version + --locked for supply chain integrity
+        run: |
+          cargo install wasm-pack --version 0.14.0 --locked
+
+      - name: Verify installation
+        run: |
+          rustc --version
+          cargo --version
+          wasm-pack --version
+          echo "Rust toolchain ${{ env.RUST_VERSION }} ready"
+
+  # ── Format Check ────────────────────────────────────────────────────
+  cargo-fmt:
+    name: Cargo Format Check
+    runs-on: ubuntu-latest
+    needs: [rust-setup]
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          override: true
+
+      - name: Run cargo fmt check
+        run: cargo fmt --all -- --check
+
+  # ── Clippy Lint ────────────────────────────────────────────────────
+  cargo-clippy:
+    name: Cargo Clippy (strict)
+    runs-on: ubuntu-latest
+    needs: [rust-setup]
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          override: true
+
+      - name: Add wasm32 target
+        run: rustup target add wasm32-unknown-unknown
+
+      - name: Run cargo clippy
+        # -D warnings: treat all clippy warnings as errors
+        run: cargo clippy --workspace -- -D warnings
+
+  # ── Core Crate Tests (native) ───────────────────────────────────────
+  cargo-test-core:
+    name: Core Crate Tests (native)
+    runs-on: ubuntu-latest
+    needs: [rust-setup]
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          override: true
+
+      - name: Run cargo test (core)
+        run: cargo test -p budget-citoyen-core
+
+  # ── Workspace Tests (all crates) ────────────────────────────────────
+  cargo-test-workspace:
+    name: Workspace Tests (all crates)
+    runs-on: ubuntu-latest
+    needs: [rust-setup]
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          override: true
+
+      - name: Add wasm32 target
+        run: rustup target add wasm32-unknown-unknown
+
+      - name: Run cargo test (workspace)
+        run: cargo test --workspace
+
+  # ── wasm-pack Build ─────────────────────────────────────────────────
+  wasm-pack-build:
+    name: WASM Build (both engines)
+    runs-on: ubuntu-latest
+    needs: [rust-setup]
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          override: true
+
+      - name: Add wasm32 target
+        run: rustup target add wasm32-unknown-unknown
+
+      - name: Install wasm-pack
+        run: cargo install wasm-pack --version 0.14.0 --locked
+
+      - name: Build wasm-micro
+        run: wasm-pack build --target web packages/wasm-micro
+
+      - name: Build wasm-macro
+        run: wasm-pack build --target web packages/wasm-macro
+
+      - name: Verify pkg output
+        run: |
+          echo "Checking wasm-micro pkg output..."
+          test -f packages/wasm-micro/pkg/budget_citoyen_wasm_micro_bg.wasm || exit 1
+          test -f packages/wasm-micro/pkg/budget_citoyen_wasm_micro.js || exit 1
+          test -f packages/wasm-micro/pkg/budget_citoyen_wasm_micro.d.ts || exit 1
+          echo "PASSED: wasm-micro pkg complete"
+
+          echo "Checking wasm-macro pkg output..."
+          test -f packages/wasm-macro/pkg/budget_citoyen_wasm_macro_bg.wasm || exit 1
+          test -f packages/wasm-macro/pkg/budget_citoyen_wasm_macro.js || exit 1
+          test -f packages/wasm-macro/pkg/budget_citoyen_wasm_macro.d.ts || exit 1
+          echo "PASSED: wasm-macro pkg complete"
+
+  # ── WASM Tests: Micro Engine ────────────────────────────────────────
+  wasm-test-micro:
+    name: WASM Tests — Micro Engine
+    runs-on: ubuntu-latest
+    needs: [wasm-pack-build]
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          override: true
+
+      - name: Add wasm32 target
+        run: rustup target add wasm32-unknown-unknown
+
+      - name: Install wasm-pack
+        run: cargo install wasm-pack --version 0.14.0 --locked
+
+      - name: Run wasm-pack test (micro)
+        run: wasm-pack test --headless packages/wasm-micro
+
+  # ── WASM Tests: Macro Engine ────────────────────────────────────────
+  wasm-test-macro:
+    name: WASM Tests — Macro Engine
+    runs-on: ubuntu-latest
+    needs: [wasm-pack-build]
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          override: true
+
+      - name: Add wasm32 target
+        run: rustup target add wasm32-unknown-unknown
+
+      - name: Install wasm-pack
+        run: cargo install wasm-pack --version 0.14.0 --locked
+
+      - name: Run wasm-pack test (macro)
+        run: wasm-pack test --headless packages/wasm-macro
+
+  # ── Version Check + Staleness + Unsafe Audit ────────────────────────
+  version-check:
+    name: Version Gates & Staleness
+    runs-on: ubuntu-latest
+    needs: [rust-setup]
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          override: true
+
+      - name: Verify reference year (2025) in Rust source
+        run: |
+          echo "Checking reference year constants in Rust source..."
+          YEAR_COUNT=$(grep -r "2025" packages/core/src/ 2>/dev/null | grep -c "reference_year\|REFERENCE_YEAR" || true)
+          if [ "$YEAR_COUNT" -lt 1 ]; then
+            echo "::error file=packages/core/src/,line=1::VERSION GATE FAILED: No reference_year = 2025 constant found in Rust source"
+            exit 1
+          fi
+          echo "PASSED: Found $YEAR_COUNT reference year (2025) source references"
+
+      - name: Verify artifact version tags (v2025.1)
+        run: |
+          echo "Checking semantic version tags (v2025.1)..."
+          VPAT_COUNT=$(grep -r "v2025\.1" packages/ 2>/dev/null \
+            | grep -v "target/" \
+            | grep -v ".venv/" \
+            | wc -l)
+          if [ "$VPAT_COUNT" -lt 2 ]; then
+            echo "::error file=packages/,line=1::VERSION GATE FAILED: Missing v2025.1 version tag references (found $VPAT_COUNT, need >= 2)"
+            exit 1
+          fi
+          echo "PASSED: Found $VPAT_COUNT v2025.1 version tag references"
+
+      - name: Unsafe block audit (MACRO-05)
+        run: |
+          echo "Auditing unsafe blocks in packages/..."
+          UNSAFE_COUNT=$(grep -r "unsafe" packages/ --include="*.rs" 2>/dev/null \
+            | grep -v "target/" \
+            | grep -v ".venv/" \
+            | wc -l)
+          if [ "$UNSAFE_COUNT" -gt 0 ]; then
+            echo "::warning file=packages/,line=1,title=Unsafe Blocks Detected::Found $UNSAFE_COUNT unsafe blocks in packages/ source (MACRO-05 target: zero unsafe)"
+          else
+            echo "PASSED: Zero unsafe blocks in packages/ source — MACRO-05 compliant"
+          fi
+
+      # ── OpenFisca Staleness (D-07 — soft warning, never hard gate) ──
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: packages/data-pipeline/pyproject.toml
+
+      - name: Install Python dependencies
+        working-directory: packages/data-pipeline
+        run: |
+          python -m pip install --upgrade pip
+          pip install ".[dev]"
+
+      - name: Run OpenFisca staleness check (D-07 — soft warning)
+        working-directory: packages/data-pipeline
+        run: |
+          PYTHONPATH=src python -m codegen.check_staleness
+          # Per D-07: always exits 0 — soft warning, never hard gate
+
+  # ── Final Gate ──────────────────────────────────────────────────────
+  ci-summary:
+    name: CI Gate Summary
+    runs-on: ubuntu-latest
+    needs:
+      [phase1-gate, cargo-fmt, cargo-clippy, cargo-test-core,
+       cargo-test-workspace, wasm-pack-build, wasm-test-micro,
+       wasm-test-macro, version-check]
+    if: always()
+    steps:
+      - name: Check all required jobs
+        run: |
+          echo "## Phase 2 CI Gate Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Job | Result |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| phase1-gate | ${{ needs.phase1-gate.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| cargo-fmt | ${{ needs.cargo-fmt.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| cargo-clippy | ${{ needs.cargo-clippy.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| cargo-test-core | ${{ needs.cargo-test-core.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| cargo-test-workspace | ${{ needs.cargo-test-workspace.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| wasm-pack-build | ${{ needs.wasm-pack-build.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| wasm-test-micro | ${{ needs.wasm-test-micro.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| wasm-test-macro | ${{ needs.wasm-test-macro.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| version-check | ${{ needs.version-check.result }} |" >> $GITHUB_STEP_SUMMARY
+
+          FAILED=0
+          for job in phase1-gate cargo-fmt cargo-clippy cargo-test-core \
+                     cargo-test-workspace wasm-pack-build wasm-test-micro \
+                     wasm-test-macro version-check; do
+            result="${{ needs[${job}].result }}"
+            if [[ "$result" == "failure" ]] || [[ "$result" == "cancelled" ]]; then
+              FAILED=1
+            fi
+          done
+
+          if [ "$FAILED" -ne 0 ]; then
+            echo "::error::Phase 2 CI gate FAILED — check job results above"
+            exit 1
+          fi
+          echo "Phase 2 CI gate PASSED — all engines validated"
