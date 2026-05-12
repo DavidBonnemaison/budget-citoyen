@@ -9,10 +9,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Data Foundation & Rules as Code
 
-- [ ] **DATA-01**: Les paramètres fiscaux (IR, IS, TVA, cotisations, aides sociales) sont encodés en YAML sous forme de Rules as Code, convertibles en JSON pour le moteur WASM
-- [ ] **DATA-02**: Le jeu de données synthétiques (50 000 profils) est généré avec préservation des dépendances entre variables (âge ↔ patrimoine ↔ revenus)
-- [ ] **DATA-03**: La confidentialité différentielle (ε ≤ 1,0) est implémentée dans le pipeline de génération de données synthétiques
-- [ ] **DATA-04**: La matrice des chocs macroéconomiques (dérivée du modèle Mésange) est pré-calculée et stockée en look-up table compressée
+- [x] **DATA-01**: Les paramètres fiscaux (IR, IS, TVA, cotisations, aides sociales) sont encodés en YAML sous forme de Rules as Code, convertibles en JSON pour le moteur WASM
+- [x] **DATA-02**: Le jeu de données synthétiques (50 000 profils) est généré avec préservation des dépendances entre variables (âge ↔ patrimoine ↔ revenus)
+- [x] **DATA-03**: La confidentialité différentielle (ε ≤ 1,0) est implémentée dans le pipeline de génération de données synthétiques
+- [x] **DATA-04**: La matrice des chocs macroéconomiques (dérivée du modèle Mésange) est pré-calculée et stockée en look-up table compressée
 
 ### Microsimulation Engine
 
@@ -87,10 +87,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DATA-01 | Phase 1 | Pending |
-| DATA-02 | Phase 1 | Pending |
-| DATA-03 | Phase 1 | Pending |
-| DATA-04 | Phase 1 | Pending |
+| DATA-01 | Phase 1 | Complete |
+| DATA-02 | Phase 1 | Complete |
+| DATA-03 | Phase 1 | Complete |
+| DATA-04 | Phase 1 | Complete |
 | MICRO-01 | Phase 2 | Pending |
 | MICRO-02 | Phase 2 | Pending |
 | MICRO-03 | Phase 2 | Pending |

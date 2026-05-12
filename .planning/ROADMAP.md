@@ -32,10 +32,10 @@ Every phase incorporates its pitfall prevention at the earliest design stage —
      4. A bilingual Python→Rust validation framework confirms that 10-20 canonical household profiles produce identical results against the official impots.gouv.fr simulator; all data artifacts are version-locked to the same reference year with CI gate enforcement
 **Plans**: 4 plans
 
-- [ ] 01-01-PLAN.md — YAML tax rules (IR, IS, TVA, cotisations, aides sociales), project foundation (pyproject.toml), JSON Schema definitions, YAML→JSON conversion + validation pipeline (DATA-01)
-- [ ] 01-02-PLAN.md — Synthetic population pipeline: CopulaGAN training, OpenDP differential privacy (ε ≤ 1.0), SDMetrics quality evaluation, JSON export with integrity hashes (DATA-02, DATA-03)
-- [ ] 01-03-PLAN.md — Shock matrix pre-computation: VAR bootstrap, 3D grid construction (max 4 dims, 10-15 breakpoints), convex hull bounds, Parquet/Zstd export under 5 MB (DATA-04)
-- [ ] 01-04-PLAN.md — Bilingual validation framework (10-20 canonical profiles, openfisca-france reference, JSON test fixtures), CI pipeline with version consistency gate and artifact integrity checks
+- [x] 01-01-PLAN.md — YAML tax rules (IR, IS, TVA, cotisations, aides sociales), project foundation (pyproject.toml), JSON Schema definitions, YAML→JSON conversion + validation pipeline (DATA-01)
+- [x] 01-02-PLAN.md — Synthetic population pipeline: CopulaGAN training, OpenDP differential privacy (ε ≤ 1.0), SDMetrics quality evaluation, JSON export with integrity hashes (DATA-02, DATA-03)
+- [x] 01-03-PLAN.md — Shock matrix pre-computation: VAR bootstrap, 3D grid construction (max 4 dims, 10-15 breakpoints), convex hull bounds, Parquet/Zstd export under 5 MB (DATA-04)
+- [x] 01-04-PLAN.md — Bilingual validation framework (10-20 canonical profiles, openfisca-france reference, JSON test fixtures), CI pipeline with version consistency gate and artifact integrity checks
 
 ### Phase 2: Core Simulation Engines (WASM)
 **Goal**: Both the microeconomic engine (IR, IS, TVA, cotisations, aides sociales) and macroeconomic engine (multi-linear interpolation over shock matrix) execute correctly in the browser via WebAssembly Web Workers, with batch interfaces avoiding serialization overhead, and pass bilingual validation against the OpenFisca Python reference — this is the computational heart of the platform.
