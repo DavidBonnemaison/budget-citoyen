@@ -30,3 +30,6 @@ Thumbs.db
 
 # Node (future frontend)
 node_modules/
+
+# GSD debug artifacts (transient)
+.planning/debug/
