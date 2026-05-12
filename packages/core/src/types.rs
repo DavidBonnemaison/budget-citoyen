@@ -87,8 +87,20 @@ pub enum LoadError {
     InvalidParts(f64),
 
     /// Un champ obligatoire est absent lors de la désérialisation.
-    #[error("Champ obligatoire manquant : {0}")]
-    MissingField(String),
+    #[error("Champ obligatoire manquant : {field}")]
+    MissingField { field: String },
+
+    /// La version du fichier de paramètres ne correspond pas à la version attendue.
+    #[error("Version mismatch: expected '{expected}', got '{actual}'")]
+    VersionMismatch { expected: String, actual: String },
+
+    /// Une clé de paramètre demandée n'existe pas dans l'arbre chargé.
+    #[error("Parameter key not found: {0}")]
+    KeyNotFound(String),
+
+    /// Erreur de parsing JSON lors du chargement des paramètres.
+    #[error("JSON parse error: {0}")]
+    ParseError(String),
 }
 
 impl Profile {
