@@ -65,7 +65,7 @@
     },
     "zone_residence": {
       "type": "string",
-      "enum": ["zone_1", "zone_2", "zone_3"],
+      "enum": ["zone1", "zone2", "zone3"],
       "description": "Geographic zone of residence (1 = Île-de-France, 2 = major cities, 3 = rest of territory)"
     },
     "enfants_a_charge": {
