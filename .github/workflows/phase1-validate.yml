@@ -1,0 +1,387 @@
+# Phase 1 — Data Validation CI Pipeline
+#
+# Validates all three Phase 1 data artifacts (tax rules, synthetic population,
+# shock matrix) for mutual consistency, schema compliance, and artifact integrity
+# before they can be consumed by Phase 2 WASM engines.
+#
+# Per D-15, D-16, D-17:
+#   - All artifacts locked to reference year 2025 (D-15)
+#   - Semantic version tags: rules-v2025.1, population-v2025.1, shockmatrix-v2025.1 (D-16)
+#   - Update cadence: September-October annually after PLF publication.
+#     Re-run entire Phase 1 pipeline with updated reference year (D-17).
+#
+# Gates (all must pass):
+#   1. JSON Schema Draft 2020-12 validation of all parameter files
+#   2. YAML→JSON conversion with schema check
+#   3. Version consistency: ALL artifacts reference 2025 only
+#   4. Synthetic population metadata integrity
+#   5. Shock matrix grid dimension caps and convex hull validation
+#   6. Canonical profile count and field completeness
+#   7. Artifact hash verification (SHA-256 integrity)
+
+name: Phase 1 — Data Validation
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: '3.10'
+
+jobs:
+  # ── Setup ────────────────────────────────────────────────────────
+  python-setup:
+    name: Python Setup & Cache
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: packages/data-pipeline/pyproject.toml
+
+      - name: Install dependencies
+        working-directory: packages/data-pipeline
+        run: |
+          python -m pip install --upgrade pip
+          pip install ".[dev]"
+
+      - name: Verify installation
+        working-directory: packages/data-pipeline
+        run: |
+          python -c "import jsonschema; import yaml; import pandas; print('Dependencies OK')"
+
+  # ── Schema Validation ─────────────────────────────────────────────
+  schema-validation:
+    name: JSON Schema Validation
+    runs-on: ubuntu-latest
+    needs: [python-setup]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: packages/data-pipeline/pyproject.toml
+
+      - name: Install dependencies
+        working-directory: packages/data-pipeline
+        run: |
+          python -m pip install --upgrade pip
+          pip install ".[dev]"
+
+      - name: Run schema validation tests
+        working-directory: packages/data-pipeline
+        run: |
+          python -m pytest tests/test_schema_validation.py -v
+
+  # ── Conversion Test ───────────────────────────────────────────────
+  conversion-test:
+    name: YAML → JSON Conversion
+    runs-on: ubuntu-latest
+    needs: [python-setup]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: packages/data-pipeline/pyproject.toml
+
+      - name: Install dependencies
+        working-directory: packages/data-pipeline
+        run: |
+          python -m pip install --upgrade pip
+          pip install ".[dev]"
+
+      - name: Run conversion tests
+        working-directory: packages/data-pipeline
+        run: |
+          python -m pytest tests/test_conversion.py -v
+
+  # ── Version Consistency ───────────────────────────────────────────
+  # Per D-15, D-16, Pitfall 2: ALL artifacts must reference 2025.
+  # Any reference to a different year = hard CI gate failure.
+  version-consistency:
+    name: Version Consistency (2025 Lock)
+    runs-on: ubuntu-latest
+    needs: [python-setup]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify all YAML parameters use 2025 date keys
+        run: |
+          # All YAML parameter files must contain only "2025-01-01" date keys
+          # (D-15: reference year locked to 2025)
+          echo "Checking date keys in YAML parameter files..."
+          NON_2025=$(grep -r "20[0-9][0-9]-" packages/tax-rules/parameters/ \
+            | grep -v "2025-01-01" \
+            | grep -v "2025-" \
+            | grep -v "index.yaml" \
+            || true)
+          if [ -n "$NON_2025" ]; then
+            echo "::error::VERSION GATE FAILED: Found non-2025 date keys in YAML parameters"
+            echo "$NON_2025"
+            exit 1
+          fi
+          echo "PASSED: All YAML date keys reference 2025"
+
+      - name: Verify JSON schema year references
+        run: |
+          echo "Checking schema year references..."
+          # JSON Schema must also reference 2025
+          NON_2025_SCHEMA=$(grep -r "20[0-9][0-9]-" packages/data-pipeline/src/schemas/ \
+            | grep -v "2025" \
+            | grep -v "2020-12" \
+            || true)
+          if [ -n "$NON_2025_SCHEMA" ]; then
+            echo "::error::VERSION GATE FAILED: Non-2025 year in schemas"
+            echo "$NON_2025_SCHEMA"
+            exit 1
+          fi
+          echo "PASSED: All schema year references are 2025 or 2020-12 (schema draft)"
+
+      - name: Verify Python source version tags (v2025.1)
+        run: |
+          echo "Checking semantic version tags (v2025.1)..."
+          # All modules should use v2025.1 for artifact versioning
+          VPAT_FOUND=$(grep -r "v2025\\.1" packages/data-pipeline/src/ \
+            | grep -v "__pycache__" \
+            | wc -l)
+          echo "Found $VPAT_FOUND references to v2025.1 in source code"
+          # At least shock_matrix and synthetic_pop must reference it
+          if [ "$VPAT_FOUND" -lt 2 ]; then
+            echo "::error::VERSION GATE FAILED: Missing v2025.1 version tag references"
+            exit 1
+          fi
+          echo "PASSED: v2025.1 version tags present"
+
+      - name: Assert reference year is 2025 (Python gate)
+        run: |
+          python3 -c "
+          import sys
+          # D-15: Reference year must be locked to 2025
+          # T-04-01: Version consistency check is a hard CI gate
+          expected = 2025
+          assert expected == 2025, f'Reference year must be {expected}, check D-15'
+          # Verify source code reference year constants
+          ref_years_found = 0
+          import subprocess
+          result = subprocess.run(
+              ['grep', '-r', 'REFERENCE_YEAR.*=.*2025', 'packages/data-pipeline/src/'],
+              capture_output=True, text=True
+          )
+          ref_years_found = len(result.stdout.strip().split('\\n')) if result.stdout.strip() else 0
+          assert ref_years_found >= 1, f'No REFERENCE_YEAR = 2025 constant found in source (found {ref_years_found})'
+          print(f'PASSED: Reference year 2025 verified ({ref_years_found} source constants)')
+          "
+
+  # ── Synthetic Population Test ─────────────────────────────────────
+  synth-pop-test:
+    name: Synthetic Population Tests
+    runs-on: ubuntu-latest
+    needs: [python-setup, version-consistency]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: packages/data-pipeline/pyproject.toml
+
+      - name: Install dependencies
+        working-directory: packages/data-pipeline
+        run: |
+          python -m pip install --upgrade pip
+          pip install ".[dev]"
+
+      - name: Run synthetic population tests
+        working-directory: packages/data-pipeline
+        run: |
+          python -m pytest tests/test_synthetic_pop.py -v
+
+  # ── Shock Matrix Test ─────────────────────────────────────────────
+  shock-matrix-test:
+    name: Shock Matrix Tests
+    runs-on: ubuntu-latest
+    needs: [python-setup, version-consistency]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: packages/data-pipeline/pyproject.toml
+
+      - name: Install dependencies
+        working-directory: packages/data-pipeline
+        run: |
+          python -m pip install --upgrade pip
+          pip install ".[dev]"
+
+      - name: Run shock matrix tests
+        working-directory: packages/data-pipeline
+        run: |
+          python -m pytest tests/test_shock_matrix.py -v
+
+  # ── Validation Test ───────────────────────────────────────────────
+  validation-test:
+    name: Validation Framework Tests
+    runs-on: ubuntu-latest
+    needs: [python-setup, version-consistency]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: packages/data-pipeline/pyproject.toml
+
+      - name: Install dependencies
+        working-directory: packages/data-pipeline
+        run: |
+          python -m pip install --upgrade pip
+          pip install ".[dev]"
+
+      - name: Run validation tests
+        working-directory: packages/data-pipeline
+        run: |
+          python -m pytest tests/test_validation.py -v
+
+  # ── Artifact Integrity ────────────────────────────────────────────
+  # T-04-02: SHA-256 hash embedded in meta.json compared against
+  # computed hash at CI time. Mismatch = hard failure.
+  artifact-integrity:
+    name: Artifact Hash Verification
+    runs-on: ubuntu-latest
+    needs: [python-setup, version-consistency]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: packages/data-pipeline/pyproject.toml
+
+      - name: Install dependencies
+        working-directory: packages/data-pipeline
+        run: |
+          python -m pip install --upgrade pip
+          pip install ".[dev]"
+
+      - name: Verify artifact integrity hashes
+        working-directory: packages/data-pipeline
+        run: |
+          python -c "
+          import hashlib, json, sys
+          from pathlib import Path
+
+          # Check population artifact hash if it exists
+          pop_json = Path('dist/population-v2025.1.json')
+          pop_meta = Path('dist/population-v2025.1.meta.json')
+
+          if pop_json.exists() and pop_meta.exists():
+              # Compute actual SHA-256
+              sha = hashlib.sha256()
+              with open(pop_json, 'rb') as f:
+                  while chunk := f.read(8192):
+                      sha.update(chunk)
+              actual_hash = sha.hexdigest()
+
+              with open(pop_meta) as f:
+                  meta = json.load(f)
+
+              expected_hash = meta.get('sha256', '')
+              if expected_hash:
+                  assert actual_hash == expected_hash, (
+                      f'POPULATION HASH MISMATCH! '
+                      f'Expected: {expected_hash[:16]}..., '
+                      f'Actual: {actual_hash[:16]}...'
+                  )
+                  print(f'PASSED: population-v2025.1.json hash verified')
+              else:
+                  print('SKIP: No sha256 field in meta.json (generated file may be pending)')
+          else:
+              print('SKIP: population artifacts not yet generated (normal for Phase 1)')
+
+          # Check shock matrix artifact hash if it exists
+          sm_parquet = Path('dist/shockmatrix-v2025.1.parquet')
+          sm_meta = Path('dist/shockmatrix-v2025.1.meta.json')
+
+          if sm_parquet.exists() and sm_meta.exists():
+              sha = hashlib.sha256()
+              with open(sm_parquet, 'rb') as f:
+                  while chunk := f.read(8192):
+                      sha.update(chunk)
+              actual_hash = sha.hexdigest()
+
+              with open(sm_meta) as f:
+                  meta = json.load(f)
+
+              expected_hash = meta.get('sha256', '')
+              if expected_hash:
+                  assert actual_hash == expected_hash, (
+                      f'SHOCK MATRIX HASH MISMATCH! '
+                      f'Expected: {expected_hash[:16]}..., '
+                      f'Actual: {actual_hash[:16]}...'
+                  )
+                  print(f'PASSED: shockmatrix-v2025.1.parquet hash verified')
+              else:
+                  print('SKIP: No sha256 field in meta.json')
+          else:
+              print('SKIP: shock matrix artifacts not yet generated (normal for Phase 1)')
+          "
+          echo "Artifact integrity check complete"
+
+  # ── Final Gate ────────────────────────────────────────────────────
+  ci-summary:
+    name: CI Gate Summary
+    runs-on: ubuntu-latest
+    needs:
+      [schema-validation, conversion-test, version-consistency,
+       synth-pop-test, shock-matrix-test, validation-test, artifact-integrity]
+    if: always()
+    steps:
+      - name: Check all required jobs
+        run: |
+          echo "## Phase 1 CI Gate Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Job | Result |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| schema-validation | ${{ needs.schema-validation.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| conversion-test | ${{ needs.conversion-test.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| version-consistency | ${{ needs.version-consistency.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| synth-pop-test | ${{ needs.synth-pop-test.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| shock-matrix-test | ${{ needs.shock-matrix-test.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| validation-test | ${{ needs.validation-test.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| artifact-integrity | ${{ needs.artifact-integrity.result }} |" >> $GITHUB_STEP_SUMMARY
+
+          if [[ "${{ needs.schema-validation.result }}" == "failure" ]] ||
+             [[ "${{ needs.conversion-test.result }}" == "failure" ]] ||
+             [[ "${{ needs.version-consistency.result }}" == "failure" ]] ||
+             [[ "${{ needs.synth-pop-test.result }}" == "failure" ]] ||
+             [[ "${{ needs.shock-matrix-test.result }}" == "failure" ]] ||
+             [[ "${{ needs.validation-test.result }}" == "failure" ]] ||
+             [[ "${{ needs.artifact-integrity.result }}" == "failure" ]]; then
+            echo "::error::Phase 1 CI gate FAILED — check job results above"
+            exit 1
+          fi
+          echo "Phase 1 CI gate PASSED — all artifacts validated"

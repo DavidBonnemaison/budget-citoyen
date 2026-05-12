@@ -28,6 +28,11 @@ dev = [
     "seaborn>=0.13,<0.14",
 ]
 
+[project.scripts]
+validate-data = "yaml2json.validate:validate_file"
+
 [tool.pytest.ini_options]
+minversion = "8.0"
 testpaths = ["tests"]
 python_files = ["test_*.py"]
+pythonpath = ["src"]
