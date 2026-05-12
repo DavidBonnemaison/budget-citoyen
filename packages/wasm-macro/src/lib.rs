@@ -1,3 +1,5 @@
+// wasm-bindgen prelude imported for future WASM boundary work (Phase 02-07)
+#[allow(unused_imports)]
 use wasm_bindgen::prelude::*;
 
 pub mod matrix;

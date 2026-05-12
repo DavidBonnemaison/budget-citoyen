@@ -17,6 +17,12 @@ use interpn::multilinear::rectilinear;
 
 /// Perform multi-linear interpolation at a single (tax, spend, horizon) point.
 ///
+/// # Input validation
+/// - All inputs must be finite (NaN/Infinity rejected — T-02-30 defense-in-depth).
+/// - `tax` and `spend` must be > 0.0.
+/// - `horizon` must be in [1.0, 5.0].
+/// - Point must lie within the pre-computed convex hull.
+///
 /// # Grid convention
 /// The 4D grid is indexed as (tax, spend, horizon, feature) where feature is
 /// [0=gdp_growth, 1=employment, 2=deficit, 3=debt] in C-order.
@@ -24,8 +30,8 @@ use interpn::multilinear::rectilinear;
 /// # Returns
 /// - `Some(MacroResult)` with single-element trajectory vectors if the point
 ///   lies inside the convex hull and interpolation succeeds.
-/// - `None` if the point is outside the convex hull (never silently
-///   extrapolates — see PITFALLS.md Pitfall 2).
+/// - `None` if the point is outside the convex hull or fails input validation
+///   (never silently extrapolates — see PITFALLS.md Pitfall 2).
 ///
 /// # Panics
 /// Panics if interpn fails for an in-bounds point (indicates grid corruption).
@@ -35,6 +41,17 @@ pub fn interpolate_at_point(
     spend: f64,
     horizon: f64,
 ) -> Option<MacroResult> {
+    // Input validation — defense-in-depth (T-02-30, T-02-31)
+    if !tax.is_finite() || !spend.is_finite() || !horizon.is_finite() {
+        return None; // Reject NaN/Infinity (T-02-30)
+    }
+    if tax <= 0.0 || spend <= 0.0 {
+        return None;
+    }
+    if !(1.0..=5.0).contains(&horizon) {
+        return None;
+    }
+
     let point = [tax, spend, horizon];
 
     // Gate: convex hull containment check (PITFALLS.md Pitfall 2)
