@@ -194,21 +194,20 @@ def build_metadata(df: pd.DataFrame) -> SingleTableMetadata:
     """
     metadata = SingleTableMetadata()
 
-    # Explicit column type definitions
-    metadata.add_column("age", sdtype="numerical")
-    metadata.add_column("patrimoine", sdtype="numerical")
-    metadata.add_column("revenu_fiscal", sdtype="numerical")
-    metadata.add_column("situation_familiale", sdtype="categorical")
-    metadata.add_column("nombre_parts", sdtype="numerical")
-    metadata.add_column("type_activite", sdtype="categorical")
-    metadata.add_column("zone_residence", sdtype="categorical")
-    metadata.add_column("profile_id", sdtype="id")
+    # Auto-detect all column types from the dataframe first
+    metadata.detect_from_dataframe(df)
+
+    # Override with explicit column type definitions per RESEARCH.md Pattern 3
+    metadata.update_column("age", sdtype="numerical")
+    metadata.update_column("patrimoine", sdtype="numerical")
+    metadata.update_column("revenu_fiscal", sdtype="numerical")
+    metadata.update_column("situation_familiale", sdtype="categorical")
+    metadata.update_column("nombre_parts", sdtype="numerical")
+    metadata.update_column("type_activite", sdtype="categorical")
+    metadata.update_column("zone_residence", sdtype="categorical")
 
     # Set primary key
     metadata.set_primary_key("profile_id")
-
-    # Detect remaining properties from the dataframe
-    metadata.detect_from_dataframe(df)
 
     logger.info(
         f"Metadata built: {len(metadata.columns)} columns, "
