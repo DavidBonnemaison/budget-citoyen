@@ -73,7 +73,17 @@ Plans:
   3. Deficit, debt, and GDP trajectory charts (5-year projection) render as RGAA 4-compliant SVGs with `role="img"`, `aria-labelledby`, pattern-fill differentiation (never color alone), and sibling HTML tables with `<th scope>` markup for screen readers
   4. The citizen can share their exact simulation state via a URL that captures the complete parameter state (slider positions, selected views); all sliders are keyboard-navigable with full WAI-ARIA attributes (`aria-valuenow`, `aria-valuemin`, `aria-valuemax`) and debounced ARIA announcements on drag-end only
   5. The platform loads in under 3 seconds (cold) and under 1 second (warm via Service Worker + Cache API); animations over 5 seconds have interruption mechanisms; automated accessibility tests (axe-core) pass in CI; and a methodology page attributes data sources (Insee, budget.gouv.fr, Mésange) with documented methodology
-**Plans**: TBD
+**Plans**: 8 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — Project scaffold: Vite+React+TS+Tailwind build system, Vitest+Playwright test infrastructure (UI-06, A11Y-06)
+- [ ] 03-02-PLAN.md — TDD: State types, URL codec, scenario interpolation, lever index-map (UI-01, UI-02, UI-05)
+- [ ] 03-03-PLAN.md — Vega-Lite chart specs, SVG pattern definitions, shared config (UI-03, A11Y-01, A11Y-03)
+- [ ] 03-04-PLAN.md — UI foundation: SplashScreen, ErrorScreen, ScenarioGrid, ScenarioCard (UI-01, UI-07)
+- [ ] 03-05-PLAN.md — LeverSlider with React Aria, SliderGroup, AdvancedToggle, Footer (UI-01, UI-04, UI-08, A11Y-05)
+- [ ] 03-06-PLAN.md — ImpactDisplay/ImpactPill, ChartGrid/ChartCell/ChartTableFallback (UI-02, UI-03, A11Y-01, A11Y-02, A11Y-03)
+- [ ] 03-07-PLAN.md — Integration: hooks, App state machine, SimulatorPage, MethodologyPage, Service Worker (UI-04, UI-05, UI-06, UI-07, UI-08, A11Y-04)
+- [ ] 03-08-PLAN.md — E2E tests, axe-core a11y tests, synthetic scenario data generation (all 14 requirements)
 **UI hint**: yes
 
 ### Phase 4: Enhanced Data & Expert Mode
