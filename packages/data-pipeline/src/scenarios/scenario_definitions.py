@@ -15,6 +15,8 @@ Per D-22: scenarios-v2025.1 is the canonical scenario set, version-locked
 to the 2025 reference year.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Type
 
@@ -149,7 +151,7 @@ def get_scenario_definitions() -> List[ScenarioDefinition]:
                         {"rate": 0.099, "threshold": 11497},   # 9.9% (was 11%)
                         {"rate": 0.27, "threshold": 29315},    # 27% (was 30%)
                         {"rate": 0.369, "threshold": 83823},   # 36.9% (was 41%)
-                        {"rate": 0.405, "threshold": 180294},  # 40.5% (was 45%)
+                        {"rate": 0.405, "threshold": 180648},  # 40.5% (was 45%)
                     ]
                 },
                 # RSA socle majoré de 5%
