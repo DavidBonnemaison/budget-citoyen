@@ -93,21 +93,24 @@ def _compute_quotient_familial(profile: Dict[str, Any]) -> float:
     if situation in ("marie", "pacse"):
         if nb_enfants == 0:
             return 2.0
-        elif nb_enfants == 1:
-            return 2.5
-        elif nb_enfants == 2:
-            return 3.0
+        elif nb_enfants <= 2:
+            return 2.0 + nb_enfants * 0.5
         else:
-            return 3.0 + (nb_enfants - 2)
+            # 3rd child and beyond count as 1 full part each
+            return 2.0 + 2 * 0.5 + (nb_enfants - 2) * 1.0
     elif situation in ("divorce", "veuf") and nb_enfants > 0:
-        return 1.0 + 0.5 + (nb_enfants * 0.5)
+        if nb_enfants <= 2:
+            return 1.0 + 0.5 + nb_enfants * 0.5  # parent isolé: +0.5 puis +0.5/enfant
+        else:
+            return 1.0 + 0.5 + 2 * 0.5 + (nb_enfants - 2) * 1.0
     else:
+        # célibataire
         if nb_enfants == 0:
             return 1.0
-        elif nb_enfants == 1:
-            return 1.5
+        elif nb_enfants <= 2:
+            return 1.0 + nb_enfants * 0.5
         else:
-            return 1.5 + (nb_enfants - 1) * 0.5
+            return 1.0 + 2 * 0.5 + (nb_enfants - 2) * 1.0
 
 
 def _compute_ir_bareme(revenu_net: float, nb_parts: float, scale: float = 1.0) -> float:
