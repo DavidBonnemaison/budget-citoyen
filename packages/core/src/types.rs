@@ -17,6 +17,9 @@ pub use crate::parameters::Bracket;
 
 // ── Enumerations ────────────────────────────────────────────────────────────
 
+/// Tax reference year for the v2025.1 parameter set.
+pub const REFERENCE_YEAR: u16 = 2025;
+
 /// Situation familiale du foyer fiscal (quotient familial).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum SituationFamiliale {

@@ -257,7 +257,7 @@ jobs:
       - name: Verify reference year (2025) in Rust source
         run: |
           echo "Checking reference year constants in Rust source..."
-          YEAR_COUNT=$(grep -r "2025" packages/core/src/ 2>/dev/null | grep -c "reference_year\|REFERENCE_YEAR" || true)
+          YEAR_COUNT=$(grep -r "2025" packages/core/ 2>/dev/null | grep -c "reference_year\|REFERENCE_YEAR" || true)
           if [ "$YEAR_COUNT" -lt 1 ]; then
             echo "::error file=packages/core/src/,line=1::VERSION GATE FAILED: No reference_year = 2025 constant found in Rust source"
             exit 1
