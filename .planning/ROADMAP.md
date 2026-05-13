@@ -106,7 +106,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Data Foundation & Rules Engine | 5/5 | Complete | 2026-05-12 |
-| 2. Core Simulation Engines (Hybrid) | 11/11 | Complete | 2026-05-13 |
+| 2. Core Simulation Engines (Hybrid) | 11/11 | Complete   | 2026-05-13 |
 | 3. Interactive Simulation Shell (MVP) | 0/TBD | Not started | - |
 | 4. Enhanced Data & Expert Mode | 0/TBD | Not started | - |
 | 5. Platform Expansion & Hardening | 0/TBD | Not started | - |
