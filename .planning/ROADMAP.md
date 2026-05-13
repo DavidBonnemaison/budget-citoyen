@@ -76,13 +76,22 @@ Plans:
 **Plans**: 8 plans
 
 Plans:
+**Wave 1**
 - [ ] 03-01-PLAN.md — Project scaffold: Vite+React+TS+Tailwind build system, Vitest+Playwright test infrastructure (UI-06, A11Y-06)
+
+**Wave 2** *(blocked on Wave 1 completion)*
 - [ ] 03-02-PLAN.md — TDD: State types, URL codec, scenario interpolation, lever index-map (UI-01, UI-02, UI-05)
 - [ ] 03-03-PLAN.md — Vega-Lite chart specs, SVG pattern definitions, shared config (UI-03, A11Y-01, A11Y-03)
+
+**Wave 3** *(blocked on Wave 2 completion)*
 - [ ] 03-04-PLAN.md — UI foundation: SplashScreen, ErrorScreen, ScenarioGrid, ScenarioCard (UI-01, UI-07)
 - [ ] 03-05-PLAN.md — LeverSlider with React Aria, SliderGroup, AdvancedToggle, Footer (UI-01, UI-04, UI-08, A11Y-05)
 - [ ] 03-06-PLAN.md — ImpactDisplay/ImpactPill, ChartGrid/ChartCell/ChartTableFallback (UI-02, UI-03, A11Y-01, A11Y-02, A11Y-03)
+
+**Wave 4** *(blocked on Wave 3 completion)*
 - [ ] 03-07-PLAN.md — Integration: hooks, App state machine, SimulatorPage, MethodologyPage, Service Worker (UI-04, UI-05, UI-06, UI-07, UI-08, A11Y-04)
+
+**Wave 5** *(blocked on Wave 4 completion)*
 - [ ] 03-08-PLAN.md — E2E tests, axe-core a11y tests, synthetic scenario data generation (all 14 requirements)
 **UI hint**: yes
 
