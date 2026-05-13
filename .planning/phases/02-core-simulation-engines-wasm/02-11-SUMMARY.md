@@ -173,7 +173,7 @@ All other values are computed from openfisca-france parameters with validated si
 |------|------|-------------|
 | threat_flag: network | precompute.py | Queries PyPI for openfisca-france version at CI time — accepted risk for dev-time dependency (same as reference_sim.py) |
 
-## Self-Check: PASSED
+## Self-Check: PASSED (verified 2026-05-13T09:23Z)
 
 - All 3 created Python files exist on disk ✓
 - Commit `488630a` (Task 11-01) present ✓
