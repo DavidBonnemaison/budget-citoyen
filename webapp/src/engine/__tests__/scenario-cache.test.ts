@@ -4,8 +4,8 @@
 // pre-computed microsimulation results.
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { ScenarioCache } from '../scenario-cache';
-import type { ScenarioDoc, ScenarioDefinition, ScenarioResult } from '../types';
+import { ScenarioCache, type ScenarioDoc } from '../scenario-cache';
+import type { ScenarioDefinition, ScenarioResult } from '../types';
 
 // ── Test Fixtures ───────────────────────────────────────────────────────────
 
