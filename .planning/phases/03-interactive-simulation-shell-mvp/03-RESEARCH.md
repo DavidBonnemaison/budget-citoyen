@@ -997,27 +997,27 @@ export const LEVER_MAPPINGS: Record<string, LeverMapping> = {
 | A5 | SharedArrayBuffer is NOT needed for Phase 3 (no wasm-bindgen-rayon, no multi-threaded WASM) | Architecture | LOW — Phase 2 removed WASM; workers use postMessage Transferable, not SharedArrayBuffer. COOP/COEP headers not required |
 | A6 | `index-map.ts` proportional weights (e.g., 0.2 per IR bracket) produce acceptable slider behavior | State Design | MEDIUM — weights are initial guesses. Real-world tuning with scenario data may require adjustment. Plan should include adjustable-weight interface |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Where do the 9-12 scenario JSON files come from?**
-   - What we know: The CI pipeline was designed in Phase 2 Plan 02-04 (scenario pre-compute using openfisca-france) but may not be finalized or triggered. The scenario JSON format is defined (`ScenarioDoc`) and the ScenarioCache can load from JSON URL.
-   - What's unclear: Whether actual pre-computed scenario data exists at `data/scenarios-v2025.1.json` or needs to be generated as part of Phase 3. The 2.6KB `shockmatrix-v2025.1.parquet` exists but is likely a test fixture.
-   - Recommendation: Plan should include a Wave 0 task to either (a) generate synthetic/minimal scenario data for UI development, or (b) flag as dependency on CI pipeline completion. The planner should verify Phase 2's scenario pre-compute deliverables.
+1. **Where do the 9-12 scenario JSON files come from?** — RESOLVED
+   - **Decision:** Synthetic generation via Plan 03-08 Task 1. The CI pipeline (Phase 2 Plan 02-04, openfisca-france pre-compute) may not be finalized; this plan includes a data-generation task that constructs 9 structurally correct ScenarioDoc objects programmatically from a Baseline 2025 definition + 8 reform/program variants with realistic French names and per-profile household impacts. The generated `public/data/scenarios-v2025.1.json` is served as a static asset by Vite and loadable via `ScenarioCache.loadFromJSON()`.
+   - **Plan reference:** 03-08-PLAN.md, Task 1 — "Generate minimal synthetic scenario data for UI development"
+   - **Rationale:** Unblocks UI development and testing without waiting for CI pipeline maturity. The synthetic data is structurally identical to CI-generated data — swapping in real pre-computed scenarios later requires no code changes.
 
-2. **What are the exact slider ranges for each lever?**
-   - What we know: CONTEXT.md mentions ±% but not specific ranges. UI-SPEC defaults to `aria-valuemin=-30`, `aria-valuemax=+30` on sliders.
-   - What's unclear: Whether all 5 levers share the same ±30% range, or if some (like TVA) should have narrower bands. Whether the range should match the shock matrix's valid domain.
-   - Recommendation: Start with ±30% for all levers (consistent with UI-SPEC). The convex hull gating in macro-interpolate will naturally clamp/flag out-of-bounds macro results. Tune ranges based on shock matrix domain in a subsequent iteration.
+2. **What are the exact slider ranges for each lever?** — RESOLVED
+   - **Decision:** ±30% for all 5 levers (IR ménages, IS entreprises, TVA, Cotisations sociales, Dépenses publiques). This is consistent with UI-SPEC's `aria-valuemin=-30`, `aria-valuemax=+30` defaults. All levers share the same range for UI consistency and simplicity in citizen mode.
+   - **Plan reference:** 03-05-PLAN.md, Task 2 SliderGroup — all levers initialized with minValue=-30, maxValue=30, step=1.
+   - **Rationale:** Convex hull gating in macro-interpolate naturally handles out-of-bounds macro results (returns null → greyed chart overlay per D-21). Citizen-mode doesn't need lever-specific ranges — the advanced mode (D-11) exposes individual sub-parameter sliders that may have narrower bands in a future phase. Uniform ±30% keeps the mental model simple for niveau-lycée users (D-26).
 
-3. **Should the interpolation layer run on main thread or in a worker?**
-   - What we know: The interpolation layer calls ScenarioCache.lookup() which is fast (HashMap O(1), <1ms). But it needs access to the ScenarioCache which currently lives in the citizen-worker.
-   - What's unclear: Whether to (a) bring interpolation logic into the citizen-worker (add INTERPOLATE message type), (b) replicate ScenarioCache on main thread for interpolation queries, or (c) run interpolation on main thread with cached results.
-   - Recommendation: Option (a) — add an INTERPOLATE message type to the citizen-worker. This keeps the cache in one place, leverages the stale response discarding protocol, and doesn't duplicate data. The main thread sends slider positions, the worker computes the weighted blend, returns InterpolationResult.
+3. **Should the interpolation layer run on main thread or in a worker?** — RESOLVED
+   - **Decision:** Main-thread interpolation via `ScenarioCache.lookup()` O(1) HashMap calls. The interpolation module (`interpolateScenarios()` in Plan 03-02) runs on the main thread, computing Euclidean distances across ≤12 scenarios, sorting, and blending — all <1ms operations. ScenarioCache is instantiated on the main thread via `ScenarioCache.loadFromJSON()` after the citizen-worker reports READY; the worker's cache is used for heavy batch simulation, not per-slider interpolation.
+   - **Plan reference:** 03-02-PLAN.md, Module 3 — `interpolateScenarios()` main-thread pure function; 03-07-PLAN.md, useSimulation hook — `handleSliderChange` calls interpolation synchronously.
+   - **Rationale:** The original recommendation (Option A: add INTERPOLATE message type to citizen-worker) was reconsidered for MVP. For ≤12 scenarios × 3 profiles × O(1) lookups, the worker message round-trip overhead (~0.5-1ms postMessage serialization + event loop) exceeds the computation time (<0.1ms). Main-thread interpolation is simpler, faster for this data scale, and avoids duplicating the stale-response-discarding protocol for a sub-millisecond operation. If scenario count grows significantly (Phase 4+), the INTERPOLATE worker message type can be added without changing the caller API.
 
-4. **Service Worker: Workbox manual config vs vite-plugin-pwa?**
-   - What we know: Both wrap Workbox. vite-plugin-pwa provides Vite-integrated precache manifest generation. Manual Workbox gives more control over strategy composition.
-   - What's unclear: Whether vite-plugin-pwa's auto-generated manifest handles the specific asset types (JSON data, Parquet binary). Whether the plugin version supports Workbox 7.
-   - Recommendation: Start with manual Workbox configuration (more predictable). If setup complexity is high, switch to vite-plugin-pwa (community-maintained, widely adopted in 2026).
+4. **Service Worker: Workbox manual config vs vite-plugin-pwa?** — RESOLVED
+   - **Decision:** Direct Workbox 7.4.1 manual configuration. The Service Worker (`sw.js`) uses `importScripts` to load Workbox from CDN and manually registers CacheFirst (data assets), NetworkFirst (app shell), and StaleWhileRevalidate (methodology page) routes. The precache manifest is generated at build time via `workbox-build` CLI invoked as a post-build step in `package.json` scripts.
+   - **Plan reference:** 03-07-PLAN.md, Task 3 — "Create Service Worker and Workbox configuration"
+   - **Rationale:** Direct Workbox configuration gives more predictable strategy composition than vite-plugin-pwa's abstraction layer. The specific strategy requirements (CacheFirst for `/data/*`, NetworkFirst for `*.html|js|css|svg`, StaleWhileRevalidate for `/methodologie`) map directly to Workbox's `registerRoute` API. Manual config avoids plugin version compatibility issues and is well-documented in Workbox 7.4. If maintenance burden proves high in later phases, migrating to vite-plugin-pwa is straightforward since it wraps the same Workbox runtime.
 
 ## Sources
 
