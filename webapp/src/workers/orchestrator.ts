@@ -1,6 +1,6 @@
 // webapp/src/workers/orchestrator.ts
 //
-// WorkerOrchestrator — coordinates micro and macro Web Workers, dispatches
+// WorkerOrchestrator — coordinates citizen and macro Web Workers, dispatches
 // requests with correlation IDs, and discards stale responses from rapid
 // slider interactions.
 //
@@ -11,71 +11,19 @@
 //
 // D-12: Workers never touch the network — all data arrives via postMessage
 //   with Transferable ArrayBuffers (zero-copy).
+//
+// Updated for Plan 02-10: Hybrid architecture with pure TypeScript engines.
+//   - citizen-worker.ts replaces micro-worker.ts (scenario cache lookups)
+//   - macro-worker.ts handles INTERPOLATE/PROJECT with TS trilinear interpolation
+//   - Zero WASM imports in any worker
 
-// ── Message Protocol Types (D-11) ──────────────────────────────────────
-
-export interface WorkerRequest {
-  id: string; // crypto.randomUUID() — correlation ID
-  type: 'INIT' | 'SIMULATE' | 'INTERPOLATE';
-  payload: unknown;
-}
-
-export interface WorkerResponse<T = unknown> {
-  id: string; // Echoes the request ID
-  type: 'READY' | 'MICRO_RESULT' | 'MACRO_RESULT' | 'ERROR';
-  payload: T | null;
-}
-
-export interface SimulatePayload {
-  params: number[];
-  profileIndex: number;
-}
-
-export interface InitPayload {
-  paramsJson: string;
-  populationJson: string;
-}
-
-export interface MacroInitPayload {
-  matrixBytes: ArrayBuffer;
-}
-
-export interface InterpolatePayload {
-  tax: number;
-  spend: number;
-  horizon: number;
-  subType?: 'interpolate';
-}
-
-export interface ProjectPayload {
-  tax: number;
-  spend: number;
-  years: number;
-  subType: 'project';
-}
-
-// ── Result Types (D-10 — serialized by serde-wasm-bindgen) ────────────
-
-export interface MicroResult {
-  ir: number;
-  is: number;
-  tva: number;
-  cotisations_salariales: number;
-  cotisations_patronales: number;
-  csg: number;
-  crds: number;
-  revenu_disponible: number;
-  revenu_imposable: number;
-}
-
-export interface MacroResult {
-  deficit: number[];
-  dette: number[];
-  pib: number[];
-  emploi: number[];
-  deficit_ratio: number[];
-  dette_ratio: number[];
-}
+import type {
+  WorkerRequest,
+  WorkerResponse,
+  MacroResult,
+  ScenarioResult,
+  MacroWorkerResult,
+} from '../engine/types';
 
 // ── Pending Request Tracking ───────────────────────────────────────────
 
@@ -88,17 +36,17 @@ interface PendingEntry {
 // ── WorkerOrchestrator ─────────────────────────────────────────────────
 
 export class WorkerOrchestrator {
-  private microWorker: Worker;
+  private citizenWorker: Worker;
   private macroWorker: Worker;
   private pending = new Map<string, PendingEntry>();
-  private latestMicroId: string | null = null;
+  private latestCitizenId: string | null = null;
   private latestMacroId: string | null = null;
-  private microReady = false;
+  private citizenReady = false;
   private macroReady = false;
 
   constructor() {
-    this.microWorker = new Worker(
-      new URL('./micro-worker.ts', import.meta.url),
+    this.citizenWorker = new Worker(
+      new URL('./citizen-worker.ts', import.meta.url),
       { type: 'module' },
     );
     this.macroWorker = new Worker(
@@ -106,8 +54,8 @@ export class WorkerOrchestrator {
       { type: 'module' },
     );
 
-    this.microWorker.onmessage = (e: MessageEvent<WorkerResponse>) =>
-      this.handleResponse(e.data, 'micro');
+    this.citizenWorker.onmessage = (e: MessageEvent<WorkerResponse>) =>
+      this.handleResponse(e.data, 'citizen');
     this.macroWorker.onmessage = (e: MessageEvent<WorkerResponse>) =>
       this.handleResponse(e.data, 'macro');
   }
@@ -116,10 +64,10 @@ export class WorkerOrchestrator {
 
   private handleResponse(
     response: WorkerResponse,
-    source: 'micro' | 'macro',
+    source: 'citizen' | 'macro',
   ): void {
     const latest =
-      source === 'micro' ? this.latestMicroId : this.latestMacroId;
+      source === 'citizen' ? this.latestCitizenId : this.latestMacroId;
 
     // D-11: Discard stale responses when a newer request superseded them.
     // This handles rapid slider dragging (60 req/s) — only the latest
@@ -131,7 +79,7 @@ export class WorkerOrchestrator {
 
     // Track READY state for init coordination
     if (response.type === 'READY') {
-      if (source === 'micro') this.microReady = true;
+      if (source === 'citizen') this.citizenReady = true;
       else this.macroReady = true;
     }
 
@@ -151,39 +99,34 @@ export class WorkerOrchestrator {
   /**
    * Initialize both workers with their respective data payloads.
    *
-   * D-12: The main thread fetches all static assets (tax rules JSON,
-   * population JSON, shock matrix binary) during initial load and
-   * transfers them to workers via postMessage — workers never touch
-   * the network.
+   * D-12: The main thread fetches all static assets (scenario JSON,
+   * shock matrix binary) during initial load and transfers them to
+   * workers via postMessage — workers never touch the network.
    *
-   * @param paramsJson  - Tax rules as JSON string (parameters-v2025.1.json)
-   * @param populationJson - Synthetic population as JSON string
-   * @param matrixBytes - Shock matrix as postcard-encoded binary (ArrayBuffer)
+   * @param scenariosJson - Pre-computed scenario results as JSON string
+   * @param matrixBytes   - Shock matrix as binary (ArrayBuffer), transferred zero-copy
    */
   async init(
-    paramsJson: string,
-    populationJson: string,
+    scenariosJson: string,
     matrixBytes: ArrayBuffer,
   ): Promise<void> {
-    const microId = crypto.randomUUID();
+    const citizenId = crypto.randomUUID();
     const macroId = crypto.randomUUID();
 
-    this.latestMicroId = microId;
+    this.latestCitizenId = citizenId;
     this.latestMacroId = macroId;
 
-    const microInit = new Promise<void>((resolve, reject) => {
-      this.pending.set(microId, {
+    const citizenInit = new Promise<void>((resolve, reject) => {
+      this.pending.set(citizenId, {
         resolve: () => resolve(),
         reject,
         timestamp: Date.now(),
       });
-      this.microWorker.postMessage(
-        {
-          id: microId,
-          type: 'INIT',
-          payload: { paramsJson, populationJson },
-        } satisfies WorkerRequest,
-      );
+      this.citizenWorker.postMessage({
+        id: citizenId,
+        type: 'INIT',
+        payload: { scenariosJson },
+      } satisfies WorkerRequest);
     });
 
     const macroInit = new Promise<void>((resolve, reject) => {
@@ -203,28 +146,31 @@ export class WorkerOrchestrator {
       );
     });
 
-    await Promise.all([microInit, macroInit]);
+    await Promise.all([citizenInit, macroInit]);
   }
 
   /**
-   * Send a SIMULATE request to the micro worker.
+   * Send a SIMULATE request to the citizen worker.
    *
-   * Updates simulation parameters from slider positions and computes
-   * fiscal impact for the specified household profile.
+   * Looks up a pre-computed scenario result by scenario ID and profile index.
+   * O(1) HashMap lookup — no computation performed in the worker.
+   *
+   * @param scenarioId   - Pre-computed scenario identifier
+   * @param profileIndex - Profile index in the synthetic population (0-49999)
    */
   async simulate(
-    params: number[],
+    scenarioId: string,
     profileIndex: number,
-  ): Promise<MicroResult> {
+  ): Promise<ScenarioResult> {
     const id = crypto.randomUUID();
-    this.latestMicroId = id;
+    this.latestCitizenId = id;
 
     return new Promise((resolve, reject) => {
       this.pending.set(id, { resolve, reject, timestamp: Date.now() });
-      this.microWorker.postMessage({
+      this.citizenWorker.postMessage({
         id,
         type: 'SIMULATE',
-        payload: { params, profileIndex } satisfies SimulatePayload,
+        payload: { scenarioId, profileIndex },
       } satisfies WorkerRequest);
     });
   }
@@ -232,7 +178,7 @@ export class WorkerOrchestrator {
   /**
    * Send an INTERPOLATE request to the macro worker (single-point).
    *
-   * Performs multi-linear interpolation over the shock matrix at
+   * Performs trilinear interpolation over the shock matrix at
    * a single (tax, spend, horizon) point. Returns null if the
    * point is outside the convex hull.
    */
@@ -240,7 +186,7 @@ export class WorkerOrchestrator {
     tax: number,
     spend: number,
     horizon: number,
-  ): Promise<MacroResult | null> {
+  ): Promise<MacroWorkerResult> {
     const id = crypto.randomUUID();
     this.latestMacroId = id;
 
@@ -255,7 +201,7 @@ export class WorkerOrchestrator {
   }
 
   /**
-   * Send an INTERPOLATE (project) request to the macro worker (multi-year).
+   * Send a PROJECT request to the macro worker (multi-year).
    *
    * Projects a macroeconomic trajectory over multiple years by
    * interpolating each year independently. Returns null if any
@@ -265,7 +211,7 @@ export class WorkerOrchestrator {
     tax: number,
     spend: number,
     years: number,
-  ): Promise<MacroResult | null> {
+  ): Promise<MacroWorkerResult> {
     const id = crypto.randomUUID();
     this.latestMacroId = id;
 
@@ -279,7 +225,7 @@ export class WorkerOrchestrator {
           spend,
           years,
           subType: 'project',
-        } satisfies ProjectPayload,
+        },
       } satisfies WorkerRequest);
     });
   }
@@ -289,7 +235,7 @@ export class WorkerOrchestrator {
    * Call when the simulation page is unmounted.
    */
   terminate(): void {
-    this.microWorker.terminate();
+    this.citizenWorker.terminate();
     this.macroWorker.terminate();
     this.pending.forEach((entry) => {
       entry.reject(new Error('Orchestrator terminated'));

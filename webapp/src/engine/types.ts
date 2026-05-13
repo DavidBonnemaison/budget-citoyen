@@ -149,8 +149,8 @@ export interface WorkerResponse<T = unknown> {
 
 /** Charge utile d'une requête SIMULATE (citizen-worker). */
 export interface SimulatePayload {
-  /** Paramètres de simulation (tableau de 16 valeurs, voir index-map.ts). */
-  params: number[];
+  /** Identifiant du scénario pré-calculé (ex: "baseline-2025"). */
+  scenarioId: string;
   /** Index du profil dans la population synthétique (0-49999). */
   profileIndex: number;
 }
