@@ -22,8 +22,8 @@ import type { ScenarioDefinition, ScenarioResult } from './types';
 export interface ScenarioDoc {
   /** Scenario metadata. */
   definition: ScenarioDefinition;
-  /** Pre-computed results indexed by profile index (0-49999). */
-  results: Record<number, ScenarioResult>;
+  /** Pre-computed results indexed by profile index (0-49999) as string keys from JSON. */
+  results: Record<string, ScenarioResult>;
 }
 
 /**
