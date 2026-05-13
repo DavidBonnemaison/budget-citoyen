@@ -86,7 +86,7 @@ export interface ScenarioDefinition {
  *
  * La grille est un tenseur 4D aplati en ordre row-major:
  *   grid[((taxIdx * spendBp.length + spendIdx) * horizonBp.length + horizonIdx) * 4 + featureIdx]
- * où featureIdx: 0=déficit, 1=dette, 2=croissance PIB, 3=emploi.
+ * où featureIdx: 0=croissance PIB, 1=emploi, 2=déficit, 3=dette.
  *
  * Les équations de l'enveloppe convexe sont stockées à plat par stride de 4:
  *   [a1, a2, a3, b] pour chaque hyperplan, définissant a1*tax + a2*spend + a3*horizon + b ≤ 0.
