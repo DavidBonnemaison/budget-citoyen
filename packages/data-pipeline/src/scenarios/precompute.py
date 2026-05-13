@@ -300,9 +300,17 @@ def _compute_scenario_result(
     bnc_total = sum(input_data.get("revenus", {}).get("bnc", [0.0]))
     fonciers_total = sum(input_data.get("revenus", {}).get("fonciers", [0.0]))
     chomage_total = input_data.get("revenus", {}).get("allocations_chomage", 0.0)
+    bic_total = input_data.get("revenus", {}).get("bic", 0.0)
+    micro_bic_total = input_data.get("revenus", {}).get("micro_bic", 0.0)
+    benefice_agricole_total = sum(
+        input_data.get("revenus", {}).get("benefice_agricole", [0.0])
+    )
+    aa_h_total = input_data.get("revenus", {}).get("aa_h", 0.0)
 
     revenu_brut_global = (
-        salaire_total + pension_total + bnc_total + fonciers_total + chomage_total
+        salaire_total + pension_total + bnc_total + fonciers_total
+        + chomage_total + bic_total + micro_bic_total
+        + benefice_agricole_total + aa_h_total
     )
 
     # ── Apply scenario overrides ──────────────────────────────────────
@@ -346,7 +354,13 @@ def _compute_scenario_result(
     # ── Compute tax components ────────────────────────────────────────
 
     # IR
-    revenu_net_cat = salaire_total * 0.9 + pension_total * 0.9
+    revenu_net_cat = (
+        salaire_total * 0.9 + pension_total * 0.9  # 10% abattement professionnel
+        + bnc_total * 0.9                         # 10% abattement on BNC
+        + bic_total * 0.5                         # 50% abattement under micro-BIC regime
+        + micro_bic_total * 0.5                   # 50% abattement under micro-BIC regime
+        + benefice_agricole_total * 1.0           # agricultural income enters IR directly
+    )
     nb_parts = _compute_quotient_familial(profile)
     ir = _compute_ir_bareme(revenu_net_cat, nb_parts, scale=ir_scale)
 
