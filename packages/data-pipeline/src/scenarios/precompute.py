@@ -125,7 +125,7 @@ def _compute_ir_bareme(revenu_net: float, nb_parts: float, scale: float = 1.0) -
         (11497.0, 0.00),
         (29315.0, 0.11 * scale),
         (83823.0, 0.30 * scale),
-        (180294.0, 0.41 * scale),
+        (180648.0, 0.41 * scale),
         (float("inf"), 0.45 * scale),
     ]
 
