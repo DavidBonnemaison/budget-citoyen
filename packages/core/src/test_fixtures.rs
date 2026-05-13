@@ -68,6 +68,16 @@ pub struct FixtureRevenus {
     pub bnc: Vec<f64>,
     #[serde(default)]
     pub fonciers: Vec<f64>,
+    #[serde(default)]
+    pub allocations_chomage: f64,
+    #[serde(default)]
+    pub bic: f64,
+    #[serde(default)]
+    pub micro_bic: f64,
+    #[serde(default)]
+    pub benefice_agricole: Vec<f64>,
+    #[serde(default)]
+    pub aa_h: f64,
 }
 
 /// Patrimoine breakdown.
@@ -149,7 +159,12 @@ pub fn profile_from_fixture(input: &FixtureInput) -> Profile {
     let total_revenu: f64 = input.revenus.salaires.iter().sum::<f64>()
         + input.revenus.pensions.iter().sum::<f64>()
         + input.revenus.bnc.iter().sum::<f64>()
-        + input.revenus.fonciers.iter().sum::<f64>();
+        + input.revenus.fonciers.iter().sum::<f64>()
+        + input.revenus.benefice_agricole.iter().sum::<f64>()
+        + input.revenus.allocations_chomage
+        + input.revenus.bic
+        + input.revenus.micro_bic
+        + input.revenus.aa_h;
 
     let patrimoine = input.patrimoine.immobilier + input.patrimoine.financier;
 
@@ -175,8 +190,17 @@ pub fn profile_from_fixture(input: &FixtureInput) -> Profile {
         TypeActivite::Salarie
     } else if !input.revenus.pensions.is_empty() {
         TypeActivite::Retraite
-    } else if !input.revenus.bnc.is_empty() || !input.revenus.fonciers.is_empty() {
+    } else if !input.revenus.bnc.is_empty()
+        || !input.revenus.fonciers.is_empty()
+        || !input.revenus.benefice_agricole.is_empty()
+        || input.revenus.bic > 0.0
+        || input.revenus.micro_bic > 0.0
+    {
         TypeActivite::Independant
+    } else if input.revenus.allocations_chomage > 0.0 {
+        TypeActivite::Chomeur
+    } else if input.revenus.aa_h > 0.0 {
+        TypeActivite::Inactif
     } else {
         TypeActivite::Inactif
     };
