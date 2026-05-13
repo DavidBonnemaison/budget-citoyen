@@ -450,21 +450,12 @@ def precompute_scenarios(
                 result = _compute_scenario_result(profile, scenario, idx)
                 results[str(idx)] = result
             except Exception as exc:
-                # Log error and continue with zeroed result
+                # Fail-fast: computation errors indicate corrupt data or buggy formulas
                 profile_name = profile.get("name", f"profile_{idx}")
-                print(
-                    f"WARNING: Computation failed for scenario '{scenario.id}' "
-                    f"profile '{profile_name}' (index {idx}): {exc}",
-                    file=_sys.stderr,
-                )
-                results[str(idx)] = {
-                    "ir": 0.0,
-                    "is": 0.0,
-                    "tva": 0.0,
-                    "cotisations": 0.0,
-                    "aides": 0.0,
-                    "revenuDisponible": 0.0,
-                }
+                raise RuntimeError(
+                    f"Computation failed for scenario '{scenario.id}' "
+                    f"profile '{profile_name}' (index {idx})"
+                ) from exc
 
         # Build ScenarioDoc matching TypeScript ScenarioDoc interface
         scenario_doc = {
