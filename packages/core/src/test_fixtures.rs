@@ -153,8 +153,8 @@ pub fn load_fixtures() -> FixtureDoc {
 /// # Number of parts (quotient familial)
 ///
 /// Simplified derivation from `situation_familiale` and `nb_enfants`:
-/// - "celibataire" / "divorce" / "veuf": 1 + 0.5 * min(nb_enfants, 2)
-/// - "marie" / "pacse": 2 + 0.5 * min(nb_enfants, 2)
+/// - "celibataire" / "divorce" / "veuf": 1 + 0.5*(min(enfants,2)) + 1.0*(enfants-2)
+/// - "marie" / "pacse": 2 + 0.5*(min(enfants,2)) + 1.0*(enfants-2)
 pub fn profile_from_fixture(input: &FixtureInput) -> Profile {
     let total_revenu: f64 = input.revenus.salaires.iter().sum::<f64>()
         + input.revenus.pensions.iter().sum::<f64>()
@@ -182,7 +182,12 @@ pub fn profile_from_fixture(input: &FixtureInput) -> Profile {
         "marie" | "mariee" | "pacse" | "pacsee" => 2.0,
         _ => 1.0,
     };
-    let enfant_parts = 0.5 * (input.nb_enfants as f64).min(2.0);
+    let nb_enfants = input.nb_enfants as f64;
+    let enfant_parts = if nb_enfants <= 2.0 {
+        nb_enfants * 0.5
+    } else {
+        2.0 * 0.5 + (nb_enfants - 2.0) * 1.0
+    };
     let nombre_parts = adult_parts + enfant_parts;
 
     // Determine activity type from income sources
