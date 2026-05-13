@@ -219,12 +219,11 @@ export class WorkerOrchestrator {
       this.pending.set(id, { resolve, reject, timestamp: Date.now() });
       this.macroWorker.postMessage({
         id,
-        type: 'INTERPOLATE',
+        type: 'PROJECT',
         payload: {
           tax,
           spend,
           years,
-          subType: 'project',
         },
       } satisfies WorkerRequest);
     });

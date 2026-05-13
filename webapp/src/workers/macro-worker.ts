@@ -125,35 +125,14 @@ self.onmessage = (e: MessageEvent<WorkerRequest>) => {
           return;
         }
 
-        // Check subType to distinguish single-point from projection
-        const interpPayload = payload as InterpolatePayload & {
-          subType?: string;
-          years?: number;
-        };
-
-        let result: MacroResult | null;
-
-        if (interpPayload.subType === 'project') {
-          // Multi-year trajectory projection
-          const years = (payload as ProjectPayload).years;
-          if (typeof years !== 'number' || years < 1) {
-            self.postMessage({
-              id,
-              type: 'ERROR',
-              payload: 'PROJECT requires a valid years field >= 1',
-            } satisfies WorkerResponse);
-            return;
-          }
-          result = projectTrajectory(matrix, interpPayload.tax, interpPayload.spend, years);
-        } else {
-          // Single-point interpolation
-          result = interpolateAtPoint(
-            matrix,
-            interpPayload.tax,
-            interpPayload.spend,
-            interpPayload.horizon,
-          );
-        }
+        // Single-point interpolation (subType removed — PROJECT type handles multi-year)
+        const interpPayload = payload as InterpolatePayload;
+        const result = interpolateAtPoint(
+          matrix,
+          interpPayload.tax,
+          interpPayload.spend,
+          interpPayload.horizon,
+        );
 
         self.postMessage({
           id,
