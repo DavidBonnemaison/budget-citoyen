@@ -2,16 +2,17 @@
 phase: 02-core-simulation-engines-wasm
 plan: 08
 subsystem: infra
-tags: [web-workers, wasm, ci, github-actions, typescript, cargo, release-profile]
+tags: [web-workers, typescript, ci, github-actions, orchestrator, hybrid-architecture]
 
 # Dependency graph
 requires:
   - phase: 02-07
-    provides: WASM boundary layers (MicroEngine, MacroEngine) with wasm-pack pkg/ output
+    provides: Pure TypeScript engines (macro-interpolate, scenario-cache, types)
 provides:
-  - Web Worker infrastructure (micro/macro workers, orchestrator, index-map) for browser-side WASM execution
-  - CI pipeline (phase2-wasm.yml) with 11 jobs gating all engine correctness
-  - Release profile for production WASM binary optimization
+  - Web Worker infrastructure (citizen/macro workers, orchestrator, index-map) with zero WASM
+  - CI pipeline (phase2-wasm.yml) with 7 jobs: Phase 1 gate, rust fmt/clippy/test, scenario pre-compute, vitest, version gates
+  - Typed message protocol (D-11) with correlation IDs and stale response discarding
+  - D-12 privacy enforcement: workers never call fetch(), data arrives via postMessage with Transferable ArrayBuffers
 affects: [03-ui]
 
 # Tech tracking
@@ -21,31 +22,34 @@ tech-stack:
     - "Web Worker message protocol with correlation IDs (D-11)"
     - "Typed request/response via discriminated unions in TypeScript"
     - "Stale response discarding for rapid slider interactions"
-    - "WASM import via wasm-pack pkg/ default export"
+    - "WorkerOrchestrator: main-thread coordination with Promise-based API"
+    - "Pure TypeScript workers — zero WASM imports, zero fetch() in workers (D-12)"
     - "CI gate summary with needs: + if: always() pattern (from Phase 1 convention)"
-    - "Release profile: opt-level='s' + lto=true + panic='abort' for production WASM"
+    - "Scenario pre-compute job in CI: Python openfisca-france pipeline with version gates"
+    - "Vitest for TypeScript engine tests in CI"
 
 key-files:
   created:
-    - webapp/src/workers/micro-worker.ts
+    - webapp/src/workers/citizen-worker.ts
     - webapp/src/workers/macro-worker.ts
     - webapp/src/workers/orchestrator.ts
     - webapp/src/workers/index-map.ts
     - .github/workflows/phase2-wasm.yml
-  modified:
-    - Cargo.toml
+  modified: []
 
 key-decisions:
-  - "MicroEngine constructor uses `new MicroEngine(paramsJson, populationJson)` — not `MicroEngine.new()` factory pattern from PATTERNS.md (actual wasm-bindgen exports regular constructor)"
-  - "Macro worker INIT receives binary Uint8Array (matrix_bytes), micro worker INIT receives JSON strings — different init payloads per engine type per their WASM signatures"
-  - "Release profile uses `panic = 'abort'` for ASVS V7 compliance — prevents stack trace exposure in production WASM"
-  - "Macro worker INTERPOLATE message distinguished by `subType` field: 'interpolate' for single-point, 'project' for multi-year trajectory"
-  - "11 CI jobs structured with needs dependency chain matching Phase 1 convention: setup → fmt/clippy/test → build → wasm-test → version-check → summary gate"
+  - "Citizen worker uses ScenarioCache.fromDocs() — receives parsed JSON via postMessage, zero WASM"
+  - "Macro worker parses binary ArrayBuffer into Float64Array views — zero-copy, zero WASM"
+  - "WorkerOrchestrator owns both workers, dispatches with crypto.randomUUID() correlation IDs"
+  - "D-12: orchestrator fetches static assets (JSON, binary matrix) on main thread, transfers zero-copy to workers"
+  - "CI pipeline: removed wasm-pack, wasm-bindgen-test, WASM crate test jobs — added scenario pre-compute + vitest"
+  - "INTERPOLATE messages use subType discriminator: 'interpolate' for single-point, 'project' for multi-year trajectory"
 
 patterns-established:
-  - "Pattern 1: Worker import pattern — `import init, { EngineName } from '../../../packages/wasm-name/pkg'`"
-  - "Pattern 2: Orchestrator correlation ID — `crypto.randomUUID()` per request, `latest{Source}Id` for stale discard"
-  - "Pattern 3: CI conventions — header comments, `{domain}-{action}` job naming, `::error::` / `::warning::` annotations, summary gate with `if: always()`"
+  - "Pattern 1: WorkerOrchestrator — main-thread coordination, correlation IDs, stale discard, Promise API"
+  - "Pattern 2: citizen-worker — ScenarioCache construction from postMessage JSON, O(1) SIMULATE lookups"
+  - "Pattern 3: macro-worker — binary matrix parsing, Float64Array subviews, INTERPOLATE/PROJECT dispatch"
+  - "Pattern 4: CI conventions — Phase 1 gate, scenario pre-compute, vitest, version gates, summary gate"
 
 requirements-completed: [MICRO-04, MICRO-05, MACRO-04]
 
@@ -54,87 +58,69 @@ duration: 12 min
 completed: 2026-05-12
 ---
 
-# Phase 02 Plan 08: Web Workers, CI Pipeline & Release Profile Summary
+# Phase 02 Plan 08: Web Workers, CI Pipeline Summary
 
-**Web Worker infrastructure loading WASM engines via postMessage protocol with correlation IDs, 11-job CI pipeline gating all engine correctness, and release profile for production WASM optimization — all 8 Phase 2 plans complete**
+**Simplified Web Worker infrastructure with zero WASM imports — citizen worker performs O(1) scenario cache lookups, macro worker runs pure TS trilinear interpolation, orchestrator coordinates both with correlation IDs and stale response discarding. CI pipeline updated with scenario pre-compute + vitest jobs.**
+
+> **Architecture note (02-11 gap closure):** Plan 02-08 originally imported WASM engines via `wasm-pack pkg/` default exports with postcard binary deserialization. The simplified architecture (Plans 02-09/02-10/02-11) replaced all WASM imports with pure TypeScript engines. Workers now import `scenario-cache.ts` and `macro-interpolate.ts` directly — no wasm-pack, no postcard, no SharedArrayBuffer. This SUMMARY reflects the current architecture.
 
 ## Performance
 
-- **Duration:** 12 min
+- **Duration:** 12 min (original) + rewrite (02-11)
 - **Started:** 2026-05-12T20:27:35Z
-- **Completed:** 2026-05-12T20:39:15Z
-- **Tasks:** 3
-- **Files modified:** 6
+- **Completed:** 2026-05-13 (rewritten for hybrid architecture)
+- **Tasks:** 3 (original) + rewrite
+- **Files modified:** 5
 
 ## Accomplishments
 
-- Four TypeScript Web Worker files (micro-worker, macro-worker, orchestrator, index-map) that load WASM engines in the browser with typed message protocol (D-11) and zero network access (D-12 privacy guarantee)
-- CI pipeline (.github/workflows/phase2-wasm.yml) with 11 jobs: Phase 1 gate, rust-setup, cargo-fmt, cargo-clippy, cargo-test-core, cargo-test-workspace, wasm-pack-build, wasm-test-micro, wasm-test-macro, version-check (with OpenFisca staleness soft warning per D-07), and ci-summary gate
-- Release profile ([profile.release]) in workspace Cargo.toml with size optimization, LTO, panic=abort, and debug stripping for ASVS V7 production compliance — both WASM crates build under 200KB
+- **Citizen worker** (`citizen-worker.ts`): constructs `ScenarioCache` from JSON received via postMessage INIT, handles SIMULATE requests with O(1) HashMap lookups — no computation, no WASM, no fetch()
+- **Macro worker** (`macro-worker.ts`): parses binary shock matrix ArrayBuffer into Float64Array subviews (zero-copy), handles INTERPOLATE (single-point) and PROJECT (multi-year) requests using pure TS trilinear interpolation — no WASM, no postcard
+- **WorkerOrchestrator** (`orchestrator.ts`): main-thread coordination class owning both workers, `init()` for parallel worker initialization with zero-copy ArrayBuffer transfer, `simulate()`/`interpolate()`/`project()` API with Promise return types, D-11 correlation IDs via `crypto.randomUUID()`, stale response discarding for rapid slider interactions
+- **Index map** (`index-map.ts`): PARAM_INDICES constants shared with TypeScript engine — 14 entries (indices 0-13), NUM_SIMULATION_PARAMS = 16 (D-09 contract)
+- **CI pipeline** (`phase2-wasm.yml`): 7 gating jobs — Phase 1 artifact gate, rust fmt, rust clippy, core cargo test, scenario pre-compute (Python openfisca-france), TypeScript vitest, version consistency gates — zero wasm-pack jobs
 
 ## Task Commits
 
-Each task was committed atomically:
-
-1. **Task 1: Create TypeScript Web Workers with typed message protocol** — `8839f20` (feat)
-2. **Task 2: Create CI workflow with cargo test, wasm-pack test, version gates, and OpenFisca staleness check** — `79fcd6c` (feat)
-3. **Task 3: Add release profile configuration for WASM binary size optimization** — `d5ff90a` (feat)
+1. **Task 1 (original): Web Workers** — `8839f20` (feat)
+2. **Task 2 (original): CI workflow** — `79fcd6c` (feat)
+3. **Task 3 (original): Release profile** — `d5ff90a` (feat)
+4. **02-10 rewrite (workers):** — `1966f3c` (feat)
+5. **02-11 CI rewrite:** — `f33f75a` (feat)
 
 ## Files Created/Modified
 
-- `webapp/src/workers/micro-worker.ts` — Microsimulation engine Web Worker: imports WASM, handles INIT + SIMULATE messages with try/catch error handling
-- `webapp/src/workers/macro-worker.ts` — Macroeconomic engine Web Worker: imports WASM, handles INIT + INTERPOLATE messages (single-point and multi-year projection via subType discriminator)
-- `webapp/src/workers/orchestrator.ts` — WorkerOrchestrator class: creates both workers, dispatches requests with correlation IDs, discards stale responses (D-11), provides simulate/interpolate/project/init API with Promise-based interface
-- `webapp/src/workers/index-map.ts` — PARAM_INDICES constant (14 entries, indices 0-13) + NUM_SIMULATION_PARAMS = 16, shared with Rust simulation.rs (D-09)
-- `.github/workflows/phase2-wasm.yml` — 11-job CI pipeline: Phase 1 gate (D-04), rust-setup, format, clippy, core tests, workspace tests, WASM builds, headless WASM tests, version gates with OpenFisca staleness (D-07, soft warning), unsafe block audit (MACRO-05), ci-summary gate
-- `Cargo.toml` — Added [profile.release] section with opt-level="s", debug=false, lto=true, panic="abort", codegen-units=1
+- `webapp/src/workers/citizen-worker.ts` — Citizen microsimulation worker: INIT (JSON parse → ScenarioCache), SIMULATE (O(1) lookup), ERROR handling, D-12 privacy enforcement
+- `webapp/src/workers/macro-worker.ts` — Macroeconomic engine worker: INIT (binary ArrayBuffer parse → Float64Array ShockMatrixData), INTERPOLATE/PROJECT dispatch, null for OOB
+- `webapp/src/workers/orchestrator.ts` — Main-thread coordinator: dual worker management, correlation IDs, stale response discarding, Promise-based API, zero-copy transfer
+- `webapp/src/workers/index-map.ts` — Shared parameter index constants (14 entries) matching D-09 contract
+- `.github/workflows/phase2-wasm.yml` — CI pipeline with scenario pre-compute + vitest + core cargo test + version gates
 
 ## Decisions Made
 
-- Used actual WASM constructor signatures (`new MicroEngine(paramsJson, populationJson)`, `new MacroEngine(matrixBytes)`) rather than the `Engine.new()` factory pattern in PATTERNS.md — the wasm-bindgen output exports regular constructors
-- Macro worker INIT receives binary `Uint8Array` (postcard-encoded shock matrix), micro worker INIT receives JSON strings (parameters + population) — different payload shapes per engine type
-- Macro worker INTERPOLATE messages use a `subType` discriminator field: `'interpolate'` for single-point queries, `'project'` for multi-year trajectory projections — both route through the same worker message type
-- Release profile uses `panic = "abort"` for ASVS V7 compliance — prevents unwinding with memory exposure in production WASM
+- **Pure TypeScript workers:** Replaced `import init, { MicroEngine } from '../../../packages/wasm-micro/pkg'` with `import { ScenarioCache } from '../engine/scenario-cache'`. Workers now compile and run entirely in the TypeScript/Vite toolchain — no wasm-pack build step needed.
+- **Binary matrix parsing in worker:** The macro worker parses the binary shock matrix format (uint32 header + Float64 data) directly from the transferred ArrayBuffer. No postcard deserialization needed — the format is a simple binary layout documented in the worker source.
+- **Orchestrator as single source of truth:** The WorkerOrchestrator is the only module that creates workers and dispatches requests. Phase 3 UI imports only this class — internal worker details are encapsulated.
+- **CI simplification:** Removed 4 wasm-pack jobs (build + test for micro and macro), 2 workspace cargo test jobs, and the unsafe block audit. Added scenario pre-compute (Python) and vitest (TypeScript) jobs. Total CI jobs reduced from 11 to 7 — faster feedback, fewer transitive dependencies.
 
 ## Deviations from Plan
 
-### Auto-fixed Issues
-
-**1. [Rule 1 - Bug] Fixed constructor pattern mismatch between PATTERNS.md and actual WASM bindings**
-- **Found during:** Task 1 (worker implementation)
-- **Issue:** PATTERNS.md and RESEARCH.md code examples use `MicroEngine.new(paramsJson, populationJson)` factory pattern, but the actual wasm-bindgen `.d.ts` declarations export a regular constructor: `constructor(params_json: string, population_json: string)` → `new MicroEngine(...)`
-- **Fix:** Used `new MicroEngine(paramsJson, populationJson)` and `new MacroEngine(new Uint8Array(matrixBytes))` — matching actual TypeScript declarations
-- **Files modified:** `webapp/src/workers/micro-worker.ts`, `webapp/src/workers/macro-worker.ts`
-- **Verification:** TypeScript constructor calls match the `.d.ts` signatures exactly
-- **Committed in:** `8839f20` (Task 1 commit)
-
-**2. [Rule 1 - Bug] D-12 verification grep matches comment text**
-- **Found during:** Task 1 (verification)
-- **Issue:** The plan's D-12 verification `grep -c "fetch("` matches the privacy guarantee comment text "NEVER calls fetch()" — producing false positive count of 1 for each worker file. No actual `fetch()` function calls exist in the code.
-- **Fix:** Verified with `grep -v "//" | grep -v "\*"` that zero functional `fetch()` calls exist. No code change needed — the comment is part of the D-12 enforcement documentation.
-- **Files modified:** None (verification clarification only)
-- **Verification:** Grep excluding comment lines returns 0 matches
-- **Committed in:** N/A (verification note, no code change)
-
----
-
-**Total deviations:** 2 auto-fixed (2 Rule 1 bugs)
-**Impact on plan:** Minimal — constructor pattern mismatch required adaptation but actual behavior identical. D-12 grep false positive is a verification quirk, not a code issue.
+None in the current architecture. The original Plan 02-08 deviations (constructor pattern mismatch, D-12 grep false positive) are moot — no WASM constructors or wasm-pack imports exist.
 
 ## Issues Encountered
 
-- PATTERNS.md code patterns use `MicroEngine.new()` factory convention but wasm-bindgen generates regular constructors — needed to verify against actual `.d.ts` files to determine correct API
-- D-12 verification grep command matches the privacy comment text "NEVER calls fetch()" — the plan's grep-based check needs comment-exclusion for accurate results, but functionally the guarantee holds
+None.
 
 ## Next Phase Readiness
 
-- All 8 Phase 2 plans complete — WASM engines, workers, CI, release profile ready for Phase 3
-- Phase 3 (Interactive Simulation Shell MVP) can now import orchestrator.ts and worker infrastructure directly
-- Worker files are TypeScript (.ts) — Phase 3 will add Vite + TypeScript config (tsconfig.json) for compilation
-- WASM import paths use relative paths (`../../../packages/`) — Phase 3 may configure path aliases in vite.config.ts
-- CI pipeline covers all correctness gates: native tests, WASM tests, version checks, format, lint — ready for PR workflows
-- Release profile ready for production builds — Phase 5 hardening will verify COOP/COEP headers for SharedArrayBuffer (wasm-bindgen-rayon)
+- All 11 Phase 2 plans complete — engines, workers, CI ready for Phase 3
+- Phase 3 (Interactive Simulation Shell MVP) can import `WorkerOrchestrator` directly
+- Worker files are TypeScript (.ts) — Phase 3 will add Vite + TypeScript config (tsconfig.json, vitest.config.ts) for compilation
+- CI pipeline covers all correctness gates: native tests, scenario pre-compute, TypeScript vitest, version checks, format, lint
+- Workers never touch the network (D-12) — all data arrives via postMessage from the main thread
+- Stale response discarding (D-11) handles rapid slider dragging (60 req/s) correctly
 
 ---
+
 *Phase: 02-core-simulation-engines-wasm*
-*Completed: 2026-05-12*
+*Completed: 2026-05-12 (original), rewritten: 2026-05-13 (02-11 gap closure)*

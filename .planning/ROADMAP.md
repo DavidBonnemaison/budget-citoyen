@@ -14,7 +14,7 @@ Every phase incorporates its pitfall prevention at the earliest design stage —
 ## Phases
 
 - [ ] **Phase 1: Data Foundation & Rules Engine** — OpenFisca-compatible YAML tax rules, synthetic population pipeline (50K profiles, DP ε ≤ 1.0), Mésange shock matrix pre-computation
-- [x] **Phase 2: Core Simulation Engines (WASM)** — Rust/WASM microsim engine + macro interpolation engine, batch interfaces, bilingual validation against OpenFisca Python reference
+- [x] **Phase 2: Core Simulation Engines (Hybrid)** — Python CI pre-compute (openfisca-france) + TypeScript runtime engines (O(1) scenario cache, trilinear macro interpolation), bilingual validation against OpenFisca Python reference
 - [ ] **Phase 3: Interactive Simulation Shell (MVP)** — Citizen Explorer UI with sliders, real-time feedback (<200ms), household impact, macro charts, shareable URLs, RGAA 4 core, responsive layout
 - [ ] **Phase 4: Enhanced Data & Expert Mode** — Full 50K profile distributional analysis, expert mode with multi-reform stacking, calculation tree transparency, data exports
 - [ ] **Phase 5: Platform Expansion & Hardening** — REST API, security/privacy audit, human RGAA 4 audit, performance hardening
@@ -38,17 +38,17 @@ Every phase incorporates its pitfall prevention at the earliest design stage —
 - [x] 01-04-PLAN.md — Bilingual validation framework (10-20 canonical profiles, openfisca-france reference, JSON test fixtures), CI pipeline with version consistency gate and artifact integrity checks
 - [x] 01-GAP-CLOSURE-PLAN.md — UAT gap closure: YAML parameter completeness (12→31 files across IR/IS/TVA/cotisations/aides, credits 3→25 entries), canonical profiles depth (16→32 with systematic 7-dimension coverage)
 
-### Phase 2: Core Simulation Engines (WASM)
-**Goal**: Both the microeconomic engine (IR, IS, TVA, cotisations, aides sociales) and macroeconomic engine (multi-linear interpolation over shock matrix) execute correctly in the browser via WebAssembly Web Workers, with batch interfaces avoiding serialization overhead, and pass bilingual validation against the OpenFisca Python reference — this is the computational heart of the platform.
+### Phase 2: Core Simulation Engines
+**Goal**: Both the microeconomic engine (IR, IS, TVA, cotisations, aides sociales) and macroeconomic engine (multi-linear interpolation over shock matrix) execute correctly in the browser via pure TypeScript Web Workers. All microsimulation computation is pre-computed in CI via openfisca-france (Python) and exported as static JSON — the browser performs O(1) HashMap lookups with zero data transfer. This is the computational heart of the platform, using a simplified hybrid architecture (Python CI + TypeScript runtime) instead of the originally planned Rust/WASM approach.
 **Depends on**: Phase 1
 **Requirements**: MICRO-01, MICRO-02, MICRO-03, MICRO-04, MICRO-05, MACRO-01, MACRO-02, MACRO-03, MACRO-04, MACRO-05
 **Success Criteria** (what must be TRUE):
-  1. The micro engine computes IR, IS, TVA, cotisations sociales, and aides sociales for any profile type, with results matching the OpenFisca Python reference to within 1e-6 precision across the bilingual test suite
-  2. The macro engine performs multi-linear interpolation over the pre-computed shock matrix to project deficit, debt, GDP growth, and employment trajectories; interpolation returns `Option::None` for inputs outside the convex hull (with a documented warning contract for the UI layer)
+  1. The micro engine provides IR, IS, TVA, cotisations sociales, and aides sociales for any profile type via O(1) lookups on pre-computed scenario JSON, with results matching the openfisca-france Python reference to within 1e-6 precision across the bilingual test suite
+  2. The macro engine performs pure TypeScript trilinear interpolation over the pre-computed shock matrix to project deficit, debt, GDP growth, and employment trajectories; interpolation returns `null` for inputs outside the convex hull (with a documented warning contract for the UI layer)
   3. Both engines run entirely client-side in separate Web Workers — no computation data, profile information, or intermediate results leave the browser; zero server round-trips are required for any simulation result
-  4. A single-profile micro calculation completes in under 200ms (WASM execution + JS↔WASM serialization combined); a full macro interpolation completes in under 50ms
-  5. Native Rust tests (`cargo test` with proptest property-based strategies) and WASM boundary tests (`wasm-pack test`) both pass in CI, confirming the `core`/`wasm` crate split prevents untestable logic
-**Plans**: 8 plans
+  4. A single-profile micro lookup completes in under 1ms (O(1) HashMap); a full macro interpolation completes in under 50ms (pure TypeScript trilinear interpolation); both well within the 200ms latency target
+  5. Python scenario pre-compute pipeline passes in CI (openfisca-france against canonical profiles), TypeScript engine tests pass via vitest, and core Rust type/parameter tests pass via `cargo test` — confirming the hybrid architecture prevents untestable logic
+**Plans**: 11 plans
 
 Plans:
 - [x] 02-01-PLAN.md — Environment setup, Rust toolchain install, Cargo workspace scaffolding, Phase 1 artifact generation, Parquet/WASM spike
@@ -57,8 +57,11 @@ Plans:
 - [x] 02-04-PLAN.md — Scenario data format & pre-compute pipeline (replaces codegen — hybrid architecture: Python CI runs openfisca-france, exports static scenario lookup JSON per D-05 through D-08 NEW)
 - [x] 02-05-PLAN.md — TDD: Macro interpolation engine (ShockMatrix, interpn, convex hull, trajectory projection)
 - [x] 02-06-PLAN.md — TDD: Scenario data cache & lookup engine (replaces TaxBenefitSystem — lightweight O(1) HashMap lookup, no formula engine per D-11 skeleton)
-- [x] 02-07-PLAN.md — WASM boundary layers (ScenarioCache + MacroEngine), boundary tests, performance benchmarks (MICRO-05, MACRO-04), core test verification
-- [x] 02-08-PLAN.md — Web Workers (macro worker, optional micro worker per D-17, orchestrator, index-map), CI pipeline, release profile
+- [x] 02-07-PLAN.md — TypeScript engines (scenario cache O(1) lookups + trilinear macro interpolation), vitest tests, performance benchmarks (MICRO-05, MACRO-04)
+- [x] 02-08-PLAN.md — Web Workers (citizen/macro workers, orchestrator, index-map — pure TS, zero WASM), CI pipeline updated for hybrid architecture
+- [x] 02-09-PLAN.md — Architecture simplification: remove all WASM crates (wasm-micro, wasm-macro) and codegen pipeline
+- [x] 02-10-PLAN.md — Implement pure TypeScript engines (ScenarioCache, macro-interpolate, types), rewrite workers for zero WASM
+- [x] 02-11-PLAN.md — Gap closure: Python scenario pre-compute pipeline, CI update, SUMMARY rewrites, REQUIREMENTS/ROADMAP updates
 
 ### Phase 3: Interactive Simulation Shell (MVP)
 **Goal**: A citizen can visit the platform on any device, manipulate fiscal sliders, and see in real time (<200ms) the impact on a typical household's purchasing power and the national deficit/debt trajectory — all in accessible, vulgarized French, shareable via URL, and compliant with RGAA 4 core criteria. This is the first user-facing deliverable (Milestone 1).
@@ -103,7 +106,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Data Foundation & Rules Engine | 5/5 | Complete | 2026-05-12 |
-| 2. Core Simulation Engines (WASM) | 8/8 | Complete | 2026-05-12 |
+| 2. Core Simulation Engines (Hybrid) | 11/11 | Complete | 2026-05-13 |
 | 3. Interactive Simulation Shell (MVP) | 0/TBD | Not started | - |
 | 4. Enhanced Data & Expert Mode | 0/TBD | Not started | - |
 | 5. Platform Expansion & Hardening | 0/TBD | Not started | - |

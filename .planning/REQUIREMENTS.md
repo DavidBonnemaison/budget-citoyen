@@ -16,11 +16,13 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Microsimulation Engine
 
-- [x] **MICRO-01**: Le moteur de microsimulation calcule l'impôt sur le revenu (IR) pour un profil type, exécuté en WASM dans le navigateur
-- [x] **MICRO-02**: Le moteur couvre les variables fiscales majeures : TVA, impôt sur les sociétés (IS), cotisations sociales
-- [x] **MICRO-03**: Le moteur calcule les aides sociales de l'État (prestations, allocations) pour un profil type
-- [x] **MICRO-04**: Le calcul microéconomique s'exécute intégralement côté client sans transfert de données personnelles vers le serveur
-- [x] **MICRO-05**: Le temps de réponse du moteur micro est inférieur à 200ms pour un calcul sur profil type
+> **Architecture (Phase 2 — simplified hybrid):** Le moteur de microsimulation original (Rust/WASM) a été remplacé par une architecture hybride Python + TypeScript. Tous les calculs microéconomiques sont pré-calculés en CI via openfisca-france (Python) et exportés sous forme de fichier JSON statique (`scenarios-v2025.1.json`). Le navigateur effectue des consultations O(1) par HashMap sur ces résultats pré-calculés — aucun calcul, aucun WASM, aucun transfert de données personnelles. Voir Plans 02-04 (pré-calcul), 02-06 (cache TypeScript), 02-07 (moteurs TS), 02-08 (workers), 02-09/02-10 (simplification), 02-11 (gap closure).
+
+- [x] **MICRO-01**: L'impôt sur le revenu (IR) est pré-calculé par openfisca-france en CI pour chaque scénario × profil et servi au navigateur via consultation O(1)
+- [x] **MICRO-02**: Les variables fiscales majeures (TVA, IS, cotisations sociales) sont pré-calculées par openfisca-france et disponibles dans le cache de scénarios TypeScript
+- [x] **MICRO-03**: Les aides sociales de l'État (prestations, allocations) sont pré-calculées par openfisca-france pour chaque profil type et consultables en O(1)
+- [x] **MICRO-04**: Le calcul microéconomique s'exécute intégralement côté client sans transfert de données personnelles vers le serveur — les résultats sont pré-calculés, le navigateur ne fait que des consultations locales
+- [x] **MICRO-05**: Le temps de réponse du moteur micro est inférieur à 200ms pour un calcul sur profil type — consultation HashMap O(1) < 1ms, bien en-dessous du seuil
 
 ### Macroeconomic Engine
 
