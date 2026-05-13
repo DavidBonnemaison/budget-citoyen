@@ -13,7 +13,10 @@
 /**
  * Résultat d'une projection macroéconomique.
  *
- * Mirrors `packages/core/src/types.rs: MacroResult`.
+ * NOTE: This interface uses JS camelCase naming conventions.
+ * Rust equivalent (packages/core/src/types.rs:MacroResult) uses snake_case.
+ * These types are independent — no WASM serialization contract exists between them.
+ *
  * All trajectory arrays have the same length (1 for single-point interpolation,
  * N for N-year projection).
  */

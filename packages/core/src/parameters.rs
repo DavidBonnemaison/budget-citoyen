@@ -235,6 +235,14 @@ impl Parameters {
         Ok(data)
     }
 
+    /// Parse a single parameter value node from JSON.
+    ///
+    /// NOTE: This parser handles the simplified test format structure only
+    /// (top-level `brackets`, `values`, `value` keys). Deeply nested structures
+    /// from the real parameters-v2025.1.json (e.g., `{"values": {"2025-01-01":
+    /// {"value": {"sub_field": {"value": 42.0}}}}}`) are stored as
+    /// `ParameterValue::None` in `load_real_format` and require recursive
+    /// parsing planned for Phase 3+.
     fn parse_parameter_value(
         value: &serde_json::Value,
     ) -> Result<ParameterValue, LoadError> {

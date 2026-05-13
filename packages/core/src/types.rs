@@ -174,6 +174,10 @@ pub struct AidesResult {
 }
 
 /// Résultat d'une projection macroéconomique.
+///
+/// NOTE: This struct uses Rust snake_case naming conventions.
+/// TypeScript equivalent (webapp/src/engine/types.ts:MacroResult) uses camelCase.
+/// These types are independent — no WASM serialization contract exists between them.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct MacroResult {
     /// Trajectoire du déficit public (points de PIB par année).

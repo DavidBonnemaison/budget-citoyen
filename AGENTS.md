@@ -29,6 +29,7 @@ Un simulateur budgétaire hybride et interactif permettant au grand public et au
 | Tailwind CSS | 4.3 | Styling | CSS-first configuration (`@theme`) eliminates separate config file; zero-runtime utility classes; works seamlessly with unstyled React Aria components; `@property` rules for accessible animations |
 | React Aria | (latest) | Accessibility | Unstyled accessible primitives with full WAI-ARIA implementation; `useSlider` hook provides `aria-valuenow`, `aria-valuemin`, `aria-valuemax`, touch + keyboard support, screen reader announcements — all mandatory for RGAA 4 Thematique 11 |
 ### WASM Microsimulation Engine (Rust)
+> **Phase 02 update (2026-05):** Architecture simplified to TypeScript engines for runtime, Python pre-compute for offline computation, Rust core crate for types/validation only. WASM dependencies below are no longer runtime requirements but remain documented for reference.
 | Technology | Version | Purpose | Why Recommended |
 |------------|---------|---------|-----------------|
 | wasm-bindgen | 0.2.121 | JS ↔ WASM interop | The standard bridge. Automatically generates TypeScript `.d.ts` declarations for all exported Rust types; supports `serde-serialize` for complex struct transfer; `wasm-bindgen-rayon` enables multi-threaded WASM |

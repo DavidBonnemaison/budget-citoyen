@@ -27,8 +27,8 @@ import type {
 
 // ── Pending Request Tracking ───────────────────────────────────────────
 
-interface PendingEntry {
-  resolve: (value: unknown) => void;
+interface PendingEntry<T = unknown> {
+  resolve: (value: T) => void;
   reject: (reason: unknown) => void;
   timestamp: number;
 }
@@ -38,7 +38,7 @@ interface PendingEntry {
 export class WorkerOrchestrator {
   private citizenWorker: Worker;
   private macroWorker: Worker;
-  private pending = new Map<string, PendingEntry>();
+  private pending = new Map<string, PendingEntry<unknown>>();
   private latestCitizenId: string | null = null;
   private latestMacroId: string | null = null;
   private citizenReady = false;
@@ -120,10 +120,10 @@ export class WorkerOrchestrator {
 
     const citizenInit = new Promise<void>((resolve, reject) => {
       this.pending.set(citizenId, {
-        resolve: () => resolve(),
+        resolve,
         reject,
         timestamp: Date.now(),
-      });
+      } as PendingEntry);
       this.citizenWorker.postMessage({
         id: citizenId,
         type: 'INIT',
@@ -133,10 +133,10 @@ export class WorkerOrchestrator {
 
     const macroInit = new Promise<void>((resolve, reject) => {
       this.pending.set(macroId, {
-        resolve: () => resolve(),
+        resolve,
         reject,
         timestamp: Date.now(),
-      });
+      } as PendingEntry);
       // Transfer the ArrayBuffer for zero-copy (D-12)
       this.macroWorker.postMessage(
         {
