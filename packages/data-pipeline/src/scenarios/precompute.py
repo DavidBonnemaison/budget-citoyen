@@ -430,9 +430,6 @@ def precompute_scenarios(
     output_path.mkdir(parents=True, exist_ok=True)
 
     # Get openfisca-france version for metadata
-    from openfisca_france import FranceTaxBenefitSystem
-
-    tbs = FranceTaxBenefitSystem()
     try:
         import importlib.metadata
         of_version = importlib.metadata.version("openfisca-france")
