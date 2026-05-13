@@ -158,7 +158,7 @@ def _estimate_cotisations(salaire_total: float, scale: float = 1.0) -> Dict[str,
         Dict with 'cotisations_salariales' and 'csg_crds'.
     """
     cotisations_salariales = salaire_total * 0.22 * scale
-    csg_crds = salaire_total * 0.9825 * 0.092 * scale
+    csg_crds = salaire_total * 0.9825 * 0.097 * scale
     return {
         "cotisations_salariales": round(cotisations_salariales, 2),
         "csg_crds": round(csg_crds, 2),
