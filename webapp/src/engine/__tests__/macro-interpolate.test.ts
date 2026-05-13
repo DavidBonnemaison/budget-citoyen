@@ -293,11 +293,11 @@ describe('MACRO-05 compliance', () => {
     expect(interpolateAtPoint(matrix, 1.0, -Infinity, 1.0)).toBeNull();
   });
 
-  it('returns null for tax or spend ≤ 0 (even if inside hull)', () => {
+  it('returns null for tax or spend at 0 due to hull rejection (hull min: tax=0.5, spend=0.7)', () => {
     const matrix = testMatrix();
-    // tax=0 is positive-finite but ≤ 0
+    // tax=0 is rejected by hull (hull min tax=0.5), not by the < 0 input guard
     expect(interpolateAtPoint(matrix, 0, 1.0, 1.0)).toBeNull();
-    // spend=0
+    // spend=0 is rejected by hull (hull min spend=0.7), not by the < 0 input guard
     expect(interpolateAtPoint(matrix, 1.0, 0, 1.0)).toBeNull();
   });
 
