@@ -206,6 +206,10 @@ impl Parameters {
         root: &serde_json::Map<String, serde_json::Value>,
         _expected_version: &str,
     ) -> Result<Self, LoadError> {
+        // NOTE: Real format version validation is deferred to a later phase.
+        // Currently all parameter values are stored as ParameterValue::None —
+        // deep parameter extraction (brackets, scalars, temporal values) from
+        // the real parameters-v2025.1.json structure is planned for Phase 3+.
         let version = "rules-v2025.1".to_string();
         let mut data = HashMap::new();
 
