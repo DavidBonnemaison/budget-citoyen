@@ -1,107 +1,126 @@
 # Phase 2: Core Simulation Engines (WASM) - Context
 
-**Gathered:** 2026-05-12
-**Status:** Ready for planning
+**Gathered:** 2026-05-13
+**Status:** Updated — hybrid architecture replaces codegen port
 
 ## Phase Boundary
 
-This phase delivers the computational heart of the platform: two WASM engines (microeconomic tax calculator + macroeconomic shock interpolator) executing in separate Web Workers. The micro engine computes IR, IS, TVA, cotisations sociales, and aides sociales for any profile, matching OpenFisca Python to ≤1e-6 precision. The macro engine performs multi-linear interpolation over the Phase 1 shock matrix to project deficit, debt, GDP growth, and employment trajectories. Both engines run entirely client-side — zero data transfer.
+This phase delivers the computational heart of the platform: a dual-mode architecture where citizens get instant pre-computed scenario results (zero data transfer) and experts access backend Python OpenFisca computation on-demand. The macro engine (multi-linear interpolation over the Phase 1 shock matrix) remains in WASM, projecting deficit, debt, GDP, and employment trajectories. **The Python-to-Rust formula codegen approach (D-05 through D-08, original) is replaced** — no OpenFisca logic is ported to Rust.
 
 ## Implementation Decisions
 
-### Crate Architecture & Code Organization
-- **D-01:** 3 crates: `core` (shared types, parameter loading, profiles, validation), `wasm-micro` (TaxBenefitSystem + formula evaluation), `wasm-macro` (ShockMatrix + interpolation). Cargo workspace at repo root.
-- **D-02:** Core crate scope: data types (Profile, Parameter), parameter tree loading from JSON, profile parsing, test fixtures. Engine-specific logic stays in engine crates. Both engine crates import core. No engine logic in core.
-- **D-03:** Crates live in `packages/` (flat alongside `tax-rules/` and `data-pipeline/`): `packages/core`, `packages/wasm-micro`, `packages/wasm-macro`.
-- **D-04:** Separate CI workflow `.github/workflows/phase2-wasm.yml` with `cargo test` (native, all crates) + `wasm-pack test` (browser context, wasm crates only). Phase 1's version-consistency gate runs first as prerequisite (produces JSON test fixtures consumed by `cargo test`).
+### Hybrid Architecture — Formula Porting Strategy (REPLACES original D-05 through D-08)
 
-### Formula Porting Strategy
-- **D-05:** Code generation from OpenFisca Python source. A Python script introspects the `openfisca-france` variable graph and generates Rust source files. No manual formula porting — the codegen automates dependency discovery and function ordering.
-- **D-06:** Full OpenFisca-France variable tree (~200+ variables) — no subsetting for v1. The code generator targets everything, avoiding cherry-picking decisions about which tax domains to include.
-- **D-07:** Manual codegen run, commit generated code to repo. CI step emits a soft warning (not hard gate) if `openfisca-france` upstream has a newer version than what's pinned in `packages/data-pipeline/pyproject.toml`. Re-run codegen only when upstream formulas change.
-- **D-08:** Code generator output: pure Rust functions with typed inputs + match on period. One module per tax domain. Each formula becomes `fn calculate_xxx(parameters: &Parameters, period: Date, profile: &Profile) -> f64`. Dependency ordering resolved at codegen time and embedded in generated code.
+- **D-05 (NEW):** No Python-to-Rust formula porting. The 3,336 lines of generated Rust formula code in `wasm-micro/src/generated/` become removable. Citizens get pre-computed scenario results (static lookup, zero data transfer). Experts use backend Python OpenFisca compute on-demand (no 200ms constraint, explicit privacy tradeoff).
+- **D-06 (NEW):** Citizen mode uses candidate scenario selector — user picks from a fixed list (e.g., 2027 presidential candidates' reform programs). Sub-scenarios per candidate possible later (Option A+). The macro engine sliders remain for exploring trajectory projections within each scenario.
+- **D-07 (NEW):** Pre-computed scenario data generated in CI pipeline by running official Python `openfisca-france` against canonical profiles for each candidate scenario. Results stored as compressed static file (Parquet/JSON/Binary) and loaded by the browser on first access. Re-generated when OpenFisca-France updates (PLF cycle).
+- **D-08 (NEW):** Expert mode — backend Python OpenFisca compute triggered by a "calculate" button. No 200ms latency constraint applies. Privacy: experts knowingly send anonymized profiles to backend; PII-free validation middleware ensures nothing identifiable enters the request body. Computation handled by a stateless API endpoint (Phase 5).
 
-### WASM Boundary & Worker Protocol Design
-- **D-09:** Input: flat `&[f64]` slice + index-based setters. All slider values cross the WASM boundary in a single slice. Rust-side has a constant index mapping and updates a pre-allocated `SimulationState` struct in-place. Zero serialization overhead.
-- **D-10:** Output: structured result structs via `wasm-bindgen` + `serde-wasm-bindgen`. Returns typed `MicroResult` / `MacroResult` objects with auto-generated TypeScript declarations. Small overhead acceptable since results produced once per slider interaction.
-- **D-11:** Web Worker message protocol: typed request/response with correlation IDs. Each `postMessage` carries `{ id: string, type: 'SIMULATE'|'INTERPOLATE'|'INIT', payload }`. Main thread tracks pending requests by ID and discards stale responses if a newer request superseded it.
-- **D-12:** Data loading: main thread fetches all static assets (tax rules JSON ~200KB, population JSON ~10MB, shock matrix Parquet ~5MB) during initial load. Transfers to workers via `postMessage` with Transferable ArrayBuffers (zero-copy). Workers never touch the network directly.
+### Privacy Boundary (NEW)
 
-### Profile Data Model
-- **D-13:** Simplified flat `Profile` struct with all relevant attributes flattened (no OpenFisca entity hierarchy). The code generator resolves cross-entity references at codegen time by inlining the relevant attributes into the flat struct.
-- **D-14:** Profile storage: `Vec<Profile>` in WASM linear memory. Single-profile: index into Vec. Batch (Phase 4): `rayon::par_iter()` for multicore parallelism. All 50K profiles loaded at init (~10MB).
-- **D-15:** Profile struct definition derives from code generator output. The codegen introspects OpenFisca's leaf input variables and emits the Rust struct with exactly those fields. CI regenerates when OpenFisca-France updates. Synthetic population export adapts its JSON keys to match.
-- **D-16:** Strict load-time validation: every profile deserializes via serde + passes a `validate()` method checking required fields and value ranges. Returns `Result<Profile, LoadError>`. Invalid profiles are rejected and counted (never silently loaded).
+- **D-09 (NEW):** Privacy split is explicit and per-mode: citizen mode = zero data transfer (static lookup file only, no requests), expert mode = voluntary backend compute with anonymized profiles. Both modes are clearly documented in the UI. No data from citizen mode ever reaches a server.
+- **D-10 (NEW):** MICRO-04 (zero client data transfer) is met for citizens, explicitly waived for experts. This satisfies the project's core promise (Privacy by Design for the general public) while enabling advanced analysis.
+
+### Crate Architecture & Code Organization (PRESERVED with scope reduction)
+
+- **D-11:** 3 crates: `core` (shared types, parameter loading, profiles, validation), `wasm-macro` (ShockMatrix + interpolation + scenario data loading), `wasm-micro` (skeleton only — scenario data cache, no formula engine).
+- **D-12:** Core crate scope unchanged: data types (Profile, Parameter), parameter tree loading from JSON, profile parsing, test fixtures. Engine-specific logic stays in engine crates.
+- **D-13:** Crates live in `packages/`: `packages/core`, `packages/wasm-micro`, `packages/wasm-macro`.
+- **D-14:** CI workflow tests `cargo test` (native) + `wasm-pack test` (wasm crates). Phase 1 version-consistency gate runs first.
+
+### WASM Boundary & Worker Architecture (ADJUSTED)
+
+- **D-15:** Macro engine input unchanged: flat `&[f64]` slice + index-based setters for slider values. Zero serialization overhead for macro interpolation.
+- **D-16:** Macro engine output unchanged: structured `MacroResult` via `serde-wasm-bindgen` with auto-generated TypeScript declarations.
+- **D-17:** Worker model: macro worker remains (interpn + projection). Micro worker becomes optional — may be absorbed into main thread for scenario data loading/caching, or kept as a lightweight worker for the scenario lookup table.
+- **D-18:** Data loading: main thread fetches static assets (scenario lookup table, shock matrix). Transfers to macro worker via `postMessage` with Transferable ArrayBuffers (zero-copy).
+
+### Profile Data Model (PRESERVED)
+
+- **D-19:** Simplified flat `Profile` struct — still needed for backend Python compute, canonical profile validation, and scenario data schema. No longer driven by codegen; derives from canonical profile schema documented in Phase 1.
+- **D-20:** Profile validation unchanged: `validate()` method checking required fields and value ranges. Returns `Result<Profile, LoadError>`.
+- **D-21:** Strict load-time validation preserved for any browser-loaded profile data.
+
+### Scenario Data Format (NEW)
+
+- **D-22:** Pre-computed scenario data format and loading strategy deferred to planner/researcher — candidates include Parquet, flat binary, or compressed JSON. Key constraint: <200ms load and lookup latency.
+- **D-23:** Scenario data version-locked following Phase 1 pattern: `scenarios-v2025.1` tag, CI version consistency gate against reference OpenFisca-France version.
 
 ### the agent's Discretion
-- Exact index mapping for the flat `&[f64]` input array (which index maps to which parameter)
-- Cargo workspace configuration details (workspace members, dependency versions, feature flags)
-- Code generator implementation details (introspection API, Rust code formatting, output directory structure)
-- Worker initialization sequencing (which worker to init first, timeout/retry strategy)
-- Production service worker integration for asset caching (deferred to Phase 3/5)
-- COOP/COEP header strategy (test on target platform early per STACK.md warning)
+
+- Exact scenario data file format (Parquet vs JSON vs binary vs hybrid)
+- Scenario lookup table schema (candidate × profile × metric dimensions)
+- Micro crate disposition (skeleton, gutted, or removed entirely)
+- Worker architecture optimization (single macro worker vs dual-worker)
+- Exact index mapping for the macro engine's `&[f64]` input array
+- Production service worker integration for asset caching (Phase 3/5)
+- COOP/COEP header strategy (test on target platform early)
+- Backend OpenFisca compute endpoint design (Phase 5)
 
 ## Canonical References
 
-Downstream agents MUST read these before planning or implementing.
+**Downstream agents MUST read these before planning or implementing.**
 
 ### Project-level
-- `.planning/PROJECT.md` — Core value, constraints, out-of-scope boundaries
+- `.planning/PROJECT.md` — Core value, constraints, out-of-scope, key decisions
 - `.planning/REQUIREMENTS.md` — v1 requirements (MICRO-01 through MICRO-05, MACRO-01 through MACRO-05)
-- `.planning/ROADMAP.md` — Phase ordering, dependencies (Phase 2 depends on Phase 1)
+- `.planning/ROADMAP.md` — Phase ordering, dependencies, success criteria
 - `.planning/phases/01-data-foundation-rules-engine/01-CONTEXT.md` — Phase 1 decisions (data format, versioning, validation, reference year 2025)
 
 ### Research
-- `.planning/research/STACK.md` — Technology stack (Rust/WASM, wasm-bindgen 0.2.121, ndarray 0.17, interpolation 0.3, serde-wasm-bindgen 0.6.5)
-- `.planning/research/ARCHITECTURE.md` — System architecture, Web Worker isolation pattern, multi-linear interpolation algorithm, data flow
+- `.planning/research/STACK.md` — Technology stack (Rust/WASM, wasm-bindgen 0.2.121, ndarray 0.17, interpn 0.11.0, serde-wasm-bindgen 0.6.5)
+- `.planning/research/ARCHITECTURE.md` — System architecture, Web Worker isolation, multi-linear interpolation, data flow
 - `.planning/research/PITFALLS.md` — Pitfall 1 (WASM serialization tax), Pitfall 2 (extrapolation beyond convex hull), Pitfall 3 (DP budget exhaustion)
 
 ### Phase 1 Data Artifacts (consumed by Phase 2)
-- `packages/tax-rules/parameters/` — YAML tax rules (31 files across IR/IS/TVA/cotisations/aides) converted to JSON at build time
-- `packages/data-pipeline/src/validation/export_fixtures.py` — JSON test fixtures for `cargo test` / `wasm-pack test`
-- `packages/data-pipeline/src/shock_matrix/` — Grid construction (Smolyak sparse + Cartesian), convex hull computation, Parquet/Zstd export
-- `packages/data-pipeline/src/synthetic_pop/` — Synthetic population export (JSON records, SHA-256 integrity hashes)
+- `packages/tax-rules/parameters/` — YAML tax rules (31 files across IR/IS/TVA/cotisations/aides)
+- `packages/data-pipeline/src/validation/export_fixtures.py` — JSON test fixtures for scenario pre-compute CI
+- `packages/data-pipeline/src/shock_matrix/` — Grid construction, convex hull computation, Parquet/Zstd export
+- `packages/data-pipeline/src/synthetic_pop/` — Synthetic population export (50K profiles, JSON, integrity hashes)
 
 ### External Domain References
-- OpenFisca Core documentation — Entity/Parameter/Variable structure, formula API, period handling (used by code generator)
-- `openfisca-france` Python package — Variable graph, formula implementations (~200+ variables)
+- OpenFisca Core documentation — Entity/Parameter/Variable structure, formula API, period handling (used by backend + scenario pre-compute pipeline)
+- `openfisca-france` Python package — Variable graph, formula implementations (source of truth for all fiscal computation)
 - wasm-bindgen documentation — JS interop patterns, `wasm-pack build --target web`, serde integration
-- wasm-bindgen-rayon documentation — Parallel WASM with SharedArrayBuffer + Web Workers
-- ndarray crate documentation — Multi-dimensional arrays, slicing, broadcasting
-- interpolation crate documentation — Multi-linear interpolation API
+- interpn 0.11.0 documentation — Multi-linear interpolation API, dimension-major obs convention
+- Postcard specification — Binary serialization format for shock matrix data transfer
 
 ## Existing Code Insights
 
 ### Reusable Assets
-- `packages/tax-rules/parameters/` — Complete YAML rules with OpenFisca-compatible schema (brackets, values, metadata.reference, metadata.unit). Build-time JSON conversion pipeline ready. Used by the micro engine for parameter loading.
-- `packages/data-pipeline/src/validation/export_fixtures.py` — Generates JSON test fixtures with input profiles + expected OpenFisca-France outputs. Directly consumable by `cargo test` via `include_str!()` or test helper.
-- `packages/data-pipeline/src/shock_matrix/export_parquet.py` — Exports shock matrix as Parquet/Zstd with `shockmatrix-v2025.1` version tag. Contains grid metadata (breakpoints per dimension, convex hull boundaries).
-- `packages/data-pipeline/src/synthetic_pop/export.py` — Exports 50K profiles as JSON records with `population-v2025.1` version tag and integrity sidecar (SHA-256, dp_epsilon).
+- `packages/wasm-macro/src/` — ShockMatrix, interpn interpolation, convex hull gating, trajectory projection. All preserved and battle-tested (12 tests passing, MACRO-05 compliant).
+- `packages/core/src/` — Profile, Parameters, MicroResult, MacroResult, test fixtures. All preserved.
+- `packages/tax-rules/parameters/` — Complete YAML rules. Used by scenario pre-compute CI pipeline (Python OpenFisca) instead of Rust runtime.
+- `packages/data-pipeline/src/validation/` — Bilingual test fixtures. Adaptable for scenario pre-compute result validation.
+
+### Deprecatable Code
+- `packages/wasm-micro/src/generated/` — 3,336 lines of auto-generated Rust formula code. Replaced by scenario pre-compute + backend approach. Can be removed in a subsequent plan.
+- `packages/wasm-micro/src/system.rs` — TaxBenefitSystem dispatcher calling generated formulas. Can be replaced with scenario data cache/loader.
+- Code generator pipeline (`packages/data-pipeline/src/codegen/` or equivalent) — Python→Rust transpiler. No longer needed.
 
 ### Established Patterns
-- Version-locking: all Phase 1 artifacts use semantic tags (`rules-v2025.1`, `population-v2025.1`, `shockmatrix-v2025.1`). Phase 2 must validate its inputs match these versions.
-- Optional dependency pattern (from `shock_matrix/bootstrap.py`): try/except ImportError with fallbacks. Relevant if the WASM engine needs optional features (e.g., rayon).
-- NumPy float32 for grid storage (memory-efficient). Rust equivalent: `f32` / `Float32Array`.
-- CI version-consistency gate: grep-based checks on YAML date keys + Python assert for reference year. Phase 2 CI extends this pattern.
+- Version-locking: all artifacts use semantic tags. Scenario data follows this pattern.
+- CI version-consistency gate: grep-based checks. Extends to scenario data version validation.
+- Postcard+gzip for WASM data loading (02-01). Candidate for scenario data transport.
+- Dimension-major obs convention for interpn (02-05). Macro engine must preserve this.
 
 ### Integration Points
-- Phase 2 CI consumes JSON test fixtures from Phase 1 validation framework. Phase 1's `phase1-validate.yml` must pass before `phase2-wasm.yml` runs.
-- WASM micro engine loads tax rules JSON (converted from YAML by Phase 1 pipeline) and synthetic population JSON (exported by Phase 1 pipeline).
-- WASM macro engine loads shock matrix Parquet (exported by Phase 1 pipeline), decodes in WASM via `parquet2` crate.
-- Bilingual validation: Python reference (openfisca-france) produces expected outputs → JSON fixtures → `cargo test` compares Rust outputs with ≤1e-6 tolerance.
+- Scenario pre-compute CI pipeline runs `openfisca-france` in CI, produces static data file consumed by browser.
+- Macro engine (wasm-macro) integrates with scenario selector UI — sliders drive interpolation, scenario choice drives pre-computed citizen results.
+- Backend OpenFisca endpoint (Phase 5) exposes compute for expert mode.
 
 ## Specific Ideas
 
-- The code generator should resolve OpenFisca's entity hierarchy (Individu, Famille, FoyerFiscal, Menage) into a flat Profile struct at codegen time, so the Rust runtime never sees entity relationships.
-- The flat `&[f64]` input array should have a companion constant module (generated or hand-written) that documents the index→parameter mapping for both Rust and TypeScript sides.
-- The shock matrix should be decoded from Parquet/Zstd in WASM (using `parquet2` crate) rather than JSON — the Phase 1 pipeline already exports in this format and it compresses ~5x better.
-- The CI staleness check for OpenFisca-France should compare the pinned version in `pyproject.toml` against the latest PyPI release, emitting a GitHub Actions warning annotation if newer.
+- The scenario selector should start simple — a list of candidate names with a brief reform summary. Sub-scenarios (policy variants per candidate) can be added later.
+- Macro engine sliders should remain functional in citizen mode — the citizen explores macro trajectory projections within their chosen scenario, even though the micro (household) results are pre-computed.
+- The scenario pre-compute pipeline should reuse the Phase 1 bilingual validation framework — iterate canonical profiles through Python OpenFisca for each candidate's parameter set, export structured results.
 
 ## Deferred Ideas
 
-None — discussion stayed within phase scope.
+- **Option A+ (sub-scenarios per candidate):** Extending candidate scenarios with policy variants (e.g., "Candidate A — full program" vs "Candidate A — tax only"). Future enhancement, not v1.
+- **Fine-tuning sliders within scenarios:** Allowing citizens to adjust individual parameters beyond the pre-computed candidate program. Future phase — adds dimensionality to scenario data.
 
 ---
 
 *Phase: 2-Core Simulation Engines (WASM)*
-*Context gathered: 2026-05-12*
+*Context gathered: 2026-05-13 (updated from 2026-05-12 original)*
