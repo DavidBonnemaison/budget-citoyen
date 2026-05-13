@@ -136,6 +136,14 @@ self.onmessage = (e: MessageEvent<WorkerRequest>) => {
         if (interpPayload.subType === 'project') {
           // Multi-year trajectory projection
           const years = (payload as ProjectPayload).years;
+          if (typeof years !== 'number' || years < 1) {
+            self.postMessage({
+              id,
+              type: 'ERROR',
+              payload: 'PROJECT requires a valid years field >= 1',
+            } satisfies WorkerResponse);
+            return;
+          }
           result = projectTrajectory(matrix, interpPayload.tax, interpPayload.spend, years);
         } else {
           // Single-point interpolation
