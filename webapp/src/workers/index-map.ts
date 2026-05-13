@@ -1,5 +1,6 @@
 // webapp/src/workers/index-map.ts
-// Shared with Rust: packages/wasm-micro/src/simulation.rs — keep in sync
+// Hybrid architecture (Plan 02-11): WASM interop layer removed.
+// These constants remain for reference but are no longer synced with a Rust crate.
 //
 // D-09: Constants shared between Rust and TypeScript.
 // Each slider in the UI maps to an index in the flat &[f64] simulation

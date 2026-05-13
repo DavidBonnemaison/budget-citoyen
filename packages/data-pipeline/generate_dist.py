@@ -12,6 +12,9 @@ from pathlib import Path
 # Ensure we can import the src/ modules
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
+# Phase 1 modules (yaml2json, validation) — these are reviewed and maintained
+# separately. Their contracts (function signatures, return types) are verified
+# by Phase 2 integration before this pipeline depends on them.
 from yaml2json.convert import convert_yaml_to_json
 from validation.canonical_profiles import CANONICAL_PROFILES
 from validation.export_fixtures import export_test_fixtures

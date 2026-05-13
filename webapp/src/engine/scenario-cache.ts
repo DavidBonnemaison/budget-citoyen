@@ -85,6 +85,7 @@ export class ScenarioCache {
 
     const profileMap = new Map<number, ScenarioResult>();
     for (const [key, value] of Object.entries(doc.results)) {
+      // JSON keys are always strings — convert to number for Map<number, ...> lookup
       profileMap.set(Number(key), value);
     }
     this.cache.set(doc.definition.id, profileMap);

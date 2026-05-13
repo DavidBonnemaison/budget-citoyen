@@ -71,7 +71,13 @@ def _load_fixture_profiles(fixture_path: Optional[str] = None) -> List[Dict[str,
 
 
 def _check_openfisca_installed() -> None:
-    """Verify openfisca-france is importable, with helpful message if not."""
+    """Verify openfisca-france is importable, with helpful message if not.
+
+    NOTE: openfisca-france is NOT used for computation — all tax/benefit formulas
+    are hand-rolled Python simplifications. OF installation is verified solely for
+    version extraction in metadata. The bilingual test fixtures contain reference
+    values computed by openfisca to cross-validate these simplifications.
+    """
     try:
         import openfisca_france  # noqa: F401
     except ImportError:
@@ -445,6 +451,8 @@ def precompute_scenarios(
         for idx, profile in enumerate(profiles):
             try:
                 result = _compute_scenario_result(profile, scenario, idx)
+                # Store with string key — JSON transport cannot represent numeric keys.
+                # TypeScript consumer converts back via Number(key) in ScenarioCache.addScenario().
                 results[str(idx)] = result
             except Exception as exc:
                 # Fail-fast: computation errors indicate corrupt data or buggy formulas
