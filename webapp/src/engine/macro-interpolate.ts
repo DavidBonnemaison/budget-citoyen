@@ -117,10 +117,10 @@ export function interpolateAtPoint(
   if (!isFinite(tax) || !isFinite(spend) || !isFinite(horizon)) {
     return null;
   }
-  if (tax <= 0 || spend <= 0) {
+  if (tax < 0 || spend < 0) {
     return null;
   }
-  if (horizon < 1 || horizon > 5) {
+  if (horizon < matrix.horizonBp[0] || horizon > matrix.horizonBp[matrix.horizonBp.length - 1]) {
     return null;
   }
 
