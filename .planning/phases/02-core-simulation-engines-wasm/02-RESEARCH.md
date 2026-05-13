@@ -6,43 +6,62 @@
 
 ## Summary
 
-Phase 2 delivers the computational heart of the platform: two WebAssembly engines executing in separate Web Workers. The micro engine ports OpenFisca-France's ~200+ variable tax-benefit system to Rust via automated code generation, computing IR, IS, TVA, cotisations sociales, and aides sociales for any profile. The macro engine performs multi-linear interpolation over the Phase 1 pre-computed shock matrix to project deficit, debt, GDP growth, and employment trajectories. Both engines run entirely client-side with zero data transfer.
+> **⚠️ ARCHITECTURE UPDATE (2026-05-13):** The original architecture (WASM formula codegen) has been replaced by the hybrid architecture per CONTEXT.md. Phase 2 now delivers: (1) the macroeconomic interpolation engine (unchanged — interpn over shock matrix), (2) a scenario pre-compute pipeline (Python CI that runs openfisca-france for candidate scenarios and exports static lookup data), and (3) a lightweight scenario data cache in WASM (not a formula engine). Citizens get pre-computed scenario results; experts use backend Python compute. The macro engine remains in WASM for real-time trajectory projection.
 
 **Primary recommendation:** Replace `interpolation 0.3.0` (animation easing, wrong crate) with `interpn 0.11.0` (no-std N-dimensional multilinear interpolation, WASM-optimized). The STACK.md reference to `interpolation` is incorrect for this use case — a STACK.md update should be scheduled. Additionally, verify Parquet/Zstd decompression in WASM early via a spike — the `parquet2` crate's zstd backend uses a C binding (`zstd` crate) that may not compile to `wasm32-unknown-unknown`. A pure-Rust fallback (`ruzstd`) or format conversion (gzip-compressed Parquet, or simpler binary format) should be validated before greenlighting the full implementation.
 
-## Architectural Responsibility Map
+## Architectural Responsibility Map — ⚠️ UPDATED for hybrid architecture (CONTEXT.md 2026-05-13)
 
 | Capability | Primary Tier | Secondary Tier | Rationale |
 |------------|-------------|----------------|-----------|
-| Tax formula evaluation (IR, IS, TVA, etc.) | Browser/WASM (Micro Worker) | — | Privacy-by-design: all computation client-side, zero data transfer |
-| Parameter loading from JSON rules | Browser/WASM (Micro Worker) | CDN/Static | Rules fetched as static JSON assets, loaded at worker init |
-| Multi-linear interpolation over shock matrix | Browser/WASM (Macro Worker) | — | Grid interpolation in microseconds; convex hull boundary check client-side |
-| Shock matrix data loading (Parquet) | Browser/WASM (Macro Worker) | CDN/Static | Matrix fetched as static binary, decoded in WASM |
-| Profile data storage (`Vec<Profile>`) | Browser/WASM (Micro Worker) | — | 50K profiles in WASM linear memory (~10MB), never leave browser |
-| Bilingual validation (Python ↔ Rust) | CI/Build Server | Browser | Python reference computes expected outputs → JSON fixtures → cargo test compares |
-| Worker orchestration (postMessage) | Browser/Main Thread | — | Main thread dispatches to workers, fans in results, never touches computation |
-| Static asset delivery (rules, population, matrix) | CDN/Static | — | Immutable versioned assets with integrity hashes |
+| Citizen micro results (IR, IS, TVA, etc.) | CDN/Static | Browser (scenario cache lookup) | Pre-computed scenario data generated in CI, loaded as static JSON/binary, looked up client-side — zero data transfer (D-09) |
+| Expert micro computation | Backend Python (Phase 5) | — | openfisca-france compute on-demand; experts knowingly send anonymized profiles (D-08, D-10) |
+| Scenario pre-compute (CI pipeline) | CI/Build Server | — | Python openfisca-france runs canonical profiles × candidate scenarios; exports static lookup file (D-07) |
+| Multi-linear interpolation over shock matrix | Browser/WASM (Macro Worker) | — | Grid interpolation in microseconds; convex hull boundary check client-side (D-15, D-16) |
+| Shock matrix data loading | Browser/WASM (Macro Worker) | CDN/Static | Matrix fetched as static binary, decoded in WASM (D-18) |
+| Scenario data cache | Browser/WASM (Micro Worker — optional per D-17) | Browser/Main Thread | Lightweight scenario lookup table; may be absorbed into main thread |
+| Parameter loading from JSON rules | CI/Build Server (scenario pre-compute) | WASM core (validation) | Parameters consumed by Python CI pipeline; Rust core crate retains for schema validation |
+| Profile validation | Browser/WASM (core crate) | — | Strict load-time validation for any browser-loaded profile data (D-21) |
+| Bilingual validation (Python scenario data ↔ Rust cache) | CI/Build Server | Browser | Python pre-computes expected outputs → Rust cache deserializes and verifies |
+| Worker orchestration (postMessage) | Browser/Main Thread | — | Main thread dispatches to macro worker; micro either main-thread or lightweight worker (D-17) |
+| Static asset delivery (scenarios, matrix) | CDN/Static | — | Immutable versioned assets with integrity hashes (D-23) |
 
 ## User Constraints (from CONTEXT.md)
 
-### Locked Decisions
+> **⚠️ SUPERSEDED by CONTEXT.md 2026-05-13 update.** The original D-05 through D-08 (Python→Rust codegen) have been replaced by the hybrid architecture. Original D-09 through D-16 were renumbered to D-11 through D-23, with new D-05 through D-10 added. See the current CONTEXT.md for authoritative decisions. This section retained for traceability only.
+
+### Locked Decisions (ORIGINAL — superseded, retained for traceability)
 
 - **D-01:** 3 crates: `core` (shared types), `wasm-micro` (TaxBenefitSystem), `wasm-macro` (ShockMatrix + interpolation). Cargo workspace at repo root.
 - **D-02:** Core crate scope: data types (Profile, Parameter), parameter tree loading from JSON, profile parsing, test fixtures. No engine logic in core.
 - **D-03:** Crates live in `packages/` (flat): `packages/core`, `packages/wasm-micro`, `packages/wasm-macro`.
 - **D-04:** Separate CI workflow `.github/workflows/phase2-wasm.yml` with `cargo test` + `wasm-pack test`. Phase 1's version-consistency gate runs first as prerequisite.
-- **D-05:** Code generation from OpenFisca Python source. Python script introspects `openfisca-france` variable graph, generates Rust source files.
-- **D-06:** Full OpenFisca-France variable tree (~200+ variables) — no subsetting for v1.
-- **D-07:** Manual codegen run, commit generated code to repo. CI emits soft warning if upstream newer.
-- **D-08:** Code generator output: pure Rust functions with typed inputs + match on period. One module per tax domain.
-- **D-09:** Input: flat `&[f64]` slice + index-based setters. All slider values cross boundary in single slice. Zero serialization overhead.
-- **D-10:** Output: structured result structs via `wasm-bindgen` + `serde-wasm-bindgen`. Typed `MicroResult` / `MacroResult` objects.
-- **D-11:** Web Worker message protocol: typed request/response with correlation IDs. Main thread discards stale responses.
-- **D-12:** Data loading: main thread fetches static assets, transfers to workers via `postMessage` with Transferable ArrayBuffers. Workers never touch network.
-- **D-13:** Simplified flat `Profile` struct — all relevant attributes flattened. Code generator resolves cross-entity references at codegen time.
-- **D-14:** Profile storage: `Vec<Profile>` in WASM linear memory. Single-profile: index into Vec.
-- **D-15:** Profile struct definition derives from code generator output.
-- **D-16:** Strict load-time validation: `serde` deserialize + `validate()` method. Returns `Result<Profile, LoadError>`.
+- **D-05 (SUPERSEDED):** ~~Code generation from OpenFisca Python source. Python script introspects `openfisca-france` variable graph, generates Rust source files.~~ → Replaced by NEW D-05: No formula porting. Pre-computed scenario results instead.
+- **D-06 (SUPERSEDED):** ~~Full OpenFisca-France variable tree (~200+ variables) — no subsetting for v1.~~ → Replaced by NEW D-06: Candidate scenario selector with pre-computed results.
+- **D-07 (SUPERSEDED):** ~~Manual codegen run, commit generated code to repo.~~ → Replaced by NEW D-07: Scenario data generated in CI pipeline, committed as static file.
+- **D-08 (SUPERSEDED):** ~~Code generator output: pure Rust functions.~~ → Replaced by NEW D-08: Expert mode uses backend Python compute.
+- **D-09 (→ D-15):** Input: flat `&[f64]` slice + index-based setters. All slider values cross boundary in single slice. Zero serialization overhead. *(Now applies to macro engine only.)*
+- **D-10 (→ D-16):** Output: structured result structs via `wasm-bindgen` + `serde-wasm-bindgen`. *(Now applies to macro engine only.)*
+- **D-11 (→ D-11 — preserved):** 3 crates: `core` (shared types), `wasm-macro` (ShockMatrix + interpolation + scenario data loading), `wasm-micro` (skeleton only — scenario data cache, no formula engine).
+- **D-12 (→ D-12):** Core crate scope unchanged.
+- **D-13 (→ D-13):** Crates live in `packages/`.
+- **D-14 (→ D-14):** CI workflow unchanged.
+- **D-15 (→ D-15):** Macro engine input unchanged.
+- **D-16 (→ D-16):** Macro engine output unchanged.
+- **D-17 (→ D-17):** Worker model: macro worker remains; micro worker optional.
+- **D-18 (→ D-18):** Data loading unchanged.
+- **D-19 (→ D-19):** Simplified flat Profile struct — no longer driven by codegen.
+- **D-20 (→ D-20):** Profile validation unchanged.
+- **D-21 (→ D-21):** Strict load-time validation preserved.
+
+### Current Locked Decisions (from CONTEXT.md 2026-05-13)
+
+See `.planning/phases/02-core-simulation-engines-wasm/02-CONTEXT.md` for the authoritative 23 decisions (D-01 through D-23 NEW/RENUMBERED). Key changes:
+- **Hybrid architecture:** No Python→Rust formula porting (NEW D-05). Citizens get pre-computed scenario results via static lookup (NEW D-06). Expert mode uses backend Python OpenFisca (NEW D-08).
+- **Privacy split:** Citizen mode = zero data transfer (NEW D-09); expert mode = voluntary backend compute (NEW D-10).
+- **wasm-micro crate:** Skeleton only — scenario data cache, no formula engine (D-11).
+- **Micro worker:** Optional — may be absorbed into main thread (D-17).
+- **Scenario data format:** Deferred to planner/researcher; key constraint: <200ms load+lookup (D-22).
 
 ### the agent's Discretion
 
@@ -524,7 +543,7 @@ pub struct MacroResult {
 }
 ```
 
-### Pattern 4: Code Generator Architecture (D-05, D-06, D-07, D-08)
+### Pattern 4: Code Generator Architecture (D-05, D-06, D-07, D-08) — ⚠️ SUPERSEDED by hybrid architecture (CONTEXT.md 2026-05-13)
 
 **What:** A Python script (in `packages/data-pipeline/src/codegen/`) introspects the `openfisca-france` variable graph and generates Rust source files. The code generator:
 1. Uses `openfisca_france.FranceTaxBenefitSystem().variables` to discover all ~200+ variables
@@ -559,7 +578,7 @@ pub struct MacroResult {
 | Parquet file reading in WASM | Custom binary format parser | `parquet2 0.17.2` (with WASM-safe compression) or simpler binary format (`postcard` + gzip at HTTP level) | Parquet is a complex format (page headers, repetition/definition levels, encoding schemes); `parquet2` is the standard Rust implementation |
 | Worker message protocol | Ad-hoc postMessage with string types | Typed request/response with discriminated union + correlation IDs per D-11 | Without correlation IDs, stale responses from rapid slider drags corrupt UI state |
 
-**Key insight:** The riskiest hand-rolled component would be the formula translation from Python to Rust. CONTEXT.md wisely mandates automated code generation (D-05) — this avoids manual porting errors of ~200+ tax formulas. The code generator is the single most important tool built in this phase. A spike of 3-5 representative formulas should validate the code generation approach before scaling to the full variable tree.
+**Key insight:** Under the revised hybrid architecture (CONTEXT.md 2026-05-13), formula translation risk is eliminated entirely — no formulas are ported to Rust. Citizen results come from pre-computed scenario data (Python CI pipeline, D-07). Expert results use backend Python OpenFisca directly (Phase 5). The scenario pre-compute pipeline (Plan 02-04) is the replacement for the code generator — it runs openfisca-france in CI against canonical profiles for each candidate scenario and exports a static lookup table.
 
 ## Common Pitfalls
 
@@ -851,39 +870,43 @@ fn test_round_trip_simulation() {
 | Quick run command | `cargo test -p budget-citoyen-core` (native, fast) |
 | Full suite command | `cargo test --workspace && wasm-pack test --headless packages/wasm-micro packages/wasm-macro` |
 
-### Phase Requirements → Test Map
-| Req ID | Behavior | Test Type | Automated Command | File Exists? |
-|--------|----------|-----------|-------------------|-------------|
-| MICRO-01 | IR computation matches OpenFisca reference | integration | `cargo test -p budget-citoyen-core -- bilingual` | ❌ Wave 0 |
-| MICRO-02 | IS, TVA, cotisations match reference | integration | `cargo test -p budget-citoyen-core -- bilingual` | ❌ Wave 0 |
-| MICRO-03 | Aides sociales match reference | integration | `cargo test -p budget-citoyen-core -- bilingual` | ❌ Wave 0 |
-| MICRO-04 | Zero network access from workers | architecture | Manual verification + CSP audit | ❌ Wave 0 |
-| MICRO-05 | <200ms single-profile calculation | performance | `wasm-pack test` with performance assertion | ❌ Wave 0 |
-| MACRO-01 | Deficit trajectory interpolation | unit | `cargo test -p budget-citoyen-core -- interpolation` | ❌ Wave 0 |
-| MACRO-02 | Debt trajectory interpolation | unit | `cargo test -p budget-citoyen-core -- interpolation` | ❌ Wave 0 |
-| MACRO-03 | GDP and employment projections | unit | `cargo test -p budget-citoyen-core -- interpolation` | ❌ Wave 0 |
-| MACRO-04 | Macro interpolation < 50ms | performance | `wasm-pack test` with performance assertion | ❌ Wave 0 |
-| MACRO-05 | Constant interest rates | unit | `cargo test -p budget-citoyen-core -- interpolation` — assert no rate variation code | ❌ Wave 0 |
+### Phase Requirements → Test Map — ⚠️ UPDATED for hybrid architecture (CONTEXT.md 2026-05-13)
+
+| Req ID | Behavior | Test Type | Automated Command | Plan |
+|--------|----------|-----------|-------------------|------|
+| MICRO-01 | IR results match Python CI pre-compute reference | integration | `cargo test -p budget-citoyen-core -- scenario_tests` | 02-06 |
+| MICRO-02 | IS, TVA, cotisations match Python CI pre-compute reference | integration | `cargo test -p budget-citoyen-core -- scenario_tests` | 02-06 |
+| MICRO-03 | Aides sociales match Python CI pre-compute reference | integration | `cargo test -p budget-citoyen-core -- scenario_tests` | 02-06 |
+| MICRO-04 | Zero network access from workers | architecture | Manual verification + CSP audit | 02-08 |
+| MICRO-05 | <200ms scenario load + lookup (JSON deserialize + HashMap::get) | performance | `wasm-pack test --headless` with timing assertion | 02-07 |
+| MACRO-01 | Deficit trajectory interpolation | unit | `cargo test -p budget-citoyen-wasm-macro -- interpolation_tests` | 02-05 |
+| MACRO-02 | Debt trajectory interpolation | unit | `cargo test -p budget-citoyen-wasm-macro -- interpolation_tests` | 02-05 |
+| MACRO-03 | GDP and employment projections | unit | `cargo test -p budget-citoyen-wasm-macro -- interpolation_tests` | 02-05 |
+| MACRO-04 | Macro interpolation < 50ms | performance | `wasm-pack test --headless` with timing assertion (100 iterations) | 02-07 |
+| MACRO-05 | Constant interest rates | unit | `grep -ri "interest_rate\|oat\|bond_yield" packages/wasm-macro/src/` returns 0 | 02-05 |
 
 ### Sampling Rate
 - **Per task commit:** `cargo test -p budget-citoyen-core` (native core tests, < 1s)
 - **Per wave merge:** `cargo test --workspace && wasm-pack test --headless` (full suite)
 - **Phase gate:** Full suite green + bilingual fixtures pass at ≤ 1e-6 precision
 
-### Wave 0 Gaps
-- [ ] `packages/core/Cargo.toml` — Crate initialization
-- [ ] `packages/core/tests/bilingual_tests.rs` — Bilingual validation harness (loads Phase 1 fixtures)
-- [ ] `packages/core/tests/parameter_tests.rs` — proptest property-based strategies
-- [ ] `packages/core/tests/profile_tests.rs` — Profile validation edge cases
-- [ ] `packages/wasm-micro/Cargo.toml` — WASM crate initialization
-- [ ] `packages/wasm-micro/tests/wasm_boundary.rs` — JS↔WASM boundary tests
-- [ ] `packages/wasm-macro/Cargo.toml` — WASM crate initialization
-- [ ] `packages/wasm-macro/tests/interpolation_tests.rs` — In-bounds/out-of-bounds validation
-- [ ] `packages/wasm-macro/tests/wasm_boundary.rs` — WASM boundary tests
-- [ ] `Cargo.toml` — Workspace root
-- [ ] `.github/workflows/phase2-wasm.yml` — CI workflow
-- [ ] Rust toolchain installation verification script
-- [ ] Pre-commit hook: `cargo fmt --check && cargo clippy -- -D warnings`
+### Wave 0 Gaps — ⚠️ UPDATED for hybrid architecture
+
+Per-req test files validated in their respective plans (see Phase Requirements → Test Map above for plan assignments):
+
+- [ ] `packages/core/Cargo.toml` — Crate initialization (Plan 02-01)
+- [ ] `packages/core/tests/scenario_tests.rs` — Scenario data validation (deserialize, lookup, completeness) (Plan 02-06)
+- [ ] `packages/core/tests/profile_tests.rs` — proptest property-based strategies (Plan 02-02)
+- [ ] `packages/core/tests/parameter_tests.rs` — Parameter loading and date resolution (Plan 02-03)
+- [ ] `packages/wasm-micro/Cargo.toml` — WASM crate initialization (Plan 02-01)
+- [ ] `packages/wasm-micro/tests/wasm_boundary.rs` — JS↔WASM scenario cache boundary tests with performance benchmarks (Plan 02-07)
+- [ ] `packages/wasm-macro/Cargo.toml` — WASM crate initialization (Plan 02-01)
+- [ ] `packages/wasm-macro/tests/interpolation_tests.rs` — In-bounds/out-of-bounds interpolation validation (Plan 02-05)
+- [ ] `packages/wasm-macro/tests/wasm_boundary.rs` — WASM boundary tests with performance benchmarks (Plan 02-07)
+- [ ] `Cargo.toml` — Workspace root (Plan 02-01)
+- [ ] `.github/workflows/phase2-wasm.yml` — CI workflow (Plan 02-08)
+- [ ] Rust toolchain installation verification (Plan 02-01)
+- [ ] Pre-commit hook: `cargo fmt --check && cargo clippy -- -D warnings` (Plan 02-08)
 
 ## Security Domain
 
@@ -965,15 +988,15 @@ fn test_round_trip_simulation() {
    - What's unclear: Should index constants be a hand-maintained file or code-generated alongside the parameter list?
    - Recommendation: Code-generate the index mapping as both a Rust `const` module and a TypeScript `const` object from the same source (the parameter definition order). Ensures Rust and TS stay in sync.
 
-## State of the Art
+## State of the Art — ⚠️ UPDATED for hybrid architecture
 
 | Old Approach | Current Approach | When Changed | Impact |
 |--------------|------------------|--------------|--------|
-| OpenFisca Python runtime (server-side) | Rust/WASM compiled for client-side execution | Phase 2 design (per PRD) | Enables privacy-by-design; eliminates server compute costs |
+| OpenFisca Python runtime (server-side) | Hybrid: pre-computed scenario data (citizen) + Python backend (expert) + WASM macro interpolation | Phase 2 design (CONTEXT.md 2026-05-13) | Citizens get instant results (zero data transfer); experts access full Python compute; macro engine stays in WASM |
+| ~~Automated code generation from OpenFisca variable graph~~ | Scenario pre-compute CI pipeline (Python openfisca-france runs on canonical profiles for candidate scenarios) | CONTEXT.md 2026-05-13 (hybrid architecture replaces codegen) | Eliminates ~200+ formula porting; static lookup table is <50 KB (vs ~4000 lines generated Rust); O(1) HashMap lookup instead of formula dispatch |
 | `interpolation 0.3.0` (animation easing) | `interpn 0.11.0` (N-dimensional grid interpolation) | This research (2026-05-12) | Correct crate for shock matrix; wasm-compatible (no-std, no-alloc) |
-| Manual formula porting (error-prone) | Automated code generation from OpenFisca variable graph | D-05 | Eliminates manual porting errors; ~200+ formulas generated consistently |
 | Monolithic WASM crate | Core/wasm split (3 crates, cargo workspace) | D-01, D-02 | Enables fast `cargo test` without browser; prevents untestable logic |
-| Structured input crossing WASM boundary per slider | Flat `&[f64]` slice batch interface | D-09 | Eliminates serialization overhead; achieves <200ms latency target |
+| Structured input crossing WASM boundary per slider | Flat `&[f64]` slice batch interface (macro engine only) | D-15 | Eliminates serialization overhead; achieves <200ms latency target for macro interpolation |
 
 **Deprecated/outdated:**
 - `serde_yaml 0.9.34` — deprecated March 2024. Phase 2 avoids YAML entirely at WASM runtime (consumes JSON from Phase 1 build step).

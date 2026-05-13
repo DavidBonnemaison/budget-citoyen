@@ -54,11 +54,11 @@ Plans:
 - [x] 02-01-PLAN.md — Environment setup, Rust toolchain install, Cargo workspace scaffolding, Phase 1 artifact generation, Parquet/WASM spike
 - [x] 02-02-PLAN.md — TDD: Profile validation & core types (Profile, LoadError, MicroResult, MacroResult)
 - [x] 02-03-PLAN.md — TDD: Parameter tree loading with date-based resolution & version checking
-- [x] 02-04-PLAN.md — Code generator script (Python→Rust), full variable tree compilation, CI staleness check
+- [x] 02-04-PLAN.md — Scenario data format & pre-compute pipeline (replaces codegen — hybrid architecture: Python CI runs openfisca-france, exports static scenario lookup JSON per D-05 through D-08 NEW)
 - [x] 02-05-PLAN.md — TDD: Macro interpolation engine (ShockMatrix, interpn, convex hull, trajectory projection)
-- [x] 02-06-PLAN.md — TDD: Bilingual tax validation & TaxBenefitSystem (32 canonical profiles, ≤1e-6 precision)
-- [x] 02-07-PLAN.md — WASM boundary layers (MicroEngine + MacroEngine), boundary tests, core test verification
-- [x] 02-08-PLAN.md — Web Workers (micro/macro workers, orchestrator, index-map), CI pipeline, release profile
+- [x] 02-06-PLAN.md — TDD: Scenario data cache & lookup engine (replaces TaxBenefitSystem — lightweight O(1) HashMap lookup, no formula engine per D-11 skeleton)
+- [x] 02-07-PLAN.md — WASM boundary layers (ScenarioCache + MacroEngine), boundary tests, performance benchmarks (MICRO-05, MACRO-04), core test verification
+- [x] 02-08-PLAN.md — Web Workers (macro worker, optional micro worker per D-17, orchestrator, index-map), CI pipeline, release profile
 
 ### Phase 3: Interactive Simulation Shell (MVP)
 **Goal**: A citizen can visit the platform on any device, manipulate fiscal sliders, and see in real time (<200ms) the impact on a typical household's purchasing power and the national deficit/debt trajectory — all in accessible, vulgarized French, shareable via URL, and compliant with RGAA 4 core criteria. This is the first user-facing deliverable (Milestone 1).
