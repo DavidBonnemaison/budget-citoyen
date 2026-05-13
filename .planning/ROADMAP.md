@@ -2,7 +2,7 @@
 
 ## Overview
 
-Budget Citoyen is built in 5 phases over 2 milestones, following a strict build-order dictated by dependency chains: data artifacts → computation engines → interactive UI → enhanced analysis → platform hardening. Phases 1-2 produce the invisible foundation (tax rules, synthetic population, shock matrix, WASM engines). Phase 3 delivers the first user-facing MVP (Citizen Explorer shell) as Milestone 1. Phase 4 adds distributional analysis and expert mode as Milestone 2. Phase 5 opens the platform to researchers and hardens for production launch.
+Budget Citoyen is built in 5 phases over 2 milestones, following a strict build-order dictated by dependency chains: data artifacts → computation engines → interactive UI → enhanced analysis → platform hardening. Phases 1-2 produce the invisible foundation (tax rules, synthetic population, shock matrix, simulation engines). Phase 3 delivers the first user-facing MVP (Citizen Explorer shell) as Milestone 1. Phase 4 adds distributional analysis and expert mode as Milestone 2. Phase 5 opens the platform to researchers and hardens for production launch.
 
 Every phase incorporates its pitfall prevention at the earliest design stage — retrofitting accessibility, privacy budget architecture, or WASM boundary optimization after the fact would cost 2-3 weeks each.
 
@@ -22,11 +22,11 @@ Every phase incorporates its pitfall prevention at the earliest design stage —
 ## Phase Details
 
 ### Phase 1: Data Foundation & Rules Engine
-**Goal**: All reference data artifacts (tax rules, synthetic population, shock matrix) exist in auditable, version-locked form, ready for consumption by the WASM computation engines — no computation can proceed without these contracts.
+**Goal**: All reference data artifacts (tax rules, synthetic population, shock matrix) exist in auditable, version-locked form, ready for consumption by the computation engines — no computation can proceed without these contracts.
 **Depends on**: Nothing (first phase)
 **Requirements**: DATA-01, DATA-02, DATA-03, DATA-04
 **Success Criteria** (what must be TRUE):
-  1. Tax rules for IR, IS, TVA, cotisations sociales, and aides sociales are encoded as auditable YAML files with referenced legislation sources and convertible to JSON for the WASM runtime
+  1. Tax rules for IR, IS, TVA, cotisations sociales, and aides sociales are encoded as auditable YAML files with referenced legislation sources and convertible to JSON for the client-side runtime
   2. A synthetic population of 50,000 profiles is generated with statistically valid multi-variable correlations (âge ↔ patrimoine ↔ revenus), and a formal differential privacy guarantee of ε ≤ 1.0 is proven (not estimated) via the OpenDP framework
   3. The Mésange-derived shock matrix is pre-computed as a compressed 3D look-up table (tax × spend × horizon) under 5 MB with convex hull boundaries documented — out-of-bounds regions are explicitly identified
      4. A bilingual Python→Rust validation framework confirms that 10-20 canonical household profiles produce identical results against the official impots.gouv.fr simulator; all data artifacts are version-locked to the same reference year with CI gate enforcement
