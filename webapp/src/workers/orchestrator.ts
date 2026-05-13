@@ -73,7 +73,9 @@ export class WorkerOrchestrator {
     // This handles rapid slider dragging (60 req/s) — only the latest
     // response matters for the UI update.
     if (latest !== null && response.id !== latest) {
-      console.debug(`Discarding stale ${source} response: ${response.id}`);
+      if (import.meta.env.DEV) {
+        console.debug(`Discarding stale ${source} response: ${response.id}`);
+      }
       return;
     }
 
