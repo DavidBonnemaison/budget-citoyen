@@ -30,6 +30,7 @@ dev = [
 
 [project.scripts]
 validate-data = "yaml2json.validate:validate_file"
+precompute-scenarios = "scenarios.precompute:main"
 
 [tool.pytest.ini_options]
 minversion = "8.0"
