@@ -146,16 +146,16 @@ def main():
             "version": "shockmatrix-v2025.1",
             "status": "stub",
             "reason": "CASD data unavailable — placeholder generated for development",
-            "format": "parquet (zstd compression)",
+            "format": "json (manifest — pyarrow unavailable)",
             "dimensions": {
                 "tax_rate": {"count": 5, "range": [0.0, 1.0]},
                 "spending_level": {"count": 5, "range": [0.0, 1.0]},
                 "horizon_year": {"count": 3, "range": [2025, 2027]},
             },
             "outputs": ["gdp_growth", "employment_change", "deficit_change", "debt_to_gdp_ratio"],
-            "note": "Regenerate with real data when CASD access is granted (multi-month process)",
+            "note": "Regenerate with real data when CASD access is granted (multi-month process). Install pyarrow for Parquet output.",
         }
-        manifest_path = dist_dir / "shockmatrix-v2025.1.parquet"
+        manifest_path = dist_dir / "shockmatrix-v2025.1.manifest.json"
         with open(manifest_path, "w") as f:
             json.dump(manifest, f, indent=2)
         print(f"  ✓ Manifest written: {manifest_path}")
