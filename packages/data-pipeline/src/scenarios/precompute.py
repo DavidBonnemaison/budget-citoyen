@@ -357,10 +357,12 @@ def _compute_scenario_result(
     # IR
     revenu_net_cat = (
         salaire_total * 0.9 + pension_total * 0.9  # 10% abattement professionnel
+        + chomage_total * 0.9                      # 10% abattement on unemployment
         + bnc_total * 0.9                         # 10% abattement on BNC
         + bic_total * 0.5                         # 50% abattement under micro-BIC regime
         + micro_bic_total * 0.5                   # 50% abattement under micro-BIC regime
         + benefice_agricole_total * 1.0           # agricultural income enters IR directly
+        + fonciers_total * 0.7                    # 30% abattement micro-foncier
     )
     nb_parts = _compute_quotient_familial(profile)
     ir = _compute_ir_bareme(revenu_net_cat, nb_parts, scale=ir_scale)
