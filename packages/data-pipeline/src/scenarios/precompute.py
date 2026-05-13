@@ -1,12 +1,12 @@
-"""Scenario pre-compute pipeline using openfisca-france.
+"""Scenario pre-compute pipeline using simplified tax/benefit formulas (cross-validated against openfisca-france reference).
 
-Runs openfisca-france for each candidate scenario × canonical profile and
+Runs simplified tax/benefit formulas for each candidate scenario × canonical profile and
 exports pre-computed results as structured JSON for client-side O(1) lookups.
 
 Pipeline:
   1. Load canonical profiles from bilingual_test_fixtures.json
   2. For each scenario definition:
-     a. Apply openfisca-france Reform parameter overrides
+     a. Apply scenario-specific parameter overrides in simplified formulas
      b. For each profile: compute IR, IS, TVA, cotisations, aides, revenu_disponible
      c. Collect into ScenarioDoc (definition + per-profile results)
   3. Export to packages/data-pipeline/dist/scenarios-v2025.1.json
@@ -84,7 +84,8 @@ def _check_openfisca_installed() -> None:
         _sys.exit(
             "openfisca-france is not installed. "
             "Install with: pip install openfisca-france>=159,<200\n"
-            "This package is required for the scenario pre-compute pipeline."
+            "This package is only required for version metadata extraction in the "
+            "pre-compute pipeline, not for computation."
         )
 
 
@@ -281,8 +282,8 @@ def _compute_scenario_result(
 ) -> Dict[str, float]:
     """Compute microsimulation result for a profile under a given scenario.
 
-    Uses openfisca-france's FranceTaxBenefitSystem as the tax-benefit framework
-    with scenario-specific parameter overrides applied via the Reform API.
+    Uses simplified tax/benefit formulas (hand-rolled Python, cross-validated
+    against openfisca-france reference values in bilingual test fixtures).
 
     Args:
         profile: Canonical profile dict from test fixtures.
@@ -413,7 +414,7 @@ def precompute_scenarios(
     """Run scenario pre-compute pipeline and export results to JSON.
 
     For each scenario × canonical profile, computes the microsimulation result
-    using openfisca-france, then exports a structured JSON file consumable by
+    using simplified formulas, then exports a structured JSON file consumable by
     the TypeScript ScenarioCache (O(1) HashMap lookups).
 
     Args:
