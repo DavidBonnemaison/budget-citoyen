@@ -130,7 +130,9 @@ export class ScenarioCache {
         `Failed to load scenario data: ${response.status} ${response.statusText}`,
       );
     }
-    const docs: ScenarioDoc[] = await response.json();
+    const data = await response.json();
+    // Support both formats: bare array and { scenarios: [...] } wrapper
+    const docs: ScenarioDoc[] = Array.isArray(data) ? data : data.scenarios ?? [];
     return ScenarioCache.fromDocs(docs);
   }
 }
