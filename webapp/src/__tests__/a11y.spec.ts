@@ -99,6 +99,56 @@ test.describe('Slider keyboard navigation (A11Y-05)', () => {
   });
 });
 
+test.describe('Pattern fills (A11Y-03)', () => {
+  test('SVG pattern defs use deuteranopia-safe Wong 2011 color palette', async ({ page }) => {
+    // The app auto-selects baseline on init. Wait for displaying state.
+    await page.goto('/');
+
+    // Wait for displaying state with charts rendered
+    await expect(page.getByText('Projections macroéconomiques')).toBeVisible({ timeout: 30000 });
+
+    // The hidden SVG defs should exist in the DOM
+    const svgDefs = page.locator('svg[aria-hidden="true"] defs');
+    await expect(svgDefs).toHaveCount(1);
+
+    // All four pattern elements should be present
+    const patterns = svgDefs.locator('pattern');
+    await expect(patterns).toHaveCount(4);
+
+    // Verify the four pattern IDs match CHART_PATTERNS_SVG definitions
+    const patternIds = await svgDefs.locator('pattern').evaluateAll((els) =>
+      els.map((el) => el.getAttribute('id')),
+    );
+    expect(patternIds).toContain('pattern-deficit');
+    expect(patternIds).toContain('pattern-debt');
+    expect(patternIds).toContain('pattern-gdp');
+    expect(patternIds).toContain('pattern-employment');
+
+    // Verify deuteranopia-safe Wong 2011 colors are present in SVG content
+    const svgContent = await svgDefs.evaluate((el) => el.innerHTML);
+    expect(svgContent).toContain('#0072B2'); // pattern-deficit (blue)
+    expect(svgContent).toContain('#E69F00'); // pattern-debt (orange)
+    expect(svgContent).toContain('#009E73'); // pattern-gdp (green)
+    expect(svgContent).toContain('#CC79A7'); // pattern-employment (pink)
+  });
+
+  test('pattern defs are present even before scenario selection (empty chart state)', async ({ page }) => {
+    await page.goto('/');
+
+    // The ChartGrid renders its hidden SVG patterns regardless of macroResult.
+    // Wait for the page to reach a stable state where ChartGrid is mounted.
+    // Use the methodology link in Footer as a signal the page is loaded.
+    await expect(page.getByRole('link', { name: 'Méthodologie et sources' })).toBeVisible({ timeout: 30000 });
+
+    // Find the hidden SVG with pattern definitions
+    const svgDefs = page.locator('svg[aria-hidden="true"] defs');
+    await expect(svgDefs).toHaveCount(1);
+
+    const patterns = svgDefs.locator('pattern');
+    await expect(patterns).toHaveCount(4);
+  });
+});
+
 test.describe('Methodology page accessibility', () => {
   test('axe-core finds no violations on methodology page', async ({ page }) => {
     await page.goto('/methodologie');

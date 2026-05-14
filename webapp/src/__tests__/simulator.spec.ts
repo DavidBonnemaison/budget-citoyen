@@ -90,6 +90,41 @@ test.describe('Methodology Page', () => {
   });
 });
 
+test.describe('Loading Indicator (UI-07)', () => {
+  test('loading pulse visible on slider track during computation', async ({ page }) => {
+    // The app auto-selects baseline on init. Wait for displaying state to appear.
+    await page.goto('/');
+
+    // Wait for the splash screen to show (proves page is loading)
+    await expect(page.getByText('Chargement du simulateur')).toBeVisible({ timeout: 30000 });
+
+    // Wait for displaying state — charts and impact should render after auto-init
+    await expect(page.getByText('Impact sur votre foyer')).toBeVisible({ timeout: 30000 });
+    await expect(page.getByText('Projections macroéconomiques')).toBeVisible({ timeout: 30000 });
+
+    // Sliders should be enabled in displaying state
+    const slider = page.getByRole('slider').first();
+    await expect(slider).toBeEnabled({ timeout: 10000 });
+
+    // Trigger slider value change + drag-end (ArrowRight then Tab to blur)
+    await slider.focus();
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('Tab'); // triggers React Aria onChangeEnd → handleDragEnd
+
+    // After drag-end, LeverSlider wraps onChangeEnd in startTransition,
+    // causing animate-pulse class on the slider track during the transition batch.
+    // Check for any element with animate-pulse in the DOM right after interaction.
+    const pulseLocator = page.locator('.animate-pulse');
+    const hasPulse = (await pulseLocator.count()) > 0;
+
+    // The requirement UI-07 demands a CSS opacity pulse visible during
+    // worker computation. The LeverSlider track has animate-pulse during
+    // its useTransition wrapping of onChangeEnd, which kicks off the
+    // macro computation via handleDragEnd → orchestrator.project().
+    expect(hasPulse).toBe(true);
+  });
+});
+
 test.describe('Mobile Layout', () => {
   test('mobile viewport shows accordion', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
