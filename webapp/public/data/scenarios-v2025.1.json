@@ -1,0 +1,142 @@
+[
+  {
+    "definition": {
+      "id": "baseline-2025",
+      "name": "Budget 2025 — Loi de finances",
+      "description": "Situation de référence : tous les paramètres à leur valeur actuelle selon la Loi de Finances Initiale 2025.",
+      "parameterOverrides": {}
+    },
+    "results": {
+      "0": { "ir": 120, "is": 50, "tva": 200, "cotisations": 280, "aides": 350, "revenuDisponible": 1350 },
+      "1": { "ir": 450, "is": 180, "tva": 420, "cotisations": 620, "aides": 100, "revenuDisponible": 1950 },
+      "2": { "ir": 2200, "is": 900, "tva": 950, "cotisations": 1300, "aides": 20, "revenuDisponible": 4200 }
+    }
+  },
+  {
+    "definition": {
+      "id": "reform-ir-baisse",
+      "name": "Baisse de l'impôt sur le revenu",
+      "description": "Réduction de 15 % des taux du barème de l'impôt sur le revenu. Vous payez moins d'IR sur chaque tranche.",
+      "parameterOverrides": {
+        "ir.bareme.tranche1": -15, "ir.bareme.tranche2": -15, "ir.bareme.tranche3": -15,
+        "ir.bareme.tranche4": -15, "ir.bareme.tranche5": -15
+      }
+    },
+    "results": {
+      "0": { "ir": 80, "is": 50, "tva": 200, "cotisations": 280, "aides": 350, "revenuDisponible": 1390 },
+      "1": { "ir": 320, "is": 180, "tva": 420, "cotisations": 620, "aides": 100, "revenuDisponible": 2080 },
+      "2": { "ir": 1800, "is": 900, "tva": 950, "cotisations": 1300, "aides": 20, "revenuDisponible": 4600 }
+    }
+  },
+  {
+    "definition": {
+      "id": "reform-ir-hausse",
+      "name": "Hausse de l'impôt sur le revenu",
+      "description": "Augmentation de 15 % des taux du barème de l'IR. Les recettes fiscales augmentent, le revenu disponible baisse.",
+      "parameterOverrides": {
+        "ir.bareme.tranche1": 15, "ir.bareme.tranche2": 15, "ir.bareme.tranche3": 15,
+        "ir.bareme.tranche4": 15, "ir.bareme.tranche5": 15
+      }
+    },
+    "results": {
+      "0": { "ir": 160, "is": 50, "tva": 200, "cotisations": 280, "aides": 350, "revenuDisponible": 1310 },
+      "1": { "ir": 580, "is": 180, "tva": 420, "cotisations": 620, "aides": 100, "revenuDisponible": 1820 },
+      "2": { "ir": 2600, "is": 900, "tva": 950, "cotisations": 1300, "aides": 20, "revenuDisponible": 3800 }
+    }
+  },
+  {
+    "definition": {
+      "id": "reform-tva-baisse",
+      "name": "Baisse de la TVA",
+      "description": "Réduction de la TVA : -10 % sur le taux normal et -5 % sur le taux réduit. Votre panier quotidien coûte moins cher.",
+      "parameterOverrides": {
+        "tva.taux.normal": -10, "tva.taux.reduit": -5
+      }
+    },
+    "results": {
+      "0": { "ir": 120, "is": 50, "tva": 170, "cotisations": 280, "aides": 350, "revenuDisponible": 1380 },
+      "1": { "ir": 450, "is": 180, "tva": 370, "cotisations": 620, "aides": 100, "revenuDisponible": 2000 },
+      "2": { "ir": 2200, "is": 900, "tva": 850, "cotisations": 1300, "aides": 20, "revenuDisponible": 4300 }
+    }
+  },
+  {
+    "definition": {
+      "id": "reform-is-baisse",
+      "name": "Baisse de l'impôt sur les sociétés",
+      "description": "Réduction de 15 % du taux de l'impôt sur les sociétés pour favoriser l'investissement des entreprises.",
+      "parameterOverrides": {
+        "is.taux": -15
+      }
+    },
+    "results": {
+      "0": { "ir": 120, "is": 40, "tva": 200, "cotisations": 280, "aides": 350, "revenuDisponible": 1360 },
+      "1": { "ir": 450, "is": 150, "tva": 420, "cotisations": 620, "aides": 100, "revenuDisponible": 1980 },
+      "2": { "ir": 2200, "is": 750, "tva": 950, "cotisations": 1300, "aides": 20, "revenuDisponible": 4350 }
+    }
+  },
+  {
+    "definition": {
+      "id": "reform-cotisations-baisse",
+      "name": "Baisse des cotisations sociales",
+      "description": "Réduction des cotisations : -10 % salariales, -10 % patronales, -5 % CSG/CRDS. Plus de pouvoir d'achat net.",
+      "parameterOverrides": {
+        "cotisations.salariales": -10, "cotisations.patronales": -10, "cotisations.csg_crds": -5
+      }
+    },
+    "results": {
+      "0": { "ir": 120, "is": 50, "tva": 200, "cotisations": 240, "aides": 350, "revenuDisponible": 1390 },
+      "1": { "ir": 450, "is": 180, "tva": 420, "cotisations": 540, "aides": 100, "revenuDisponible": 2030 },
+      "2": { "ir": 2200, "is": 900, "tva": 950, "cotisations": 1140, "aides": 20, "revenuDisponible": 4360 }
+    }
+  },
+  {
+    "definition": {
+      "id": "reform-depenses-hausse",
+      "name": "Hausse des dépenses publiques",
+      "description": "Augmentation des dépenses de l'État : +10 % de budget de fonctionnement et +5 % d'effectifs publics.",
+      "parameterOverrides": {
+        "depenses.spend_level": 10, "depenses.effectifs": 5
+      }
+    },
+    "results": {
+      "0": { "ir": 120, "is": 50, "tva": 200, "cotisations": 280, "aides": 380, "revenuDisponible": 1380 },
+      "1": { "ir": 450, "is": 180, "tva": 420, "cotisations": 620, "aides": 130, "revenuDisponible": 1980 },
+      "2": { "ir": 2200, "is": 900, "tva": 950, "cotisations": 1300, "aides": 40, "revenuDisponible": 4220 }
+    }
+  },
+  {
+    "definition": {
+      "id": "programme-social",
+      "name": "Programme social",
+      "description": "Combinaison de mesures sociales : hausse de l'IR pour les plus aisés, hausse des dépenses publiques, et légère baisse de la TVA sur les produits de première nécessité.",
+      "parameterOverrides": {
+        "ir.bareme.tranche4": 10, "ir.bareme.tranche5": 10,
+        "depenses.spend_level": 15, "depenses.effectifs": 10,
+        "tva.taux.reduit": -5
+      }
+    },
+    "results": {
+      "0": { "ir": 120, "is": 50, "tva": 190, "cotisations": 280, "aides": 400, "revenuDisponible": 1410 },
+      "1": { "ir": 470, "is": 180, "tva": 400, "cotisations": 620, "aides": 150, "revenuDisponible": 2010 },
+      "2": { "ir": 2450, "is": 900, "tva": 920, "cotisations": 1300, "aides": 50, "revenuDisponible": 3910 }
+    }
+  },
+  {
+    "definition": {
+      "id": "programme-liberal",
+      "name": "Programme libéral",
+      "description": "Combinaison de mesures libérales : baisse de l'IR, baisse de l'IS, et réduction des dépenses publiques pour alléger la charge fiscale globale.",
+      "parameterOverrides": {
+        "ir.bareme.tranche1": -10, "ir.bareme.tranche2": -10, "ir.bareme.tranche3": -10,
+        "ir.bareme.tranche4": -10, "ir.bareme.tranche5": -10,
+        "is.taux": -15,
+        "depenses.spend_level": -10
+      }
+    },
+    "results": {
+      "0": { "ir": 90, "is": 40, "tva": 200, "cotisations": 280, "aides": 300, "revenuDisponible": 1340 },
+      "1": { "ir": 360, "is": 150, "tva": 420, "cotisations": 620, "aides": 70, "revenuDisponible": 2040 },
+      "2": { "ir": 1950, "is": 750, "tva": 950, "cotisations": 1300, "aides": 10, "revenuDisponible": 4590 }
+    }
+  }
+]
