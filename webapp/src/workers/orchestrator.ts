@@ -27,8 +27,8 @@ import type {
 
 // ── Pending Request Tracking ───────────────────────────────────────────
 
-interface PendingEntry<T = unknown> {
-  resolve: (value: T) => void;
+interface PendingEntry {
+  resolve: (value: unknown) => void;
   reject: (reason: unknown) => void;
   timestamp: number;
 }
@@ -38,7 +38,7 @@ interface PendingEntry<T = unknown> {
 export class WorkerOrchestrator {
   private citizenWorker: Worker;
   private macroWorker: Worker;
-  private pending = new Map<string, PendingEntry<unknown>>();
+  private pending = new Map<string, PendingEntry>();
   private latestCitizenId: string | null = null;
   private latestMacroId: string | null = null;
   private citizenReady = false;
@@ -168,7 +168,11 @@ export class WorkerOrchestrator {
     this.latestCitizenId = id;
 
     return new Promise((resolve, reject) => {
-      this.pending.set(id, { resolve, reject, timestamp: Date.now() });
+      this.pending.set(id, {
+        resolve: resolve as (value: unknown) => void,
+        reject,
+        timestamp: Date.now(),
+      });
       this.citizenWorker.postMessage({
         id,
         type: 'SIMULATE',
@@ -193,7 +197,11 @@ export class WorkerOrchestrator {
     this.latestMacroId = id;
 
     return new Promise((resolve, reject) => {
-      this.pending.set(id, { resolve, reject, timestamp: Date.now() });
+      this.pending.set(id, {
+        resolve: resolve as (value: unknown) => void,
+        reject,
+        timestamp: Date.now(),
+      });
       this.macroWorker.postMessage({
         id,
         type: 'INTERPOLATE',
@@ -218,7 +226,11 @@ export class WorkerOrchestrator {
     this.latestMacroId = id;
 
     return new Promise((resolve, reject) => {
-      this.pending.set(id, { resolve, reject, timestamp: Date.now() });
+      this.pending.set(id, {
+        resolve: resolve as (value: unknown) => void,
+        reject,
+        timestamp: Date.now(),
+      });
       this.macroWorker.postMessage({
         id,
         type: 'PROJECT',
