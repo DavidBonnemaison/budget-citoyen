@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 03 UI-SPEC approved
-last_updated: "2026-05-13T19:35:20.360Z"
-last_activity: 2026-05-13 -- Phase 03 planning complete
+stopped_at: Phase 02.1 context gathered
+last_updated: "2026-05-14T18:37:35.197Z"
+last_activity: 2026-05-13 -- Phase 03 execution started
 progress:
-  total_phases: 5
-  completed_phases: 2
+  total_phases: 6
+  completed_phases: 3
   total_plans: 24
-  completed_plans: 16
-  percent: 67
+  completed_plans: 24
+  percent: 100
 ---
 
 # Project State
@@ -21,14 +21,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-11)
 
 **Core value:** Permettre à tout citoyen de comprendre en temps réel l'impact budgétaire et macroéconomique d'une réforme fiscale sur son foyer et sur l'économie nationale, sans vocabulaire comptable complexe et sans jamais transmettre ses données personnelles.
-**Current focus:** Phase 02 — core-simulation-engines-wasm
+**Current focus:** Phase 03 — interactive-simulation-shell-mvp
 
 ## Current Position
 
-Phase: 02 (core-simulation-engines-wasm) — EXECUTING
-Plan: 1 of 11
-Status: Ready to execute
-Last activity: 2026-05-13 -- Phase 03 planning complete
+Phase: 03 (interactive-simulation-shell-mvp) — EXECUTING
+Plan: 1 of 8
+Status: Executing Phase 03
+Last activity: 2026-05-13 -- Phase 03 execution started
 
 Progress: [█████████░] 94%
 
@@ -61,6 +61,10 @@ Progress: [█████████░] 94%
 | Phase 02-core-simulation-engines-wasm P10 | 16 min | 5 tasks | 8 files |
 
 ## Accumulated Context
+
+### Roadmap Evolution
+
+- Phase 02.1 inserted after Phase 2: Close gap: MICRO-01/02/03/05 — architecture resolution + precompute execution (URGENT)
 
 ### Decisions
 
@@ -292,6 +296,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-05-13T17:52:51.232Z
-Stopped at: Phase 03 UI-SPEC approved
-Resume file: .planning/phases/03-interactive-simulation-shell-mvp/03-UI-SPEC.md
+Last session: 2026-05-14T18:37:35.181Z
+Stopped at: Phase 02.1 context gathered
+Resume file: .planning/phases/02.1-close-gap-micro-01-02-03-05-architecture-resolution-precompu/02.1-CONTEXT.md
