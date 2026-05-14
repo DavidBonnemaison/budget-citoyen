@@ -1,0 +1,33 @@
+/* webapp/src/index.css
+ *
+ * Tailwind CSS 4.3 entry point with Budget Citoyen design tokens.
+ * Decision: CSS-first @theme directive (Tailwind 4 convention — no separate config file).
+ * All color/spacing/typography tokens from UI-SPEC.md Design System contract.
+ */
+
+@import "tailwindcss";
+
+@theme {
+  /* System font stack — no web font download (D-31 <1s warm / <3s cold load) */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Semantic color palette (UI-SPEC Color section) */
+  --color-dominant: #F8FAFC;
+  --color-secondary: #F0F4F8;
+  --color-primary: #1E3A5F;
+  --color-destructive: #DC2626;
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #475569;
+  --color-text-on-accent: #FFFFFF;
+  --color-text-disabled: #94A3B8;
+
+  /* Chart palette — deuteranopia-safe (RGAA 4 compliant) */
+  --color-chart-deficit: #0072B2;
+  --color-chart-debt: #E69F00;
+  --color-chart-gdp: #009E73;
+  --color-chart-employment: #CC79A7;
+
+  /* Spacing exceptions (UI-SPEC Spacing Scale) */
+  --spacing-touch-target: 44px;
+  --spacing-panel-width: 380px;
+}

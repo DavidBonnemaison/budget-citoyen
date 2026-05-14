@@ -1,0 +1,27 @@
+// webapp/tsconfig.json
+//
+// TypeScript configuration for Vite + React 19 + Tailwind project.
+// Uses modern bundler resolution per Vite conventions.
+// Decision: noEmit true (Vite handles transpilation), strict mode enforced.
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "allowImportingTsExtensions": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "useDefineForClassFields": true,
+    "types": ["vite/client"]
+  },
+  "include": ["src"],
+  "exclude": ["src/workers"],
+  "references": []
+}
