@@ -187,6 +187,56 @@ describe('ScenarioCache', () => {
     });
   });
 
+  describe('lookup() performance', () => {
+    it('completes a lookup in under 1ms on a realistic cache', () => {
+      // Build a realistic cache: 14 scenarios × 32 profiles
+      const scenarioCount = 14;
+      const profileCount = 32;
+      const docs: ScenarioDoc[] = [];
+
+      for (let s = 0; s < scenarioCount; s++) {
+        const results: Record<number, ScenarioResult> = {};
+        for (let p = 0; p < profileCount; p++) {
+          // Vary values per profile to avoid trivial hash collisions
+          results[p] = makeScenarioResult(
+            500 + p * 100,       // ir
+            0.0,                  // is
+            300 + (p % 10) * 50, // tva
+            400 + (p % 5) * 80,  // cotisations
+            200 + (s % 3) * 70,  // aides
+            15000 + p * 500,     // revenuDisponible
+          );
+        }
+        docs.push(
+          makeDoc(
+            makeDefinition(
+              `scenario-${s}`,
+              `Scenario ${s}`,
+              `Description for scenario ${s} with enough length`,
+            ),
+            results,
+          ),
+        );
+      }
+
+      const cache = ScenarioCache.fromDocs(docs);
+
+      // Warm up once (ensure JIT doesn't distort measurement of first call)
+      cache.lookup('scenario-7', 15);
+
+      // Measure: worst-case scenario (last scenario, highest profile index)
+      const start = performance.now();
+      const result = cache.lookup('scenario-13', 31);
+      const elapsed = performance.now() - start;
+
+      expect(result, 'lookup should return a result').toBeDefined();
+      expect(
+        elapsed,
+        `lookup took ${elapsed.toFixed(3)}ms, expected < 1ms`,
+      ).toBeLessThan(1);
+    });
+  });
+
   describe('addScenario()', () => {
     it('adds a new scenario incrementally', () => {
       const doc1 = makeDoc(makeDefinition('baseline', 'Baseline', 'Default'), {

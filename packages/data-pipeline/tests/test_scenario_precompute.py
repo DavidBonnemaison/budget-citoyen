@@ -134,7 +134,7 @@ class TestPrecomputePipeline:
             return None
         with open(fixture_path, "r") as f:
             data = json.load(f)
-        return data.get("profils", data.get("profiles", []))
+        return data.get("test_fixtures", [])
 
     def test_baseline_computes_for_all_profiles(self):
         """_compute_scenario_result for baseline × all 32 fixture profiles succeeds."""
@@ -148,7 +148,7 @@ class TestPrecomputePipeline:
         baseline = [s for s in get_scenario_definitions() if s.id == "baseline-2025"][0]
         for idx, profile in enumerate(profiles[:32]):
             try:
-                result = _compute_scenario_result(profile, baseline, idx)
+                result = _compute_scenario_result(profile, baseline)
                 assert isinstance(result, dict), (
                     f"Profile {idx}: result is not a dict"
                 )
@@ -165,7 +165,7 @@ class TestPrecomputePipeline:
 
         baseline = [s for s in get_scenario_definitions() if s.id == "baseline-2025"][0]
         profile = self._make_profile()
-        result = _compute_scenario_result(profile, baseline, 0)
+        result = _compute_scenario_result(profile, baseline)
         assert result["is"] == 0.0, (
             f"IS should be 0.0, got {result['is']}"
         )
@@ -177,7 +177,7 @@ class TestPrecomputePipeline:
 
         baseline = [s for s in get_scenario_definitions() if s.id == "baseline-2025"][0]
         profile = self._make_profile()
-        result = _compute_scenario_result(profile, baseline, 0)
+        result = _compute_scenario_result(profile, baseline)
         assert result["revenuDisponible"] > 0, (
             f"Revenu disponible should be > 0, got {result['revenuDisponible']}"
         )
@@ -208,8 +208,8 @@ class TestPrecomputePipeline:
             parameter_overrides={},
         )
         profile = self._make_profile()
-        result_test = _compute_scenario_result(profile, test_scenario, 0)
-        result_baseline = _compute_scenario_result(profile, baseline, 0)
+        result_test = _compute_scenario_result(profile, test_scenario)
+        result_baseline = _compute_scenario_result(profile, baseline)
 
         # With scale=2.0 (0.22/0.11), IR should be roughly 2× baseline IR
         # (exact ratio depends on progressive bracket calculations)
@@ -218,6 +218,37 @@ class TestPrecomputePipeline:
         assert result_test["ir"] != result_baseline["ir"], (
             f"IR scale extraction should produce different IR from baseline: "
             f"test={result_test['ir']}, baseline={result_baseline['ir']}"
+        )
+
+    def test_aides_match_bilingual_fixture_expected_values(self):
+        """Baseline scenario aides totals match bilingual fixture expected values."""
+        from scenarios.scenario_definitions import get_scenario_definitions
+        from scenarios.precompute import _compute_scenario_result
+
+        profiles = self._load_fixture_profiles()
+        if profiles is None:
+            return  # Fixture file not available — skip
+
+        baseline = [s for s in get_scenario_definitions() if s.id == "baseline-2025"][0]
+
+        mismatches = []
+        for idx, profile in enumerate(profiles[:32]):
+            result = _compute_scenario_result(profile, baseline)
+            expected_aides_total = sum(
+                profile.get("expected", {}).get("aides", {}).values()
+            )
+            computed_aides = result["aides"]
+
+            if abs(computed_aides - expected_aides_total) > 0.01:
+                mismatches.append(
+                    f"Profile {idx} ({profile.get('name', 'unknown')}): "
+                    f"computed aides={computed_aides}, "
+                    f"expected aides={expected_aides_total}"
+                )
+
+        assert not mismatches, (
+            f"Aides mismatch for {len(mismatches)} profile(s):\n" +
+            "\n".join(mismatches)
         )
 
     def test_backward_compatibility_existing_scenarios(self):
@@ -232,7 +263,7 @@ class TestPrecomputePipeline:
 
         for sid in original_ids:
             assert sid in scenarios, f"Missing scenario: {sid}"
-            result = _compute_scenario_result(profile, scenarios[sid], 0)
+            result = _compute_scenario_result(profile, scenarios[sid])
             assert isinstance(result, dict), (
                 f"{sid}: result is not a dict"
             )

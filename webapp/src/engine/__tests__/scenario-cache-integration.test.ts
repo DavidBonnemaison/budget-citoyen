@@ -59,6 +59,11 @@ describe('ScenarioCache integration — real scenarios-v2025.1.json', () => {
       for (let i = 0; i < 32; i++) {
         const r = cache.lookup(doc.definition.id, i);
         expect(r, `${doc.definition.id}[${i}] missing from cache`).toBeDefined();
+        // MICRO-01: IR results must be non-negative for all scenario×profile combos
+        expect(
+          r!.ir,
+          `${doc.definition.id}[${i}]: IR must be non-negative, got ${r!.ir}`,
+        ).toBeGreaterThanOrEqual(0);
       }
     }
   });
