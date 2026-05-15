@@ -45,13 +45,25 @@ def evaluate_quality(
     logger.info("Generating SDMetrics QualityReport...")
 
     report = QualityReport()
-    report.generate(real_data, synthetic_data, metadata)
+    # SDMetrics 0.28+ requires metadata as a dict, not SingleTableMetadata object
+    meta = metadata.to_dict() if hasattr(metadata, 'to_dict') else metadata
+    report.generate(real_data, synthetic_data, meta)
 
     # Extract scores from the report
-    # SDMetrics 0.28+ uses property names for get_details
+    # SDMetrics 0.28+ get_details returns DataFrame for Column Shapes
     overall_score = report.get_score()
-    column_shapes_score = report.get_details("Column Shapes").get("Score", 0.0)
-    column_pair_trends_score = report.get_details("Column Pair Trends").get("Score", 0.0)
+    column_shapes_details = report.get_details("Column Shapes")
+    if hasattr(column_shapes_details, 'iloc'):
+        # DataFrame — average the Score column
+        column_shapes_score = float(column_shapes_details["Score"].mean())
+    else:
+        column_shapes_score = (column_shapes_details or {}).get("Score", 0.0)
+
+    column_pair_details = report.get_details("Column Pair Trends")
+    if hasattr(column_pair_details, 'iloc'):
+        column_pair_trends_score = float(column_pair_details["Score"].mean())
+    else:
+        column_pair_trends_score = (column_pair_details or {}).get("Score", 0.0)
 
     scores = {
         "overall_score": overall_score,
