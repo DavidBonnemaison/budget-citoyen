@@ -352,6 +352,19 @@ def _compute_scenario_result(
     if "tva.taux_normal" in overrides:
         taux_tva = float(overrides["tva.taux_normal"])
 
+    # Cotisations scale factor
+    cotisation_scale = 1.0
+    if "cotisations.scale" in overrides:
+        cotisation_scale = float(overrides["cotisations.scale"])
+
+    # Revenu universel
+    ru_montant = 0.0
+    ru_remplace_aides = False
+    if "revenu_universel.montant_mensuel" in overrides:
+        ru_montant = float(overrides["revenu_universel.montant_mensuel"])
+    if "revenu_universel.remplace_aides" in overrides:
+        ru_remplace_aides = bool(overrides["revenu_universel.remplace_aides"])
+
     # ── Compute tax components ────────────────────────────────────────
 
     # IR
@@ -368,7 +381,7 @@ def _compute_scenario_result(
     ir = _compute_ir_bareme(revenu_net_cat, nb_parts, scale=ir_scale)
 
     # Cotisations
-    cotisations = _estimate_cotisations(salaire_total)
+    cotisations = _estimate_cotisations(salaire_total, scale=cotisation_scale)
     cotisations_salariales = cotisations["cotisations_salariales"]
     csg_crds = cotisations["csg_crds"]
     cotisations_totales = cotisations_salariales + csg_crds
@@ -376,6 +389,15 @@ def _compute_scenario_result(
     # Aides
     aides_dict = _estimate_aides(profile, revenu_brut_global, aide_scales)
     aides_totales = sum(aides_dict.values())
+
+    # Revenu universel: flat monthly transfer, optionally replacing RSA + prime activité
+    if ru_montant > 0:
+        ru_annuel = ru_montant * 12
+        aides_totales += ru_annuel
+        if ru_remplace_aides:
+            # Subtract RSA and prime d'activité if they were included
+            aides_totales -= (aides_dict.get("rsa", 0.0) + aides_dict.get("prime_activite", 0.0))
+            aides_totales = max(aides_totales, ru_annuel)  # At minimum, the RU amount
 
     # IS (not applicable to individual profiles — always 0)
     is_contribution = 0.0
