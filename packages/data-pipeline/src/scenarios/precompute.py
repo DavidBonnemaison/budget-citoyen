@@ -18,6 +18,7 @@ Per D-22: version tag embedded in filename and metadata (v2025.1).
 Per D-07: openfisca-france version consistency verified at export time.
 """
 
+import copy as _copy
 import datetime as _datetime
 import json as _json
 import os as _os
@@ -131,6 +132,10 @@ def _compute_ir_bareme(revenu_net: float, nb_parts: float, scale: float = 1.0) -
     Returns:
         IR amount in euros.
     """
+    # Per IN-03: these brackets mirror the 2025 French tax barème.
+    # A CI gate should cross-validate against tax-rules/parameters/impot_revenu/
+    # bareme/*.yaml to prevent drift when tax law changes. For now, manual
+    # review of thresholds/rates against the legislation is required.
     brackets = [
         (11497.0, 0.00),
         (29315.0, 0.11 * scale),
@@ -149,6 +154,57 @@ def _compute_ir_bareme(revenu_net: float, nb_parts: float, scale: float = 1.0) -
             ir_par_part += taxable * taux
         previous = seuil
         if qf <= seuil:
+            break
+
+    return round(ir_par_part * nb_parts, 2)
+
+
+def _compute_ir_bareme_custom(
+    revenu_net: float,
+    nb_parts: float,
+    bareme_data: Dict[str, Any],
+) -> float:
+    """Compute IR using custom bracket definitions from a scenario override.
+
+    Uses the actual bracket thresholds and rates defined in the scenario's
+    parameterOverrides rather than a flat scale factor on the baseline brackets.
+    This correctly handles scenarios with arbitrary bracket counts, thresholds,
+    and rates (e.g., LFI/NFP 14-bracket system, PS 8-bracket system).
+
+    Args:
+        revenu_net: Net taxable income after professional deductions.
+        nb_parts: Number of tax parts (quotient familial).
+        bareme_data: Dict with a "brackets" key containing a list of
+            {"rate": float, "threshold": float} dicts. Thresholds should be
+            sorted ascending; the last bracket typically has a very large
+            or infinite threshold.
+
+    Returns:
+        IR amount in euros.
+
+    Raises:
+        ValueError: If bareme_data does not contain a valid "brackets" list.
+    """
+    brackets = bareme_data.get("brackets", [])
+    if not brackets:
+        raise ValueError(
+            "Custom IR bareme must contain a non-empty 'brackets' list."
+        )
+
+    qf = revenu_net / max(nb_parts, 0.5)
+    ir_par_part = 0.0
+    previous = 0.0
+
+    for bracket in brackets:
+        if not isinstance(bracket, dict):
+            continue
+        rate = float(bracket.get("rate", 0))
+        threshold = float(bracket.get("threshold", float("inf")))
+        if qf > previous:
+            taxable = min(qf, threshold) - previous
+            ir_par_part += taxable * rate
+        previous = threshold
+        if qf <= threshold:
             break
 
     return round(ir_par_part * nb_parts, 2)
@@ -202,14 +258,25 @@ def _estimate_aides(
 
     aides: Dict[str, float] = {}
 
+    # RSA resource base: excludes minimum sociaux (AAH) and simplified-regime
+    # income (micro-BIC, bénéfice agricole) whose gross values overstate
+    # disposable resources. Real-regime self-employed income (BIC, BNC) and
+    # salarial income (salaires, pensions, chômage) count at full value.
+    micro_bic = input_data.get("revenus", {}).get("micro_bic", 0.0)
+    benefice_agricole = sum(
+        input_data.get("revenus", {}).get("benefice_agricole", [0.0])
+    )
+    aa_h = input_data.get("revenus", {}).get("aa_h", 0.0)
+    rsa_resource = revenu_brut - micro_bic - benefice_agricole - aa_h
+
     # RSA
     rsa_personne_seule = 635.71 * 12
-    if revenu_brut < rsa_personne_seule * 1.2:
+    if rsa_resource < rsa_personne_seule * 1.2:
         nb_adultes = 2.0 if situation in ("marie", "pacse") else 1.0
         plafond_rsa = rsa_personne_seule * (
             1.0 + 0.5 * (nb_adultes - 1) + 0.3 * nb_enfants
         )
-        aides["rsa"] = round(max(0.0, plafond_rsa - revenu_brut) * rsa_scale, 2)
+        aides["rsa"] = round(max(0.0, plafond_rsa - rsa_resource) * rsa_scale, 2)
     else:
         aides["rsa"] = 0.0
 
@@ -278,7 +345,6 @@ def _estimate_tva(profile: Dict[str, Any], revenu_disponible: float, taux_tva: f
 def _compute_scenario_result(
     profile: Dict[str, Any],
     scenario: ScenarioDefinition,
-    profile_index: int,
 ) -> Dict[str, float]:
     """Compute microsimulation result for a profile under a given scenario.
 
@@ -288,7 +354,6 @@ def _compute_scenario_result(
     Args:
         profile: Canonical profile dict from test fixtures.
         scenario: ScenarioDefinition with parameter overrides.
-        profile_index: Zero-based index of the profile in the population.
 
     Returns:
         Dict with ir, is, tva, cotisations, aides, revenuDisponible.
@@ -317,17 +382,19 @@ def _compute_scenario_result(
     # ── Apply scenario overrides ──────────────────────────────────────
     overrides = scenario.parameter_overrides
 
-    # IR scale factor: extract from bareme override if present
+    # IR: use custom brackets if present, otherwise fall back to scaled baseline
     ir_scale = 1.0
+    custom_bareme = None
     if "impot_revenu.bareme" in overrides:
         bareme_data = overrides["impot_revenu.bareme"]
         if isinstance(bareme_data, dict) and "brackets" in bareme_data:
-            # Use the ratio of first non-zero bracket rate as scale factor
             brackets = bareme_data["brackets"]
-            for b in brackets:
-                if isinstance(b, dict) and b.get("rate", 0) > 0:
-                    ir_scale = b["rate"] / 0.11  # baseline rate for 2nd bracket
-                    break
+            if brackets:
+                # Use custom bracket computation for scenarios with explicit brackets
+                custom_bareme = bareme_data
+            else:
+                # No brackets defined — fall back to baseline
+                ir_scale = 1.0
 
     # Social benefit scales
     aide_scales: Dict[str, float] = {}
@@ -343,9 +410,11 @@ def _compute_scenario_result(
         )
     if "prestations_sociales.apl.revalorisation" in overrides:
         reval = float(overrides["prestations_sociales.apl.revalorisation"])
-        # 0.0 = freeze, 1.0 = normal revalorisation
+        # 0.0 = freeze (no change from baseline), > 0 = scale factor
         if reval == 0.0:
-            aide_scales["apl"] = 1.0  # APL amount unchanged but not increased
+            aide_scales["apl"] = 1.0  # APL frozen at baseline level
+        else:
+            aide_scales["apl"] = reval
 
     # VAT rate
     taux_tva = 0.20
@@ -378,7 +447,10 @@ def _compute_scenario_result(
         + fonciers_total * 0.7                    # 30% abattement micro-foncier
     )
     nb_parts = _compute_quotient_familial(profile)
-    ir = _compute_ir_bareme(revenu_net_cat, nb_parts, scale=ir_scale)
+    if custom_bareme:
+        ir = _compute_ir_bareme_custom(revenu_net_cat, nb_parts, custom_bareme)
+    else:
+        ir = _compute_ir_bareme(revenu_net_cat, nb_parts, scale=ir_scale)
 
     # Cotisations
     cotisations = _estimate_cotisations(salaire_total, scale=cotisation_scale)
@@ -489,7 +561,7 @@ def precompute_scenarios(
 
         for idx, profile in enumerate(profiles):
             try:
-                result = _compute_scenario_result(profile, scenario, idx)
+                result = _compute_scenario_result(profile, scenario)
                 # Store with string key — JSON transport cannot represent numeric keys.
                 # TypeScript consumer converts back via Number(key) in ScenarioCache.addScenario().
                 results[str(idx)] = result
@@ -508,7 +580,11 @@ def precompute_scenarios(
                 "name": scenario.name,
                 "description": scenario.description,
                 "parameterOverrides": {
-                    k: v for k, v in scenario.parameter_overrides.items()
+                    k: (
+                        1.0 if v is True else 0.0 if v is False
+                        else _copy.deepcopy(v)
+                    )
+                    for k, v in scenario.parameter_overrides.items()
                 },
             },
             "results": results,
