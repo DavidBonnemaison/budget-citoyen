@@ -23,6 +23,7 @@ import type {
   MacroResult,
   ScenarioResult,
   MacroWorkerResult,
+  PopulationInitPayload,
 } from '../engine/types';
 
 // ── Pending Request Tracking ───────────────────────────────────────────
@@ -107,12 +108,18 @@ export class WorkerOrchestrator {
    * shock matrix binary) during initial load and transfers them to
    * workers via postMessage — workers never touch the network.
    *
-   * @param scenariosJson - Pre-computed scenario results as JSON string
-   * @param matrixBytes   - Shock matrix as binary (ArrayBuffer), transferred zero-copy
+   * When populationJson is provided, an INIT_POPULATION message is sent
+   * to the citizen worker in parallel with INIT (scenarios). Both must
+   * complete before init() resolves.
+   *
+   * @param scenariosJson  - Pre-computed scenario results as JSON string
+   * @param matrixBytes    - Shock matrix as binary (ArrayBuffer), transferred zero-copy
+   * @param populationJson - Optional synthetic population JSON string
    */
   async init(
     scenariosJson: string,
     matrixBytes: ArrayBuffer,
+    populationJson?: string,
   ): Promise<void> {
     const citizenId = crypto.randomUUID();
     const macroId = crypto.randomUUID();
@@ -120,6 +127,9 @@ export class WorkerOrchestrator {
     this.latestCitizenId = citizenId;
     this.latestMacroId = macroId;
 
+    const initPromises: Promise<void>[] = [];
+
+    // INIT: Scenario cache
     const citizenInit = new Promise<void>((resolve, reject) => {
       this.pending.set(citizenId, {
         resolve,
@@ -132,7 +142,27 @@ export class WorkerOrchestrator {
         payload: { scenariosJson },
       } satisfies WorkerRequest);
     });
+    initPromises.push(citizenInit);
 
+    // INIT_POPULATION: Population cache (optional)
+    if (populationJson !== undefined) {
+      const popId = crypto.randomUUID();
+      const popInit = new Promise<void>((resolve, reject) => {
+        this.pending.set(popId, {
+          resolve,
+          reject,
+          timestamp: Date.now(),
+        } as PendingEntry);
+        this.citizenWorker.postMessage({
+          id: popId,
+          type: 'INIT_POPULATION',
+          payload: { populationJson } satisfies PopulationInitPayload,
+        } satisfies WorkerRequest);
+      });
+      initPromises.push(popInit);
+    }
+
+    // INIT: Macro worker
     const macroInit = new Promise<void>((resolve, reject) => {
       this.pending.set(macroId, {
         resolve,
@@ -149,8 +179,9 @@ export class WorkerOrchestrator {
         [matrixBytes],
       );
     });
+    initPromises.push(macroInit);
 
-    await Promise.all([citizenInit, macroInit]);
+    await Promise.all(initPromises);
   }
 
   /**

@@ -17,17 +17,21 @@
 //   ERROR    → caught exceptions respond with ERROR type
 
 import { ScenarioCache, type ScenarioDoc } from '../engine/scenario-cache';
+import { PopulationCache } from '../engine/population-cache';
+import type { PopulationDoc } from '../engine/population-cache';
 import type {
   WorkerRequest,
   WorkerResponse,
   SimulatePayload,
   CitizenInitPayload,
+  PopulationInitPayload,
   ScenarioResult,
 } from '../engine/types';
 
 // ── Worker State ────────────────────────────────────────────────────────────
 
 let cache: ScenarioCache | null = null;
+let populationCache: PopulationCache | null = null;
 
 // ── Message Handler ─────────────────────────────────────────────────────────
 
@@ -40,6 +44,15 @@ self.onmessage = (e: MessageEvent<WorkerRequest>) => {
         const initPayload = payload as CitizenInitPayload;
         const docs: ScenarioDoc[] = JSON.parse(initPayload.scenariosJson);
         cache = ScenarioCache.fromDocs(docs);
+        const response: WorkerResponse = { id, type: 'READY', payload: null };
+        self.postMessage(response);
+        break;
+      }
+
+      case 'INIT_POPULATION': {
+        const popPayload = payload as PopulationInitPayload;
+        const doc: PopulationDoc = JSON.parse(popPayload.populationJson);
+        populationCache = PopulationCache.fromDoc(doc);
         const response: WorkerResponse = { id, type: 'READY', payload: null };
         self.postMessage(response);
         break;
