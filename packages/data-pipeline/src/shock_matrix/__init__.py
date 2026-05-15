@@ -9,6 +9,7 @@ WASM macro engine (static Parquet binary with sidecar metadata).
 
 from .bootstrap import run_var_bootstrap, generate_placeholder_shocks, compute_confidence_bounds
 from .grid_build import build_dimension_breakpoints, build_cartesian_grid, build_smolyak_grid
+from .calibrate import build_calibrated_grid, calibrate_and_export
 
 __all__ = [
     "run_var_bootstrap",
@@ -17,6 +18,8 @@ __all__ = [
     "build_dimension_breakpoints",
     "build_cartesian_grid",
     "build_smolyak_grid",
+    "build_calibrated_grid",
+    "calibrate_and_export",
 ]
 
 # convex_hull and export_parquet — these require scipy and pyarrow
