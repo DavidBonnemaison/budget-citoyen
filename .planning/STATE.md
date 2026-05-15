@@ -4,7 +4,7 @@ milestone: v1.0
 milestone_name: milestone
 status: verifying
 stopped_at: Phase 02.2 context gathered
-last_updated: "2026-05-15T18:00:29.831Z"
+last_updated: "2026-05-15T18:52:46.354Z"
 last_activity: 2026-05-15
 progress:
   total_phases: 7
@@ -289,6 +289,12 @@ None yet.
 - **Phase 1:** Mésange model documentation is restricted (Insee/Trésor) — shock matrix generation methodology needs validation. Synthetic data training requires Insee CASD access (multi-month approval process).
 - **Phase 2:** OpenFisca Python→Rust formula porting feasibility needs validation via spike of 3-5 representative formulas.
 - **Phase 5:** Human RGAA 4 auditor must be procured (certified auditor, all 106 criteria). CNIL privacy audit scope needs legal review.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260515-szz | Fix ROADMAP.md checkboxes and REQUIREMENTS.md false completion markers, if still present | 2026-05-15 | 7cb4577 | [260515-szz-fix-roadmap-md-checkboxes-and-requiremen](./quick/260515-szz-fix-roadmap-md-checkboxes-and-requiremen/) |
 
 ## Deferred Items
 
