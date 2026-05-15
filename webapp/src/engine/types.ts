@@ -76,6 +76,86 @@ export interface ScenarioDefinition {
   parameterOverrides: Record<string, unknown>;
 }
 
+// ── Synthetic Population Types ──────────────────────────────────────────────
+
+/**
+ * Profil synthétique d'un foyer fiscal.
+ *
+ * Miroir exact du JSON Schema synthetic_profile.schema.json (Draft 2020-12).
+ * 6 champs obligatoires (identity + fiscal) et 5 champs optionnels (socio-démo).
+ *
+ * Les profils sont générés par le pipeline CopulaGAN hors-ligne,
+ * injectés de bruit différentiel (ε ≤ 1.0), et chargés dans PopulationCache
+ * pour des recherches O(1).
+ */
+export interface Profile {
+  /** Identifiant unique du profil synthétique (UUID v4). */
+  profile_id: string;
+  /** Âge de la personne de référence (0-120 ans). */
+  age: number;
+  /** Patrimoine net total en EUR (immobilier + financier - dettes). */
+  patrimoine: number;
+  /** Revenu fiscal de référence en EUR. */
+  revenu_fiscal: number;
+  /** Situation familiale (état civil). */
+  situation_familiale:
+    | 'celibataire'
+    | 'marie'
+    | 'pacse'
+    | 'veuf'
+    | 'divorce'
+    | 'separe';
+  /** Nombre de parts fiscales (quotient familial, 1-20). */
+  nombre_parts: number;
+  /** Type d'activité professionnelle (optionnel). */
+  type_activite?:
+    | 'salarie'
+    | 'independant'
+    | 'fonctionnaire'
+    | 'retraite'
+    | 'chomeur'
+    | 'etudiant'
+    | 'inactif';
+  /** Zone géographique de résidence (optionnel). */
+  zone_residence?: 'zone1' | 'zone2' | 'zone3';
+  /** Nombre d'enfants à charge dans le foyer (optionnel, 0-20). */
+  enfants_a_charge?: number;
+  /** Loyer mensuel en EUR (0 si propriétaire, optionnel). */
+  loyer_mensuel?: number;
+  /** Statut d'occupation du logement (optionnel). */
+  statut_occupation?:
+    | 'proprietaire'
+    | 'locataire'
+    | 'heberge_gratuitement';
+}
+
+/**
+ * Document de population synthétique — structure JSON consommée par
+ * PopulationCache.fromDoc().
+ *
+ * Miroir du pattern ScenarioDoc (scenario-cache.ts) pour la cohérence
+ * de l'architecture de cache : version/reference_year/meta + données.
+ */
+export interface PopulationDoc {
+  /** Version du document (ex: "population-v2025.1"). */
+  version: string;
+  /** Année de référence des données (ex: 2025). */
+  reference_year: number;
+  /** Liste des profils synthétiques (50 000 profils). */
+  profiles: Profile[];
+  /** Métadonnées de génération et de garantie différentielle. */
+  meta: {
+    /** Budget epsilon de confidentialité différentielle (ε ≤ 1.0). */
+    dp_epsilon: number;
+    /** Source des données sous-jacentes (ex: "INSEE ERFS 2025 via agrégation"). */
+    dp_data_source: string;
+    /** Horodatage de la preuve DP (ISO 8601). */
+    dp_proof_timestamp: string;
+    /** Empreinte SHA-256 du fichier de population. */
+    sha256: string;
+  };
+}
+
 // ── Shock Matrix Data (transferred via ArrayBuffer) ─────────────────────────
 
 /**
@@ -109,6 +189,7 @@ export interface ShockMatrixData {
 /** Types de messages supportés par le protocole Worker. */
 export type WorkerMessageType =
   | 'INIT'
+  | 'INIT_POPULATION'
   | 'SIMULATE'
   | 'INTERPOLATE'
   | 'PROJECT'
@@ -162,6 +243,12 @@ export interface SimulatePayload {
 export interface CitizenInitPayload {
   /** Données de scénarios pré-calculés au format JSON. */
   scenariosJson: string;
+}
+
+/** Charge utile d'une requête INIT_POPULATION pour le citizen-worker. */
+export interface PopulationInitPayload {
+  /** Population synthétique au format JSON (PopulationDoc). */
+  populationJson: string;
 }
 
 /** Charge utile d'une requête INIT pour le macro-worker. */
