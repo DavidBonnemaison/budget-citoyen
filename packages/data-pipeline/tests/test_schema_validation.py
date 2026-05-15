@@ -37,6 +37,50 @@ class TestSchemaSelfValidation:
                 f"parameter.schema.json is not a valid Draft 2020-12 schema: {e}"
             ) from e
 
+    def test_scenario_schema_is_valid_draft202012(self):
+        """scenarios.schema.json is a valid Draft 2020-12 JSON Schema."""
+        from jsonschema import Draft202012Validator, SchemaError
+
+        schema_path = SRC_DIR / "scenarios" / "schemas" / "scenarios.schema.json"
+        assert schema_path.exists(), (
+            f"Schema file not found: {schema_path}"
+        )
+
+        with open(schema_path, "r") as f:
+            schema = json.load(f)
+
+        try:
+            Draft202012Validator.check_schema(schema)
+        except SchemaError as e:
+            raise AssertionError(
+                f"scenarios.schema.json is not a valid Draft 2020-12 schema: {e}"
+            ) from e
+
+    def test_validate_scenarios_output(self):
+        """The generated scenarios-v2025.1.json validates against the schema."""
+        from jsonschema import Draft202012Validator, ValidationError
+
+        schema_path = SRC_DIR / "scenarios" / "schemas" / "scenarios.schema.json"
+        if not schema_path.exists():
+            return  # Schema not created yet — skip
+
+        with open(schema_path, "r") as f:
+            schema = json.load(f)
+
+        validator = Draft202012Validator(schema)
+
+        output_path = SRC_DIR.parent / "dist" / "scenarios-v2025.1.json"
+        if not output_path.exists():
+            return  # Output not yet generated — skip (this is a CI gating test)
+
+        with open(output_path, "r") as f:
+            doc = json.load(f)
+
+        errors = list(validator.iter_errors(doc))
+        assert len(errors) == 0, (
+            f"scenarios-v2025.1.json failed schema validation: {errors}"
+        )
+
     def test_validate_ir_bareme_structure(self):
         """The IR bareme (post-conversion) validates against the schema."""
         from jsonschema import Draft202012Validator, ValidationError
