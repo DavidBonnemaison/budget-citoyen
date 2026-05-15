@@ -63,17 +63,34 @@ Plans:
 - [x] 02-10-PLAN.md — Implement pure TypeScript engines (ScenarioCache, macro-interpolate, types), rewrite workers for zero WASM
 - [x] 02-11-PLAN.md — Gap closure: Python scenario pre-compute pipeline, CI update, SUMMARY rewrites, REQUIREMENTS/ROADMAP updates
 
+### Phase 02.2: Close gap: DATA-02/03/04 — synthetic population + DP guarantee + real shock matrix (INSERTED)
+
+**Goal:** Execute the offline data pipeline end-to-end — CopulaGAN synthetic population generation from INSEE aggregate tables, OpenDP formal ε ≤ 1.0 differential privacy proof, and hybrid IRF + elasticity shock matrix calibration — producing population-v2025.1.json (50K profiles + DP sidecar) and shockmatrix-v2025.1.parquet (calibrated 12³ grid), consumable by Phase 3 TypeScript engines via PopulationCache and macro-interpolate.ts.
+**Requirements**: DATA-02, DATA-03, DATA-04
+**Depends on:** Phase 2
+**Plans:** 8 plans
+
+Plans:
+- [x] 02.2-01-PLAN.md — Wave 1: Python 3.11 venv setup, TypeScript Profile/PopulationDoc interfaces, Wave 0 test stubs
+- [x] 02.2-02-PLAN.md — Wave 2: TDD INSEE aggregate data loader (InseeAggregateLoader) for CopulaGAN training data
+- [x] 02.2-03-PLAN.md — Wave 2: TDD shock matrix calibration (calibrate.py) — hybrid IRF + elasticity, 12³ grid
+- [x] 02.2-04-PLAN.md — Wave 3: TDD CopulaGAN synthetic population pipeline (train + evaluate)
+- [x] 02.2-05-PLAN.md — Wave 2: TDD PopulationCache TypeScript class — O(1) HashMap, mirrors ScenarioCache
+- [x] 02.2-06-PLAN.md — Wave 4: TDD DP proof execution + population export to JSON + .meta.json sidecar
+- [x] 02.2-07-PLAN.md — Wave 3: WorkerOrchestrator INIT_POPULATION integration with citizen worker
+- [x] 02.2-08-PLAN.md — Wave 5: Vitest integration tests + generate_dist.py pipeline convergence
+
 ### Phase 02.1: Close gap: MICRO-01/02/03/05 — architecture resolution + precompute execution (INSERTED)
 
 **Goal:** Execute the Python scenario pre-compute pipeline end-to-end — expanding from 3 to 12 scenarios, formalizing JSON Schema validation (Draft 2020-12), extending the pre-compute engine with new override keys (cotisations.scale, revenu universel), and producing scenarios-v2025.1.json consumable by the TypeScript ScenarioCache for O(1) citizen-mode lookups.
 **Requirements**: MICRO-01, MICRO-02, MICRO-03, MICRO-05
 **Depends on:** Phase 2
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 - [x] 02.1-01-PLAN.md — Expand scenario definitions (3→12), extend precompute with new override keys, create JSON Schema contract
 - [x] 02.1-02-PLAN.md — Test scaffolding: Python unit tests, TypeScript integration test, schema self-validation
-- [ ] 02.1-03-PLAN.md — CI update (count gate 3→12, schema validation), pipeline execution, output validation
+- [x] 02.1-03-PLAN.md — CI update (count gate 3→12, schema validation), pipeline execution, output validation
 
 ### Phase 3: Interactive Simulation Shell (MVP)
 **Goal**: A citizen can visit the platform on any device, manipulate fiscal sliders, and see in real time (<200ms) the impact on a typical household's purchasing power and the national deficit/debt trajectory — all in accessible, vulgarized French, shareable via URL, and compliant with RGAA 4 core criteria. This is the first user-facing deliverable (Milestone 1).
