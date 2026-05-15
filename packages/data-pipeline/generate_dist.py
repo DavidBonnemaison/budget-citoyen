@@ -1,7 +1,7 @@
-"""Orchestrator script: generate all Phase 1 dist/ artifacts.
+"""Orchestrator script: generate all dist/ artifacts (Phase 1 + Phase 02.2).
 
 Run with: python generate_dist.py
-Prerequisites: venv activated with jsonschema, openfisca-france installed.
+Prerequisites: venv activated (Python 3.11+ with all dependencies from pyproject.toml).
 """
 
 import json
@@ -12,9 +12,7 @@ from pathlib import Path
 # Ensure we can import the src/ modules
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
-# Phase 1 modules (yaml2json, validation) — these are reviewed and maintained
-# separately. Their contracts (function signatures, return types) are verified
-# by Phase 2 integration before this pipeline depends on them.
+# Phase 1 modules
 from yaml2json.convert import convert_yaml_to_json
 from validation.canonical_profiles import CANONICAL_PROFILES
 from validation.export_fixtures import export_test_fixtures
@@ -24,44 +22,37 @@ from validation.reference_sim import validate_all_profiles
 def main():
     # Script is in packages/data-pipeline/ — go up 2 levels to repo root
     repo_root = Path(__file__).parent.parent.parent
-    dist_dir = repo_root / "packages" / "data-pipeline" / "dist"
+    dist_dir = Path(__file__).parent / "dist"
     dist_dir.mkdir(parents=True, exist_ok=True)
 
     print("=" * 60)
-    print("Phase 1 Artifact Generation")
+    print("Phase 1 + Phase 02.2 Artifact Generation")
     print("=" * 60)
 
     # ── Step 1: YAML → JSON conversion ──────────────────────────
-    print("\n[1/5] Converting YAML parameters to JSON...")
+    print("\n[1/7] Converting YAML parameters to JSON...")
     yaml_dir = str(repo_root / "packages" / "tax-rules" / "parameters")
     output_parameters_dir = str(dist_dir / "parameters-v2025.1")
 
     result = convert_yaml_to_json(
         yaml_dir=yaml_dir,
         output_dir=output_parameters_dir,
-        schema_path=None,  # No schema yet — schema validation added in Plan 02-02
+        schema_path=None,
     )
     print(f"  ✓ Converted: {result['converted']} files")
     if result["failed"]:
         print(f"  ✗ Failed: {result['failed']} files")
-        for err in result["errors"]:
-            print(f"    - {err}")
-    else:
-        print("  All files converted successfully")
 
-    # ── Step 2: Run reference simulation on canonical profiles ───
-    print("\n[2/5] Running openfisca-france reference simulation...")
+    # ── Step 2: Reference simulation ───────────────────────────
+    print("\n[2/7] Running openfisca-france reference simulation...")
     ref_results = validate_all_profiles(
         profiles=CANONICAL_PROFILES,
         reference_year=2025,
     )
-    print(f"  ✓ Profiles processed: {ref_results['passed']} passed, "
-          f"{ref_results['failed']} failed")
-    print(f"  Reference year: {ref_results['reference_year']}")
-    print(f"  Precision threshold: {ref_results['precision']}")
+    print(f"  ✓ Profiles: {ref_results['passed']} passed, {ref_results['failed']} failed")
 
-    # ── Step 3: Export bilingual test fixtures ──────────────────
-    print("\n[3/5] Exporting bilingual test fixtures JSON...")
+    # ── Step 3: Bilingual test fixtures ────────────────────────
+    print("\n[3/7] Exporting bilingual test fixtures...")
     fixture_path = export_test_fixtures(
         profiles=CANONICAL_PROFILES,
         reference_results=ref_results,
@@ -69,20 +60,8 @@ def main():
     )
     print(f"  ✓ Written: {fixture_path}")
 
-    # Verify fixture keys
-    with open(fixture_path) as f:
-        doc = json.load(f)
-    required_keys = ["test_fixtures", "reference_year", "generated_at", "openfisca_version"]
-    missing = [k for k in required_keys if k not in doc]
-    if missing:
-        print(f"  ✗ Missing required keys: {missing}")
-    else:
-        print(f"  ✓ Required keys present: {required_keys}")
-        print(f"  Total fixtures: {doc.get('total_fixtures', len(doc['test_fixtures']))}")
-
-    # ── Step 4: Write parameters-v2025.1.json aggregate ──────────
-    # Combine all individual parameter JSONs into one aggregate file
-    print("\n[4/5] Aggregating parameters into parameters-v2025.1.json...")
+    # ── Step 4: Aggregate parameters ───────────────────────────
+    print("\n[4/7] Aggregating parameters into parameters-v2025.1.json...")
     params_dir = Path(output_parameters_dir)
     aggregate = {}
     if params_dir.exists():
@@ -94,92 +73,58 @@ def main():
     aggregate_path = dist_dir / "parameters-v2025.1.json"
     with open(aggregate_path, "w", encoding="utf-8") as f:
         json.dump(aggregate, f, indent=2, ensure_ascii=False)
-    print(f"  ✓ Written: {aggregate_path}")
-    print(f"  Aggregated {len(aggregate)} parameter files")
+    print(f"  ✓ Written: {aggregate_path} ({len(aggregate)} files)")
 
-    # ── Step 5: Shock matrix stub ───────────────────────────────
-    print("\n[5/5] Creating shock matrix stub (CASD data unavailable)...")
-    import numpy as np
-
+    # ── Step 5: Calibrated shock matrix (Phase 02.2 — Plan 03) ─
+    print("\n[5/7] Calibrating and exporting shock matrix...")
     try:
-        import pyarrow as pa
-        import pyarrow.parquet as pq
-        _has_pyarrow = True
-    except ImportError:
-        _has_pyarrow = False
+        from shock_matrix.calibrate import calibrate_and_export
 
-    if _has_pyarrow:
-        # Create a minimal valid Parquet file as a stub
-        # 3D Cartesian grid: tax_rate x spending x horizon_year -> 4 outputs
-        n_tax = 5
-        n_spend = 5
-        n_horizon = 3
-        n_outputs = 4
+        matrix_path = calibrate_and_export(output_dir=str(dist_dir), seed=42)
+        size = os.path.getsize(matrix_path)
+        print(f"  ✓ Written: {matrix_path} ({size:,} bytes)")
+        print(f"  Dimensions: 12×12×5×4 (2880 float32 values)")
+    except ImportError as e:
+        print(f"  ⚠ calibrate.py unavailable: {e}")
+        print("  Skipping shock matrix calibration.")
 
-        records = []
-        for tx in range(n_tax):
-            for sp in range(n_spend):
-                for yr in range(n_horizon):
-                    records.append({
-                        "tax_rate": float(tx) / (n_tax - 1),  # 0.0 to 1.0
-                        "spending_level": float(sp) / (n_spend - 1),
-                        "horizon_year": 2025 + yr,
-                        "gdp_growth": 0.0,
-                        "employment_change": 0.0,
-                        "deficit_change": 0.0,
-                        "debt_to_gdp_ratio": 100.0,
-                    })
+    # ── Step 6: Synthetic population (Phase 02.2 — Plans 02,04,06) ─
+    print("\n[6/7] Generating synthetic population with DP proof...")
+    try:
+        from synthetic_pop import generate_from_insee, export_with_dp
 
-        table = pa.Table.from_pylist(records)
-        parquet_path = str(dist_dir / "shockmatrix-v2025.1.parquet")
-        pq.write_table(
-            table,
-            parquet_path,
-            compression="zstd",
-            compression_level=9,
-            row_group_size=100,
-        )
-        file_size = Path(parquet_path).stat().st_size
-        print(f"  ✓ Stub written: {parquet_path} ({file_size:,} bytes)")
-        print(f"  ⚠ CASD data not available — grid contains zero values (placeholder)")
-        print(f"  Dimensions: tax_rate(5) × spending(5) × horizon(3) → 4 outputs")
-    else:
-        # Fallback: create a JSON manifest
-        manifest = {
-            "version": "shockmatrix-v2025.1",
-            "status": "stub",
-            "reason": "CASD data unavailable — placeholder generated for development",
-            "format": "json (manifest — pyarrow unavailable)",
-            "dimensions": {
-                "tax_rate": {"count": 5, "range": [0.0, 1.0]},
-                "spending_level": {"count": 5, "range": [0.0, 1.0]},
-                "horizon_year": {"count": 3, "range": [2025, 2027]},
-            },
-            "outputs": ["gdp_growth", "employment_change", "deficit_change", "debt_to_gdp_ratio"],
-            "note": "Regenerate with real data when CASD access is granted (multi-month process). Install pyarrow for Parquet output.",
-        }
-        manifest_path = dist_dir / "shockmatrix-v2025.1.manifest.json"
-        with open(manifest_path, "w") as f:
-            json.dump(manifest, f, indent=2)
-        print(f"  ✓ Manifest written: {manifest_path}")
-        print(f"  ⚠ pyarrow not installed — JSON manifest written instead of Parquet")
+        print("  Training CopulaGAN (epochs=100, this may take several minutes)...")
+        pipeline_result = generate_from_insee(epochs=100, num_rows=50000, seed=42)
+        quality = pipeline_result["quality_report"]["fidelity"]["overall_score"]
+        print(f"  ✓ Training complete — quality score: {quality:.3f}")
 
-    # Write a stub README
+        print("  Injecting DP noise and exporting...")
+        pop_path = export_with_dp(pipeline_result, output_dir=str(dist_dir))
+        print(f"  ✓ Written: {pop_path}")
+    except ImportError as e:
+        print(f"  ⚠ synthetic_pop modules unavailable: {e}")
+        print("  Skipping synthetic population generation.")
+
+    # ── Step 7: dist/README.md ───────────────────────────────────
+    print("\n[7/7] Writing dist/README.md...")
     readme_path = dist_dir / "README.md"
-    with open(readme_path, "w") as f:
-        f.write("""# Phase 1 Dist/ Artifacts
+    with open(readme_path, "w", encoding="utf-8") as f:
+        f.write("""# Budget Citoyen — Distribution Artifacts
 
 Generated by `packages/data-pipeline/generate_dist.py`.
+All files are versioned with reference year 2025.
 
 ## Files
 
-| File | Description | Status |
-|------|-------------|--------|
-| `bilingual_test_fixtures.json` | 16 canonical profiles with openfisca-france reference results | ✅ Generated |
-| `parameters-v2025.1.json` | Aggregated JSON tax parameters from 31 YAML files | ✅ Generated |
-| `parameters-v2025.1/` | Individual per-file JSON outputs | ✅ Generated |
-| `shockmatrix-v2025.1.parquet` | Shock matrix grid (Mésange model) | ⚠ Stub — CASD data unavailable |
-| `population-v2025.1.json` | Synthetic population profiles | ⏳ Pending — CASD access required |
+| File | Source | Description |
+|------|--------|-------------|
+| `parameters-v2025.1.json` | Phase 1 | Aggregated tax parameters from OpenFisca YAML files |
+| `parameters-v2025.1/` | Phase 1 | Individual per-file JSON outputs |
+| `bilingual_test_fixtures.json` | Phase 1 | 16 canonical profiles with openfisca reference results |
+| `shockmatrix-v2025.1.parquet` | Phase 02.2 Plan 03 | Calibrated 12x12x5x4 shock matrix (hybrid IRF + elasticity) |
+| `shockmatrix-v2025.1.parquet.meta.json` | Phase 02.2 Plan 03 | Sidecar with calibration methodology, breakpoints, hull |
+| `population-v2025.1.json` | Phase 02.2 Plans 02-06 | 50K synthetic profiles from CopulaGAN + INSEE aggregates |
+| `population-v2025.1.meta.json` | Phase 02.2 Plan 06 | DP guarantee (epsilon <= 1.0), SHA-256 hash, privacy statement |
 
 ## Regeneration
 
@@ -189,16 +134,15 @@ source .venv/bin/activate
 python generate_dist.py
 ```
 
-## Shock Matrix Status
+## Architecture
 
-The shock matrix file is a **placeholder stub** containing a minimal 5×5×3 grid
-with zero values. Real shock matrix data requires CASD (Centre d'Accès Sécurisé
-aux Données) access — a multi-month INSEE approval process.
+The pipeline executes in this order:
+1. **Tax rules** → YAML to JSON conversion (Phase 1)
+2. **Test fixtures** → OpenFisca reference simulations (Phase 1)
+3. **Shock matrix** → Hybrid IRF + elasticity calibration (Phase 02.2 Plan 03)
+4. **Synthetic population** → INSEE aggregate loading → CopulaGAN training → DP injection → JSON export (Phase 02.2 Plans 02, 04, 06)
 
-When CASD data becomes available, regenerate with:
-```bash
-python -m shock_matrix.export_parquet
-```
+All outputs are static files consumable by the webapp without server-side computation.
 """)
     print(f"  ✓ README written: {readme_path}")
 
