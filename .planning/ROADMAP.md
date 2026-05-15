@@ -68,11 +68,11 @@ Plans:
 **Goal:** Execute the Python scenario pre-compute pipeline end-to-end — expanding from 3 to 12 scenarios, formalizing JSON Schema validation (Draft 2020-12), extending the pre-compute engine with new override keys (cotisations.scale, revenu universel), and producing scenarios-v2025.1.json consumable by the TypeScript ScenarioCache for O(1) citizen-mode lookups.
 **Requirements**: MICRO-01, MICRO-02, MICRO-03, MICRO-05
 **Depends on:** Phase 2
-**Plans:** 1/3 plans executed
+**Plans:** 2/3 plans executed
 
 Plans:
 - [x] 02.1-01-PLAN.md — Expand scenario definitions (3→12), extend precompute with new override keys, create JSON Schema contract
-- [ ] 02.1-02-PLAN.md — Test scaffolding: Python unit tests, TypeScript integration test, schema self-validation
+- [x] 02.1-02-PLAN.md — Test scaffolding: Python unit tests, TypeScript integration test, schema self-validation
 - [ ] 02.1-03-PLAN.md — CI update (count gate 3→12, schema validation), pipeline execution, output validation
 
 ### Phase 3: Interactive Simulation Shell (MVP)
