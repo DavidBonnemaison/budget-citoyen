@@ -68,7 +68,7 @@ Plans:
 **Goal:** Execute the offline data pipeline end-to-end — CopulaGAN synthetic population generation from INSEE aggregate tables, OpenDP formal ε ≤ 1.0 differential privacy proof, and hybrid IRF + elasticity shock matrix calibration — producing population-v2025.1.json (50K profiles + DP sidecar) and shockmatrix-v2025.1.parquet (calibrated 12³ grid), consumable by Phase 3 TypeScript engines via PopulationCache and macro-interpolate.ts.
 **Requirements**: DATA-02, DATA-03, DATA-04
 **Depends on:** Phase 2
-**Plans:** 8 plans
+**Plans:** 1/8 plans executed
 
 Plans:
 - [x] 02.2-01-PLAN.md — Wave 1: Python 3.11 venv setup, TypeScript Profile/PopulationDoc interfaces, Wave 0 test stubs
