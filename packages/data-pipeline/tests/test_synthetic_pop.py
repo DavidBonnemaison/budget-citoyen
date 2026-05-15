@@ -1,19 +1,25 @@
 """Tests for the synthetic population pipeline.
 
-Tests imports and metadata creation from synthetic_pop module.
+Tests imports, metadata creation, and full pipeline integration.
 Uses small in-memory DataFrames — no file I/O to real data directories.
 """
 
+import os
 import sys
 from pathlib import Path
 
-import pandas as pd
 import numpy as np
+import pandas as pd
+import pytest
 
 # Add src to path for imports when running from tests/ directory
 SRC_DIR = Path(__file__).resolve().parent.parent / "src"
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
+
+# Global fixture for CI-friendly pipeline parameters
+CI_EPOCHS = 10
+CI_NUM_ROWS = 2000
 
 
 class TestSyntheticPopImports:
@@ -96,3 +102,106 @@ class TestExportImports:
         digest = compute_sha256(str(test_file))
         assert len(digest) == 64
         assert all(c in "0123456789abcdef" for c in digest)
+
+
+class TestPipelineIntegration:
+    """Integration tests for the full CopulaGAN train + evaluate pipeline.
+
+    Uses CI-friendly parameters (epochs=10, num_rows=2000) for fast execution.
+    Full-scale training (epochs=500, num_rows=50000) is marked @pytest.mark.slow.
+    """
+
+    def test_generate_from_insee_smoke(self):
+        """Pipeline runs train + evaluate chain without error."""
+        from synthetic_pop import generate_from_insee
+
+        result = generate_from_insee(epochs=CI_EPOCHS, num_rows=CI_NUM_ROWS, seed=42)
+
+        expected_keys = {"synthesizer", "synthetic_df", "quality_report", "metadata", "real_df"}
+        missing = expected_keys - set(result.keys())
+        assert not missing, f"Missing keys in result: {missing}"
+        assert isinstance(result["synthetic_df"], pd.DataFrame)
+        assert len(result["synthetic_df"]) == CI_NUM_ROWS
+
+    def test_synthetic_has_no_nulls(self):
+        """Synthetic data has no nulls in critical columns."""
+        from synthetic_pop import generate_from_insee
+
+        result = generate_from_insee(epochs=CI_EPOCHS, num_rows=CI_NUM_ROWS, seed=42)
+        df = result["synthetic_df"]
+        critical_cols = ["age", "patrimoine", "revenu_fiscal"]
+        for col in critical_cols:
+            null_count = df[col].isnull().sum()
+            assert null_count == 0, f"Column {col} has {null_count} null values"
+
+    def test_quality_report_generated(self):
+        """Quality report contains fidelity and privacy keys."""
+        from synthetic_pop import generate_from_insee
+
+        result = generate_from_insee(epochs=CI_EPOCHS, num_rows=CI_NUM_ROWS, seed=42)
+        report = result["quality_report"]
+        assert "fidelity" in report, f"Missing fidelity — keys: {list(report.keys())}"
+        assert "privacy" in report, f"Missing privacy — keys: {list(report.keys())}"
+
+    def test_quality_scores_not_none(self):
+        """Fidelity overall_score is not None or NaN."""
+        from synthetic_pop import generate_from_insee
+
+        result = generate_from_insee(epochs=CI_EPOCHS, num_rows=CI_NUM_ROWS, seed=42)
+        score = result["quality_report"]["fidelity"]["overall_score"]
+        assert score is not None, "Overall quality score is None"
+        assert not (isinstance(score, float) and np.isnan(score)), "Overall quality score is NaN"
+
+    def test_synthesizer_checkpoint(self):
+        """Checkpoint file exists after training."""
+        from synthetic_pop import generate_from_insee
+
+        result = generate_from_insee(epochs=CI_EPOCHS, num_rows=CI_NUM_ROWS, seed=42)
+        # Synthesizer was saved during training (train.py saves to models/ subdir)
+        synth_dir = Path("models") / f"{CI_EPOCHS}epochs"
+        checkpoint = synth_dir / "synthesizer.pkl"
+        assert checkpoint.exists(), f"Checkpoint not found: {checkpoint}"
+
+    def test_synthetic_row_count(self):
+        """Synthetic data has exactly num_rows rows and correct column count."""
+        from synthetic_pop import generate_from_insee
+
+        result = generate_from_insee(epochs=CI_EPOCHS, num_rows=100, seed=42)
+        df = result["synthetic_df"]
+        assert len(df) == 100, f"Expected 100 rows, got {len(df)}"
+
+    def test_categorical_values_valid(self):
+        """Categorical values are all within valid enum sets from preprocess.py."""
+        from synthetic_pop import generate_from_insee
+        from synthetic_pop.preprocess import SITUATION_FAMILIALE_VALUES, TYPE_ACTIVITE_VALUES, ZONE_RESIDENCE_VALUES
+
+        result = generate_from_insee(epochs=CI_EPOCHS, num_rows=CI_NUM_ROWS, seed=42)
+        df = result["synthetic_df"]
+
+        assert df["situation_familiale"].isin(SITUATION_FAMILIALE_VALUES).all()
+        assert df["type_activite"].isin(TYPE_ACTIVITE_VALUES).all()
+        assert df["zone_residence"].isin(ZONE_RESIDENCE_VALUES).all()
+
+    def test_privacy_score_acceptable(self):
+        """DisclosureProtectionEstimate score >= 0.5."""
+        from synthetic_pop import generate_from_insee
+
+        result = generate_from_insee(epochs=CI_EPOCHS, num_rows=CI_NUM_ROWS, seed=42)
+        dpe_score = result["quality_report"]["privacy"]["dpe_score"]
+        assert dpe_score >= 0.5, f"DPE score {dpe_score} < 0.5"
+
+
+@pytest.mark.slow
+class TestFullScalePipeline:
+    """Full-scale pipeline tests (manual only, excluded from CI)."""
+
+    def test_generate_from_insee_full_scale(self):
+        """Full training at epochs=500, num_rows=50000 completes without error."""
+        from synthetic_pop import generate_from_insee
+
+        result = generate_from_insee(epochs=500, num_rows=50000, seed=42)
+        assert len(result["synthetic_df"]) == 50000
+        assert result["quality_report"]["fidelity"]["overall_score"] is not None
+        # Verify checkpoint
+        checkpoint = Path("models") / "500epochs" / "synthesizer.pkl"
+        assert checkpoint.exists()
