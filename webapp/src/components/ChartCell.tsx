@@ -58,12 +58,13 @@ export function ChartCell({
       <figcaption id={uniqueId} className="text-sm font-semibold text-primary mb-2">
         {title}
       </figcaption>
-      <div className="relative bg-white rounded-lg border border-gray-200 p-2">
+      <div className="relative bg-white rounded-lg border border-gray-200 p-2" style={{ minHeight: 250 }}>
         <div
           ref={containerRef}
           role="img"
           aria-labelledby={uniqueId}
           className={isOutOfBounds ? 'opacity-30' : ''}
+          style={{ width: '100%', minHeight: 200 }}
         />
         {isEmpty && (
           <div className="absolute inset-0 flex items-center justify-center">

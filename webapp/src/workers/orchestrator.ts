@@ -69,10 +69,12 @@ export class WorkerOrchestrator {
     const latest =
       source === 'citizen' ? this.latestCitizenId : this.latestMacroId;
 
-    // D-11: Discard stale responses when a newer request superseded them.
-    // This handles rapid slider dragging (60 req/s) — only the latest
-    // response matters for the UI update.
-    if (latest !== null && response.id !== latest) {
+    // D-11: Discard stale macro responses during rapid slider dragging.
+    // Citizen SIMULATE (CITIZEN_RESULT) responses always pass through —
+    // they're explicit one-shot operations, not rapid-stream events.
+    const isMacroStaleResponse =
+      source === 'macro' && latest !== null && response.id !== latest;
+    if (isMacroStaleResponse) {
       if (import.meta.env.DEV) {
         console.debug(`Discarding stale ${source} response: ${response.id}`);
       }
@@ -165,7 +167,9 @@ export class WorkerOrchestrator {
     profileIndex: number,
   ): Promise<ScenarioResult> {
     const id = crypto.randomUUID();
-    this.latestCitizenId = id;
+    // NOTE: Do NOT set this.latestCitizenId here — SIMULATE calls are parallel
+    // (Promise.all over 3 profile indices) and the stale-response discard would
+    // silently drop the first two responses, causing Promise.all to hang.
 
     return new Promise((resolve, reject) => {
       this.pending.set(id, {

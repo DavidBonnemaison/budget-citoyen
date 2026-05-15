@@ -20,7 +20,38 @@
               "id": { "type": "string", "pattern": "^[a-z0-9-]+$", "minLength": 3 },
               "name": { "type": "string", "minLength": 5 },
               "description": { "type": "string", "minLength": 20 },
-              "parameterOverrides": { "type": "object" }
+              "parameterOverrides": {
+                "type": "object",
+                "properties": {
+                  "impot_revenu.bareme": {
+                    "type": "object",
+                    "required": ["brackets"],
+                    "properties": {
+                      "brackets": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": ["rate", "threshold"],
+                          "properties": {
+                            "rate": { "type": "number", "minimum": 0, "maximum": 1 },
+                            "threshold": { "type": "number", "minimum": 0 }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "tva.taux_normal": { "type": "number", "minimum": 0, "maximum": 1 },
+                  "tva.taux_intermediaire": { "type": "number", "minimum": 0, "maximum": 1 },
+                  "cotisations.scale": { "type": "number", "minimum": 0 },
+                  "prestations_sociales.rsa.socle": { "type": "number", "minimum": 0 },
+                  "prestations_sociales.prime_activite.montant_base": { "type": "number", "minimum": 0 },
+                  "prestations_sociales.allocations_familiales.modulation": { "type": "number", "minimum": 0 },
+                  "prestations_sociales.apl.revalorisation": { "type": "number", "minimum": 0 },
+                  "revenu_universel.montant_mensuel": { "type": "number", "minimum": 0 },
+                  "revenu_universel.remplace_aides": { "type": ["boolean", "number"] }
+                },
+                "additionalProperties": false
+              }
             }
           },
           "results": {

@@ -120,6 +120,16 @@ export function interpolateAtPoint(
   if (tax < 0 || spend < 0) {
     return null;
   }
+
+  // Guard: empty matrix (placeholder, no pre-computed data available)
+  if (
+    matrix.taxBp.length === 0 ||
+    matrix.spendBp.length === 0 ||
+    matrix.horizonBp.length === 0
+  ) {
+    return null;
+  }
+
   if (horizon < matrix.horizonBp[0] || horizon > matrix.horizonBp[matrix.horizonBp.length - 1]) {
     return null;
   }

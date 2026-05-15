@@ -73,7 +73,7 @@ export interface ScenarioDefinition {
   description: string;
   /** Overrides de paramètres (clé → valeur). Les clés non spécifiées
    * conservent leur valeur par défaut. */
-  parameterOverrides: Record<string, number>;
+  parameterOverrides: Record<string, unknown>;
 }
 
 // ── Shock Matrix Data (transferred via ArrayBuffer) ─────────────────────────

@@ -20,12 +20,13 @@ export function ScenarioCard({ scenario, isSelected, onSelect }: ScenarioCardPro
       aria-label={`Sélectionner le scénario ${scenario.name}`}
       className={`
         bg-secondary rounded-lg p-4 text-left w-full min-h-[44px]
-        hover:scale-[1.02] transition-transform duration-200
+        border border-slate-200 shadow-sm overflow-hidden
+        hover:scale-[1.02] hover:shadow-md transition-all duration-200
         focus:outline-2 focus:outline-offset-2 focus:outline-primary
-        ${isSelected ? 'ring-2 ring-primary shadow-md' : ''}
+        ${isSelected ? 'ring-2 ring-primary shadow-md border-primary' : ''}
       `}
     >
-      <h3 className="text-lg font-semibold text-primary mb-1">
+      <h3 className="text-lg font-semibold text-primary mb-1 break-words">
         {scenario.name}
       </h3>
       <p className="text-sm text-text-secondary line-clamp-3">

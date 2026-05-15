@@ -235,7 +235,8 @@ print(f'PASSED: scenarios JSON validates against schema ({len(doc[\"scenarios\"]
           MAJOR=$(echo "$OF_VERSION" | cut -d. -f1)
           MINOR=$(echo "$OF_VERSION" | cut -d. -f2)
           if [ "$MAJOR" -lt 159 ] || [ "$MAJOR" -ge 200 ]; then
-            echo "::warning file=packages/data-pipeline/pyproject.toml,line=19::openfisca-france version $OF_VERSION is outside expected range 159-199"
+            echo "::error file=packages/data-pipeline/pyproject.toml,line=19::openfisca-france version $OF_VERSION is outside expected range 159-199"
+            exit 1
           fi
 
   # ── TypeScript Engine Tests (vitest) ────────────────────────────────

@@ -67,7 +67,9 @@ export function SimulatorPage({ simulation }: SimulatorPageProps) {
               <SliderGroup
                 disabled={isPreselect}
                 sliderValues={sliderValues}
+                advancedValues={simulation.advancedValues}
                 onValueChange={simulation.handleSliderChange}
+                onSubSliderChange={simulation.handleSubSliderChange}
                 onDragEnd={simulation.handleDragEnd}
                 onReset={simulation.handleReset}
                 advancedMode={simulation.advancedMode}
@@ -96,7 +98,9 @@ export function SimulatorPage({ simulation }: SimulatorPageProps) {
               <SliderGroup
                 disabled={isPreselect}
                 sliderValues={sliderValues}
+                advancedValues={simulation.advancedValues}
                 onValueChange={simulation.handleSliderChange}
+                onSubSliderChange={simulation.handleSubSliderChange}
                 onDragEnd={simulation.handleDragEnd}
                 onReset={simulation.handleReset}
                 advancedMode={simulation.advancedMode}

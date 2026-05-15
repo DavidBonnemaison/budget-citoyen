@@ -37,3 +37,8 @@ node_modules/
 
 # GSD debug artifacts (transient)
 .planning/debug/
+
+# Generated build/test artifacts
+*.tsbuildinfo
+webapp/playwright-report/
+webapp/test-results/

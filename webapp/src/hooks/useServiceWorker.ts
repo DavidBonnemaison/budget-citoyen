@@ -15,6 +15,13 @@ export function useServiceWorker(): ServiceWorkerState {
   const [hasUpdate, setHasUpdate] = useState(false);
 
   useEffect(() => {
+    // Skip Service Worker in dev mode — cached assets interfere with HMR
+    // and every code change requires cache clearing.
+    if (import.meta.env.DEV) {
+      setIsReady(true);
+      return;
+    }
+
     if (!('serviceWorker' in navigator)) {
       setIsReady(true);
       return;

@@ -7,11 +7,46 @@
 import type { SliderState, InterpolationResult } from './types';
 import type { ScenarioDefinition, ScenarioResult } from '../engine/types';
 import type { ScenarioCache } from '../engine/scenario-cache';
+import { LEVER_MAPPINGS } from './index-map';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
 export const DEFAULT_K = 3;
 export const EXACT_MATCH_THRESHOLD = 1e-3;
+
+// ── Parameter Override Aggregation ─────────────────────────────────────────────
+
+/**
+ * Aggregates sub-parameter overrides into lever-level values.
+ * E.g., {"ir.bareme.tranche1": -15, ...} → {ir: -15}.
+ */
+function aggregateOverrides(
+  overrides: Record<string, number>,
+): Record<string, number> {
+  const leverValues: Record<string, number> = {};
+  for (const [leverKey, mapping] of Object.entries(LEVER_MAPPINGS)) {
+    // Check if any sub-parameter key is present (production data format)
+    const hasSubParams = mapping.subParams.some((sp) => sp in overrides);
+    if (hasSubParams) {
+      let ws = 0;
+      let totalW = 0;
+      for (let i = 0; i < mapping.subParams.length; i++) {
+        const subVal = overrides[mapping.subParams[i]];
+        if (subVal !== undefined) {
+          ws += subVal * mapping.weights[i];
+          totalW += mapping.weights[i];
+        }
+      }
+      leverValues[leverKey] = totalW > 0 ? Math.round(ws / totalW) : 0;
+    } else if (leverKey in overrides) {
+      // Direct lever-level override (test data)
+      leverValues[leverKey] = overrides[leverKey];
+    } else {
+      leverValues[leverKey] = 0;
+    }
+  }
+  return leverValues;
+}
 
 // ── Distance Computation ──────────────────────────────────────────────────────
 
@@ -22,10 +57,11 @@ export const EXACT_MATCH_THRESHOLD = 1e-3;
  */
 function squaredDistance(slider: SliderState, def: ScenarioDefinition): number {
   const fields: (keyof SliderState)[] = ['ir', 'is', 'tva', 'cotisations', 'depenses'];
+  const leverOverrides = aggregateOverrides(def.parameterOverrides as Record<string, number>);
   let sum = 0;
   for (const field of fields) {
     const sliderVal = slider[field];
-    const scenarioVal = def.parameterOverrides[field] ?? 0;
+    const scenarioVal = leverOverrides[field] ?? 0;
     const diff = sliderVal - scenarioVal;
     sum += diff * diff;
   }

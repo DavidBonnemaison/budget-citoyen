@@ -302,220 +302,220 @@
       },
       "results": {
         "0": {
-          "ir": 536.97,
+          "ir": 2602.66,
           "is": 0.0,
-          "tva": 1162.16,
+          "tva": 998.72,
           "cotisations": 5928.0,
           "aides": 2352.0,
-          "revenuDisponible": 13525.87
+          "revenuDisponible": 11623.62
         },
         "1": {
-          "ir": 13288.93,
+          "ir": 21699.83,
           "is": 0.0,
-          "tva": 3282.57,
+          "tva": 2617.08,
           "cotisations": 25224.2,
           "aides": 0.0,
-          "revenuDisponible": 38204.3
+          "revenuDisponible": 30458.89
         },
         "2": {
-          "ir": 1000.2,
+          "ir": 3866.01,
           "is": 0.0,
-          "tva": 2005.92,
+          "tva": 1779.16,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 23345.88
+          "revenuDisponible": 20706.83
         },
         "3": {
-          "ir": 0.0,
+          "ir": 712.8,
           "is": 0.0,
-          "tva": 976.61,
+          "tva": 920.21,
           "cotisations": 2522.42,
           "aides": 6865.3,
-          "revenuDisponible": 11366.27
+          "revenuDisponible": 10709.87
         },
         "4": {
-          "ir": 465.6,
+          "ir": 2408.01,
           "is": 0.0,
-          "tva": 1573.48,
+          "tva": 1419.79,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 18312.92
+          "revenuDisponible": 16524.2
         },
         "5": {
-          "ir": 3267.89,
+          "ir": 12327.04,
           "is": 0.0,
-          "tva": 3872.0,
+          "tva": 3155.21,
           "cotisations": 23647.69,
           "aides": 851.94,
-          "revenuDisponible": 45064.36
+          "revenuDisponible": 36722.0
         },
         "6": {
-          "ir": 347.69,
+          "ir": 5501.05,
           "is": 0.0,
-          "tva": 3259.05,
+          "tva": 2851.3,
           "cotisations": 17341.64,
           "aides": 3878.88,
-          "revenuDisponible": 37930.5
+          "revenuDisponible": 33184.89
         },
         "7": {
-          "ir": 1733.09,
+          "ir": 7003.03,
           "is": 0.0,
-          "tva": 3423.42,
+          "tva": 3006.44,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 39843.49
+          "revenuDisponible": 34990.53
         },
         "8": {
-          "ir": 10053.86,
+          "ir": 20816.86,
           "is": 0.0,
-          "tva": 4188.65,
+          "tva": 3337.05,
           "cotisations": 29007.83,
           "aides": 0.0,
-          "revenuDisponible": 48749.66
+          "revenuDisponible": 38838.26
         },
         "9": {
-          "ir": 0.0,
+          "ir": 2673.0,
           "is": 0.0,
-          "tva": 2290.36,
+          "tva": 2078.87,
           "cotisations": 9459.08,
           "aides": 8405.88,
-          "revenuDisponible": 26656.44
+          "revenuDisponible": 24194.93
         },
         "10": {
-          "ir": 0.0,
+          "ir": 1603.8,
           "is": 0.0,
-          "tva": 1269.27,
+          "tva": 1142.38,
           "cotisations": 5675.45,
           "aides": 3717.18,
-          "revenuDisponible": 14772.46
+          "revenuDisponible": 13295.55
         },
         "11": {
-          "ir": 2500.49,
+          "ir": 9665.03,
           "is": 0.0,
-          "tva": 4549.55,
+          "tva": 3982.67,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 52949.96
+          "revenuDisponible": 46352.3
         },
         "12": {
-          "ir": 1089.3,
+          "ir": 4109.01,
           "is": 0.0,
-          "tva": 3474.36,
+          "tva": 3235.43,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 40436.34
+          "revenuDisponible": 37655.56
         },
         "13": {
-          "ir": 15161.8,
+          "ir": 31335.98,
           "is": 0.0,
-          "tva": 7437.93,
+          "tva": 6158.18,
           "cotisations": 36259.79,
           "aides": 425.97,
-          "revenuDisponible": 86566.45
+          "revenuDisponible": 71672.02
         },
         "14": {
-          "ir": 9651.33,
+          "ir": 22035.87,
           "is": 0.0,
-          "tva": 4816.43,
+          "tva": 3836.52,
           "cotisations": 32476.16,
           "aides": 0.0,
-          "revenuDisponible": 56056.08
+          "revenuDisponible": 44651.45
         },
         "15": {
-          "ir": 122701.37,
+          "ir": 158592.6,
           "is": 0.0,
-          "tva": 17412.91,
+          "tva": 14573.08,
           "cotisations": 157651.25,
           "aides": 425.97,
-          "revenuDisponible": 202660.44
+          "revenuDisponible": 169609.04
         },
         "16": {
-          "ir": 0.0,
+          "ir": 1960.2,
           "is": 0.0,
-          "tva": 1377.96,
+          "tva": 1222.86,
           "cotisations": 6936.66,
           "aides": 2352.0,
-          "revenuDisponible": 16037.38
+          "revenuDisponible": 14232.28
         },
         "17": {
-          "ir": 70172.13,
+          "ir": 65276.64,
           "is": 0.0,
-          "tva": 7991.62,
+          "tva": 8378.97,
           "cotisations": 78825.62,
           "aides": 0.0,
-          "revenuDisponible": 93010.63
+          "revenuDisponible": 97518.77
         },
         "18": {
-          "ir": 4282.49,
+          "ir": 14525.03,
           "is": 0.0,
-          "tva": 3995.19,
+          "tva": 3184.77,
           "cotisations": 25224.2,
           "aides": 0.0,
-          "revenuDisponible": 46498.12
+          "revenuDisponible": 37066.0
         },
         "19": {
-          "ir": 140344.25,
+          "ir": 130553.28,
           "is": 0.0,
-          "tva": 15983.25,
+          "tva": 16757.94,
           "cotisations": 157651.25,
           "aides": 0.0,
-          "revenuDisponible": 186021.25
+          "revenuDisponible": 195037.53
         },
         "20": {
-          "ir": 536.97,
+          "ir": 2602.66,
           "is": 0.0,
-          "tva": 1108.99,
+          "tva": 945.55,
           "cotisations": 5928.0,
           "aides": 1680.0,
-          "revenuDisponible": 12907.04
+          "revenuDisponible": 11004.79
         },
         "21": {
-          "ir": 198.3,
+          "ir": 1679.01,
           "is": 0.0,
-          "tva": 1304.09,
+          "tva": 1186.93,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 15177.61
+          "revenuDisponible": 13814.06
         },
         "22": {
-          "ir": 594.3,
+          "ir": 2759.01,
           "is": 0.0,
-          "tva": 2855.22,
+          "tva": 2683.94,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 33230.48
+          "revenuDisponible": 31237.05
         },
         "23": {
-          "ir": 11082.33,
+          "ir": 23991.57,
           "is": 0.0,
-          "tva": 6871.57,
+          "tva": 5850.15,
           "cotisations": 22071.18,
           "aides": 0.0,
-          "revenuDisponible": 79974.92
+          "revenuDisponible": 68087.1
         },
         "24": {
-          "ir": 5998.93,
+          "ir": 11736.83,
           "is": 0.0,
-          "tva": 2234.12,
+          "tva": 1780.12,
           "cotisations": 15765.12,
           "aides": 0.0,
-          "revenuDisponible": 26001.83
+          "revenuDisponible": 20717.93
         },
         "25": {
-          "ir": 1633.8,
+          "ir": 5594.01,
           "is": 0.0,
-          "tva": 2219.11,
+          "tva": 1905.76,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 25827.09
+          "revenuDisponible": 22180.23
         },
         "26": {
-          "ir": 99.3,
+          "ir": 1409.01,
           "is": 0.0,
-          "tva": 2156.32,
+          "tva": 2052.69,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 25096.38
+          "revenuDisponible": 23890.3
         },
         "27": {
           "ir": 0.0,
@@ -526,36 +526,36 @@
           "revenuDisponible": 13393.23
         },
         "28": {
-          "ir": 0.0,
+          "ir": 445.5,
           "is": 0.0,
-          "tva": 746.92,
+          "tva": 711.67,
           "cotisations": 0.0,
           "aides": 4439.95,
-          "revenuDisponible": 8693.03
+          "revenuDisponible": 8282.78
         },
         "29": {
-          "ir": 465.6,
+          "ir": 2408.01,
           "is": 0.0,
-          "tva": 1614.96,
+          "tva": 1461.27,
           "cotisations": 3153.02,
           "aides": 6029.3,
-          "revenuDisponible": 18795.72
+          "revenuDisponible": 17007.0
         },
         "30": {
-          "ir": 396.59,
+          "ir": 3358.03,
           "is": 0.0,
-          "tva": 2528.42,
+          "tva": 2294.1,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 29426.99
+          "revenuDisponible": 26699.87
         },
         "31": {
-          "ir": 0.0,
+          "ir": 4009.5,
           "is": 0.0,
-          "tva": 3867.45,
+          "tva": 3550.21,
           "cotisations": 0.0,
           "aides": 3878.88,
-          "revenuDisponible": 45011.43
+          "revenuDisponible": 41319.17
         }
       }
     },
@@ -903,220 +903,220 @@
       },
       "results": {
         "0": {
-          "ir": 54.24,
+          "ir": 1088.14,
           "is": 0.0,
-          "tva": 1200.36,
+          "tva": 1118.55,
           "cotisations": 5928.0,
           "aides": 2352.0,
-          "revenuDisponible": 13970.4
+          "revenuDisponible": 13018.31
         },
         "1": {
-          "ir": 1342.32,
+          "ir": 16100.0,
           "is": 0.0,
-          "tva": 4227.83,
+          "tva": 3060.15,
           "cotisations": 25224.2,
           "aides": 0.0,
-          "revenuDisponible": 49205.65
+          "revenuDisponible": 35615.65
         },
         "2": {
-          "ir": 101.03,
+          "ir": 1790.0,
           "is": 0.0,
-          "tva": 2077.06,
+          "tva": 1943.42,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 24173.91
+          "revenuDisponible": 22618.58
         },
         "3": {
-          "ir": 0.0,
+          "ir": 160.0,
           "is": 0.0,
-          "tva": 1106.47,
+          "tva": 1093.81,
           "cotisations": 2522.42,
           "aides": 8506.5,
-          "revenuDisponible": 12877.61
+          "revenuDisponible": 12730.27
         },
         "4": {
-          "ir": 47.03,
+          "ir": 980.0,
           "is": 0.0,
-          "tva": 1606.59,
+          "tva": 1532.78,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 18698.38
+          "revenuDisponible": 17839.22
         },
         "5": {
-          "ir": 330.09,
+          "ir": 5775.0,
           "is": 0.0,
-          "tva": 4104.45,
+          "tva": 3673.63,
           "cotisations": 23647.69,
           "aides": 851.94,
-          "revenuDisponible": 47769.71
+          "revenuDisponible": 42755.62
         },
         "6": {
-          "ir": 35.12,
+          "ir": 2150.0,
           "is": 0.0,
-          "tva": 3283.78,
+          "tva": 3116.45,
           "cotisations": 17341.64,
           "aides": 3878.88,
-          "revenuDisponible": 38218.34
+          "revenuDisponible": 36270.79
         },
         "7": {
-          "ir": 175.06,
+          "ir": 3175.0,
           "is": 0.0,
-          "tva": 3546.69,
+          "tva": 3309.33,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 41278.25
+          "revenuDisponible": 38515.67
         },
         "8": {
-          "ir": 1015.54,
+          "ir": 11440.0,
           "is": 0.0,
-          "tva": 4903.79,
+          "tva": 4078.97,
           "cotisations": 29007.83,
           "aides": 0.0,
-          "revenuDisponible": 57072.84
+          "revenuDisponible": 47473.2
         },
         "9": {
-          "ir": 0.0,
+          "ir": 350.0,
           "is": 0.0,
-          "tva": 2290.36,
+          "tva": 2262.67,
           "cotisations": 9459.08,
           "aides": 8405.88,
-          "revenuDisponible": 26656.44
+          "revenuDisponible": 26334.13
         },
         "10": {
-          "ir": 0.0,
+          "ir": 310.0,
           "is": 0.0,
-          "tva": 1278.86,
+          "tva": 1254.33,
           "cotisations": 5675.45,
           "aides": 3838.38,
-          "revenuDisponible": 14884.07
+          "revenuDisponible": 14598.6
         },
         "11": {
-          "ir": 252.57,
+          "ir": 4475.0,
           "is": 0.0,
-          "tva": 4727.41,
+          "tva": 4393.32,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 55020.02
+          "revenuDisponible": 51131.68
         },
         "12": {
-          "ir": 110.03,
+          "ir": 1925.0,
           "is": 0.0,
-          "tva": 3551.84,
+          "tva": 3408.23,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 41338.13
+          "revenuDisponible": 39666.77
         },
         "13": {
-          "ir": 1531.49,
+          "ir": 17250.0,
           "is": 0.0,
-          "tva": 8516.4,
+          "tva": 7272.7,
           "cotisations": 36259.79,
           "aides": 425.97,
-          "revenuDisponible": 99118.29
+          "revenuDisponible": 84643.48
         },
         "14": {
-          "ir": 974.88,
+          "ir": 11790.0,
           "is": 0.0,
-          "tva": 5502.94,
+          "tva": 4647.21,
           "cotisations": 32476.16,
           "aides": 0.0,
-          "revenuDisponible": 64046.02
+          "revenuDisponible": 54086.63
         },
         "15": {
-          "ir": 12394.08,
+          "ir": 165900.0,
           "is": 0.0,
-          "tva": 26140.78,
+          "tva": 13994.9,
           "cotisations": 157651.25,
           "aides": 425.97,
-          "revenuDisponible": 304239.86
+          "revenuDisponible": 162879.82
         },
         "16": {
-          "ir": 0.0,
+          "ir": 590.0,
           "is": 0.0,
-          "tva": 1377.96,
+          "tva": 1331.28,
           "cotisations": 6936.66,
           "aides": 2352.0,
-          "revenuDisponible": 16037.38
+          "revenuDisponible": 15494.06
         },
         "17": {
-          "ir": 7088.09,
+          "ir": 104800.0,
           "is": 0.0,
-          "tva": 12983.04,
+          "tva": 5251.75,
           "cotisations": 78825.62,
           "aides": 0.0,
-          "revenuDisponible": 151103.25
+          "revenuDisponible": 61122.63
         },
         "18": {
-          "ir": 432.57,
+          "ir": 7650.0,
           "is": 0.0,
-          "tva": 4299.81,
+          "tva": 3728.75,
           "cotisations": 25224.2,
           "aides": 0.0,
-          "revenuDisponible": 50043.42
+          "revenuDisponible": 43397.05
         },
         "19": {
-          "ir": 14176.19,
+          "ir": 209600.0,
           "is": 0.0,
-          "tva": 25966.07,
+          "tva": 10503.51,
           "cotisations": 157651.25,
           "aides": 0.0,
-          "revenuDisponible": 302206.49
+          "revenuDisponible": 122245.24
         },
         "20": {
-          "ir": 54.24,
+          "ir": 1088.14,
           "is": 0.0,
-          "tva": 1147.19,
+          "tva": 1065.38,
           "cotisations": 5928.0,
           "aides": 1680.0,
-          "revenuDisponible": 13351.57
+          "revenuDisponible": 12399.48
         },
         "21": {
-          "ir": 20.03,
+          "ir": 650.0,
           "is": 0.0,
-          "tva": 1318.19,
+          "tva": 1268.35,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 15341.78
+          "revenuDisponible": 14761.65
         },
         "22": {
-          "ir": 60.03,
+          "ir": 1175.0,
           "is": 0.0,
-          "tva": 2897.49,
+          "tva": 2809.27,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 33722.48
+          "revenuDisponible": 32695.73
         },
         "23": {
-          "ir": 1119.43,
+          "ir": 12850.0,
           "is": 0.0,
-          "tva": 7659.87,
+          "tva": 6731.71,
           "cotisations": 22071.18,
           "aides": 0.0,
-          "revenuDisponible": 89149.52
+          "revenuDisponible": 78347.11
         },
         "24": {
-          "ir": 605.95,
+          "ir": 6800.0,
           "is": 0.0,
-          "tva": 2660.83,
+          "tva": 2170.74,
           "cotisations": 15765.12,
           "aides": 0.0,
-          "revenuDisponible": 30968.1
+          "revenuDisponible": 25264.14
         },
         "25": {
-          "ir": 165.03,
+          "ir": 2900.0,
           "is": 0.0,
-          "tva": 2335.32,
+          "tva": 2118.92,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 27179.65
+          "revenuDisponible": 24661.08
         },
         "26": {
-          "ir": 10.03,
+          "ir": 550.0,
           "is": 0.0,
-          "tva": 2163.38,
+          "tva": 2120.66,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 25178.59
+          "revenuDisponible": 24681.34
         },
         "27": {
           "ir": 0.0,
@@ -1127,36 +1127,36 @@
           "revenuDisponible": 13393.23
         },
         "28": {
-          "ir": 0.0,
+          "ir": 45.0,
           "is": 0.0,
-          "tva": 798.91,
+          "tva": 795.35,
           "cotisations": 0.0,
           "aides": 5097.08,
-          "revenuDisponible": 9298.17
+          "revenuDisponible": 9256.73
         },
         "29": {
-          "ir": 47.03,
+          "ir": 980.0,
           "is": 0.0,
-          "tva": 1753.88,
+          "tva": 1680.06,
           "cotisations": 3153.02,
           "aides": 7366.5,
-          "revenuDisponible": 20412.57
+          "revenuDisponible": 19553.42
         },
         "30": {
-          "ir": 40.06,
+          "ir": 1300.0,
           "is": 0.0,
-          "tva": 2556.62,
+          "tva": 2456.93,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 29755.32
+          "revenuDisponible": 28595.07
         },
         "31": {
-          "ir": 0.0,
+          "ir": 1250.0,
           "is": 0.0,
-          "tva": 3867.45,
+          "tva": 3768.55,
           "cotisations": 0.0,
           "aides": 3878.88,
-          "revenuDisponible": 45011.43
+          "revenuDisponible": 43860.33
         }
       }
     },
@@ -1192,220 +1192,220 @@
       },
       "results": {
         "0": {
-          "ir": 596.63,
+          "ir": 2796.27,
           "is": 0.0,
-          "tva": 1204.35,
+          "tva": 1030.31,
           "cotisations": 5335.2,
           "aides": 2352.0,
-          "revenuDisponible": 14016.82
+          "revenuDisponible": 11991.22
         },
         "1": {
-          "ir": 14765.48,
+          "ir": 22620.0,
           "is": 0.0,
-          "tva": 3365.33,
+          "tva": 2743.85,
           "cotisations": 22701.78,
           "aides": 0.0,
-          "revenuDisponible": 39167.41
+          "revenuDisponible": 31934.37
         },
         "2": {
-          "ir": 1111.33,
+          "ir": 4200.0,
           "is": 0.0,
-          "tva": 1997.12,
+          "tva": 1752.74,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 23243.55
+          "revenuDisponible": 20399.26
         },
         "3": {
-          "ir": 0.0,
+          "ir": 792.0,
           "is": 0.0,
-          "tva": 1012.8,
+          "tva": 950.13,
           "cotisations": 2270.18,
           "aides": 7070.45,
-          "revenuDisponible": 11787.47
+          "revenuDisponible": 11058.14
         },
         "4": {
-          "ir": 517.33,
+          "ir": 2580.0,
           "is": 0.0,
-          "tva": 1569.38,
+          "tva": 1406.18,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 18265.29
+          "revenuDisponible": 16365.82
         },
         "5": {
-          "ir": 3630.99,
+          "ir": 13410.0,
           "is": 0.0,
-          "tva": 4030.38,
+          "tva": 3256.63,
           "cotisations": 21282.92,
           "aides": 851.94,
-          "revenuDisponible": 46907.65
+          "revenuDisponible": 37902.39
         },
         "6": {
-          "ir": 386.32,
+          "ir": 5730.0,
           "is": 0.0,
-          "tva": 3393.21,
+          "tva": 2970.4,
           "cotisations": 15607.47,
           "aides": 3878.88,
-          "revenuDisponible": 39491.88
+          "revenuDisponible": 34571.01
         },
         "7": {
-          "ir": 1925.66,
+          "ir": 7590.0,
           "is": 0.0,
-          "tva": 3408.18,
+          "tva": 2960.0,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 39666.16
+          "revenuDisponible": 34450.0
         },
         "8": {
-          "ir": 11170.96,
+          "ir": 20280.0,
           "is": 0.0,
-          "tva": 4329.78,
+          "tva": 3609.04,
           "cotisations": 26107.05,
           "aides": 0.0,
-          "revenuDisponible": 50392.21
+          "revenuDisponible": 42003.91
         },
         "9": {
-          "ir": 0.0,
+          "ir": 2970.0,
           "is": 0.0,
-          "tva": 2365.21,
+          "tva": 2130.21,
           "cotisations": 8513.17,
           "aides": 8405.88,
-          "revenuDisponible": 27527.5
+          "revenuDisponible": 24792.5
         },
         "10": {
-          "ir": 0.0,
+          "ir": 1782.0,
           "is": 0.0,
-          "tva": 1315.38,
+          "tva": 1174.38,
           "cotisations": 5107.9,
           "aides": 3732.33,
-          "revenuDisponible": 15309.05
+          "revenuDisponible": 13668.05
         },
         "11": {
-          "ir": 2778.32,
+          "ir": 10500.0,
           "is": 0.0,
-          "tva": 4527.56,
+          "tva": 3916.6,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 52694.12
+          "revenuDisponible": 45583.4
         },
         "12": {
-          "ir": 1210.33,
+          "ir": 4470.0,
           "is": 0.0,
-          "tva": 3464.78,
+          "tva": 3206.86,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 40324.89
+          "revenuDisponible": 37323.14
         },
         "13": {
-          "ir": 16846.44,
+          "ir": 30510.0,
           "is": 0.0,
-          "tva": 7591.53,
+          "tva": 6510.43,
           "cotisations": 32633.81,
           "aides": 425.97,
-          "revenuDisponible": 88354.19
+          "revenuDisponible": 75771.73
         },
         "14": {
-          "ir": 10723.7,
+          "ir": 22110.0,
           "is": 0.0,
-          "tva": 4988.54,
+          "tva": 4087.62,
           "cotisations": 29228.54,
           "aides": 0.0,
-          "revenuDisponible": 58059.22
+          "revenuDisponible": 47573.84
         },
         "15": {
-          "ir": 136334.85,
+          "ir": 173160.0,
           "is": 0.0,
-          "tva": 17581.58,
+          "tva": 14667.85,
           "cotisations": 141886.12,
           "aides": 425.97,
-          "revenuDisponible": 204623.42
+          "revenuDisponible": 170712.0
         },
         "16": {
-          "ir": 0.0,
+          "ir": 2178.0,
           "is": 0.0,
-          "tva": 1432.84,
+          "tva": 1260.51,
           "cotisations": 6242.99,
           "aides": 2352.0,
-          "revenuDisponible": 16676.17
+          "revenuDisponible": 14670.5
         },
         "17": {
-          "ir": 77969.03,
+          "ir": 71220.0,
           "is": 0.0,
-          "tva": 7998.4,
+          "tva": 8532.41,
           "cotisations": 70943.06,
           "aides": 0.0,
-          "revenuDisponible": 93089.51
+          "revenuDisponible": 99304.53
         },
         "18": {
-          "ir": 4758.32,
+          "ir": 15900.0,
           "is": 0.0,
-          "tva": 4157.13,
+          "tva": 3275.56,
           "cotisations": 22701.78,
           "aides": 0.0,
-          "revenuDisponible": 48382.77
+          "revenuDisponible": 38122.66
         },
         "19": {
-          "ir": 155938.06,
+          "ir": 142440.0,
           "is": 0.0,
-          "tva": 15996.8,
+          "tva": 17064.81,
           "cotisations": 141886.12,
           "aides": 0.0,
-          "revenuDisponible": 186179.02
+          "revenuDisponible": 198609.07
         },
         "20": {
-          "ir": 596.63,
+          "ir": 2796.27,
           "is": 0.0,
-          "tva": 1151.18,
+          "tva": 977.13,
           "cotisations": 5335.2,
           "aides": 1680.0,
-          "revenuDisponible": 13397.99
+          "revenuDisponible": 11372.4
         },
         "21": {
-          "ir": 220.33,
+          "ir": 1770.0,
           "is": 0.0,
-          "tva": 1302.34,
+          "tva": 1179.73,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 15157.33
+          "revenuDisponible": 13730.27
         },
         "22": {
-          "ir": 660.33,
+          "ir": 2970.0,
           "is": 0.0,
-          "tva": 2849.99,
+          "tva": 2667.24,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 33169.68
+          "revenuDisponible": 31042.76
         },
         "23": {
-          "ir": 12313.7,
+          "ir": 23700.0,
           "is": 0.0,
-          "tva": 6948.78,
+          "tva": 6047.86,
           "cotisations": 19864.06,
           "aides": 0.0,
-          "revenuDisponible": 80873.46
+          "revenuDisponible": 70388.08
         },
         "24": {
-          "ir": 6665.48,
+          "ir": 11220.0,
           "is": 0.0,
-          "tva": 2306.12,
+          "tva": 1945.75,
           "cotisations": 14188.61,
           "aides": 0.0,
-          "revenuDisponible": 26839.79
+          "revenuDisponible": 22645.64
         },
         "25": {
-          "ir": 1815.33,
+          "ir": 6120.0,
           "is": 0.0,
-          "tva": 2204.74,
+          "tva": 1864.14,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 25659.93
+          "revenuDisponible": 21695.86
         },
         "26": {
-          "ir": 110.33,
+          "ir": 1470.0,
           "is": 0.0,
-          "tva": 2155.45,
+          "tva": 2047.87,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 25086.22
+          "revenuDisponible": 23834.13
         },
         "27": {
           "ir": 0.0,
@@ -1416,36 +1416,36 @@
           "revenuDisponible": 13393.23
         },
         "28": {
-          "ir": 0.0,
+          "ir": 495.0,
           "is": 0.0,
-          "tva": 736.52,
+          "tva": 697.35,
           "cotisations": 0.0,
           "aides": 4308.52,
-          "revenuDisponible": 8572.0
+          "revenuDisponible": 8116.17
         },
         "29": {
-          "ir": 517.33,
+          "ir": 2580.0,
           "is": 0.0,
-          "tva": 1649.04,
+          "tva": 1485.83,
           "cotisations": 2837.72,
           "aides": 6196.45,
-          "revenuDisponible": 19192.36
+          "revenuDisponible": 17292.9
         },
         "30": {
-          "ir": 440.66,
+          "ir": 3540.0,
           "is": 0.0,
-          "tva": 2524.93,
+          "tva": 2279.7,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 29386.41
+          "revenuDisponible": 26532.3
         },
         "31": {
-          "ir": 0.0,
+          "ir": 4455.0,
           "is": 0.0,
-          "tva": 3867.45,
+          "tva": 3514.96,
           "cotisations": 0.0,
           "aides": 3878.88,
-          "revenuDisponible": 45011.43
+          "revenuDisponible": 40908.92
         }
       }
     },
@@ -1487,220 +1487,220 @@
       },
       "results": {
         "0": {
-          "ir": 542.39,
+          "ir": 2528.64,
           "is": 0.0,
-          "tva": 1245.98,
+          "tva": 1077.42,
           "cotisations": 5928.0,
           "aides": 2352.0,
-          "revenuDisponible": 13436.63
+          "revenuDisponible": 11618.94
         },
         "1": {
-          "ir": 13423.16,
+          "ir": 21600.0,
           "is": 0.0,
-          "tva": 3509.22,
+          "tva": 2815.33,
           "cotisations": 25224.2,
           "aides": 0.0,
-          "revenuDisponible": 37843.42
+          "revenuDisponible": 30360.47
         },
         "2": {
-          "ir": 1010.3,
+          "ir": 3792.0,
           "is": 0.0,
-          "tva": 2150.52,
+          "tva": 1914.46,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 23191.18
+          "revenuDisponible": 20645.54
         },
         "3": {
-          "ir": 0.0,
+          "ir": 720.0,
           "is": 0.0,
-          "tva": 1012.61,
+          "tva": 951.51,
           "cotisations": 2522.42,
           "aides": 6455.0,
-          "revenuDisponible": 10919.97
+          "revenuDisponible": 10261.07
         },
         "4": {
-          "ir": 470.3,
+          "ir": 2334.0,
           "is": 0.0,
-          "tva": 1687.18,
+          "tva": 1529.02,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 18194.52
+          "revenuDisponible": 16488.98
         },
         "5": {
-          "ir": 3300.9,
+          "ir": 12105.0,
           "is": 0.0,
-          "tva": 4113.84,
+          "tva": 3366.71,
           "cotisations": 23647.69,
           "aides": 425.97,
-          "revenuDisponible": 44363.54
+          "revenuDisponible": 36306.57
         },
         "6": {
-          "ir": 351.2,
+          "ir": 5205.0,
           "is": 0.0,
-          "tva": 3330.5,
+          "tva": 2918.6,
           "cotisations": 17341.64,
           "aides": 1939.44,
-          "revenuDisponible": 35916.1
+          "revenuDisponible": 31474.2
         },
         "7": {
-          "ir": 1750.6,
+          "ir": 6855.0,
           "is": 0.0,
-          "tva": 3670.18,
+          "tva": 3237.02,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 39579.22
+          "revenuDisponible": 34907.98
         },
         "8": {
-          "ir": 10155.42,
+          "ir": 20556.0,
           "is": 0.0,
-          "tva": 4483.78,
+          "tva": 3601.17,
           "cotisations": 29007.83,
           "aides": 0.0,
-          "revenuDisponible": 48352.97
+          "revenuDisponible": 38835.0
         },
         "9": {
-          "ir": 0.0,
+          "ir": 2700.0,
           "is": 0.0,
-          "tva": 2199.58,
+          "tva": 1970.46,
           "cotisations": 9459.08,
           "aides": 5378.94,
-          "revenuDisponible": 23720.28
+          "revenuDisponible": 21249.4
         },
         "10": {
-          "ir": 0.0,
+          "ir": 1620.0,
           "is": 0.0,
-          "tva": 1286.45,
+          "tva": 1148.97,
           "cotisations": 5675.45,
           "aides": 2834.94,
-          "revenuDisponible": 13873.04
+          "revenuDisponible": 12390.52
         },
         "11": {
-          "ir": 2525.75,
+          "ir": 9480.0,
           "is": 0.0,
-          "tva": 4877.32,
+          "tva": 4287.17,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 52596.93
+          "revenuDisponible": 46232.83
         },
         "12": {
-          "ir": 1100.3,
+          "ir": 4035.0,
           "is": 0.0,
-          "tva": 3725.37,
+          "tva": 3476.33,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 40174.33
+          "revenuDisponible": 37488.67
         },
         "13": {
-          "ir": 15314.95,
+          "ir": 30945.0,
           "is": 0.0,
-          "tva": 7946.23,
+          "tva": 6619.85,
           "cotisations": 36259.79,
           "aides": 212.99,
-          "revenuDisponible": 85692.02
+          "revenuDisponible": 71388.35
         },
         "14": {
-          "ir": 9748.82,
+          "ir": 21699.0,
           "is": 0.0,
-          "tva": 5157.42,
+          "tva": 4143.32,
           "cotisations": 32476.16,
           "aides": 0.0,
-          "revenuDisponible": 55617.6
+          "revenuDisponible": 44681.52
         },
         "15": {
-          "ir": 123940.77,
+          "ir": 157230.0,
           "is": 0.0,
-          "tva": 18552.38,
+          "tva": 15727.42,
           "cotisations": 157651.25,
           "aides": 212.99,
-          "revenuDisponible": 200068.59
+          "revenuDisponible": 169604.32
         },
         "16": {
-          "ir": 0.0,
+          "ir": 1980.0,
           "is": 0.0,
-          "tva": 1477.88,
+          "tva": 1309.86,
           "cotisations": 6936.66,
           "aides": 2352.0,
-          "revenuDisponible": 15937.46
+          "revenuDisponible": 14125.48
         },
         "17": {
-          "ir": 70880.94,
+          "ir": 64410.0,
           "is": 0.0,
-          "tva": 8510.99,
+          "tva": 9060.12,
           "cotisations": 78825.62,
           "aides": 0.0,
-          "revenuDisponible": 91782.45
+          "revenuDisponible": 97704.26
         },
         "18": {
-          "ir": 4325.75,
+          "ir": 14340.0,
           "is": 0.0,
-          "tva": 4281.24,
+          "tva": 3431.42,
           "cotisations": 25224.2,
           "aides": 0.0,
-          "revenuDisponible": 46168.81
+          "revenuDisponible": 37004.38
         },
         "19": {
-          "ir": 141761.87,
+          "ir": 128820.0,
           "is": 0.0,
-          "tva": 17021.99,
+          "tva": 18120.25,
           "cotisations": 157651.25,
           "aides": 0.0,
-          "revenuDisponible": 183564.89
+          "revenuDisponible": 195408.5
         },
         "20": {
-          "ir": 542.39,
+          "ir": 2528.64,
           "is": 0.0,
-          "tva": 1188.95,
+          "tva": 1020.4,
           "cotisations": 5928.0,
           "aides": 1680.0,
-          "revenuDisponible": 12821.66
+          "revenuDisponible": 11003.96
         },
         "21": {
-          "ir": 200.3,
+          "ir": 1605.0,
           "is": 0.0,
-          "tva": 1398.48,
+          "tva": 1279.28,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 15081.22
+          "revenuDisponible": 13795.72
         },
         "22": {
-          "ir": 600.3,
+          "ir": 2685.0,
           "is": 0.0,
-          "tva": 3061.76,
+          "tva": 2884.85,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 33017.94
+          "revenuDisponible": 31110.15
         },
         "23": {
-          "ir": 11194.27,
+          "ir": 23660.0,
           "is": 0.0,
-          "tva": 7360.37,
+          "tva": 6302.52,
           "cotisations": 22071.18,
           "aides": 0.0,
-          "revenuDisponible": 79374.18
+          "revenuDisponible": 67966.3
         },
         "24": {
-          "ir": 6059.53,
+          "ir": 11610.0,
           "is": 0.0,
-          "tva": 2390.99,
+          "tva": 1919.97,
           "cotisations": 15765.12,
           "aides": 0.0,
-          "revenuDisponible": 25784.36
+          "revenuDisponible": 20704.91
         },
         "25": {
-          "ir": 1650.3,
+          "ir": 5520.0,
           "is": 0.0,
-          "tva": 2378.63,
+          "tva": 2050.24,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 25651.07
+          "revenuDisponible": 22109.76
         },
         "26": {
-          "ir": 100.3,
+          "ir": 1335.0,
           "is": 0.0,
-          "tva": 2312.6,
+          "tva": 2207.83,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 24939.1
+          "revenuDisponible": 23809.17
         },
         "27": {
           "ir": 0.0,
@@ -1711,36 +1711,36 @@
           "revenuDisponible": 13309.78
         },
         "28": {
-          "ir": 0.0,
+          "ir": 450.0,
           "is": 0.0,
-          "tva": 789.93,
+          "tva": 751.74,
           "cotisations": 0.0,
           "aides": 4308.52,
-          "revenuDisponible": 8518.59
+          "revenuDisponible": 8106.78
         },
         "29": {
-          "ir": 470.3,
+          "ir": 2334.0,
           "is": 0.0,
-          "tva": 1703.3,
+          "tva": 1545.15,
           "cotisations": 3153.02,
           "aides": 5695.0,
-          "revenuDisponible": 18368.38
+          "revenuDisponible": 16662.83
         },
         "30": {
-          "ir": 400.6,
+          "ir": 3210.0,
           "is": 0.0,
-          "tva": 2711.43,
+          "tva": 2473.02,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 29239.97
+          "revenuDisponible": 26668.98
         },
         "31": {
-          "ir": 0.0,
+          "ir": 4050.0,
           "is": 0.0,
-          "tva": 3983.32,
+          "tva": 3639.64,
           "cotisations": 0.0,
           "aides": 1939.44,
-          "revenuDisponible": 42956.12
+          "revenuDisponible": 39249.8
         }
       }
     },
@@ -1781,220 +1781,220 @@
       },
       "results": {
         "0": {
-          "ir": 488.15,
+          "ir": 2111.02,
           "is": 0.0,
-          "tva": 1236.38,
+          "tva": 1107.98,
           "cotisations": 5038.8,
           "aides": 2352.0,
-          "revenuDisponible": 14389.67
+          "revenuDisponible": 12895.2
         },
         "1": {
-          "ir": 12080.85,
+          "ir": 19510.0,
           "is": 0.0,
-          "tva": 3677.54,
+          "tva": 3089.72,
           "cotisations": 21440.57,
           "aides": 0.0,
-          "revenuDisponible": 42801.04
+          "revenuDisponible": 35959.71
         },
         "2": {
-          "ir": 909.27,
+          "ir": 3234.0,
           "is": 0.0,
-          "tva": 2013.11,
+          "tva": 1829.17,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 23429.62
+          "revenuDisponible": 21288.83
         },
         "3": {
-          "ir": 0.0,
+          "ir": 648.0,
           "is": 0.0,
-          "tva": 974.08,
+          "tva": 922.81,
           "cotisations": 2144.06,
           "aides": 6455.0,
-          "revenuDisponible": 11336.86
+          "revenuDisponible": 10740.13
         },
         "4": {
-          "ir": 423.27,
+          "ir": 1938.0,
           "is": 0.0,
-          "tva": 1576.83,
+          "tva": 1456.98,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 18351.9
+          "revenuDisponible": 16957.02
         },
         "5": {
-          "ir": 2970.81,
+          "ir": 10350.0,
           "is": 0.0,
-          "tva": 4176.17,
+          "tva": 3592.31,
           "cotisations": 20100.53,
           "aides": 851.94,
-          "revenuDisponible": 48604.43
+          "revenuDisponible": 41809.1
         },
         "6": {
-          "ir": 316.08,
+          "ir": 4455.0,
           "is": 0.0,
-          "tva": 3467.37,
+          "tva": 3139.89,
           "cotisations": 14740.39,
           "aides": 3878.88,
-          "revenuDisponible": 40355.04
+          "revenuDisponible": 36543.6
         },
         "7": {
-          "ir": 1575.54,
+          "ir": 5820.0,
           "is": 0.0,
-          "tva": 3435.88,
+          "tva": 3100.05,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 39988.58
+          "revenuDisponible": 36079.95
         },
         "8": {
-          "ir": 9139.88,
+          "ir": 17600.0,
           "is": 0.0,
-          "tva": 4605.25,
+          "tva": 3935.85,
           "cotisations": 24656.66,
           "aides": 0.0,
-          "revenuDisponible": 53598.21
+          "revenuDisponible": 45807.49
         },
         "9": {
-          "ir": 0.0,
+          "ir": 2430.0,
           "is": 0.0,
-          "tva": 2402.63,
+          "tva": 2210.36,
           "cotisations": 8040.21,
           "aides": 8405.88,
-          "revenuDisponible": 27963.04
+          "revenuDisponible": 25725.31
         },
         "10": {
-          "ir": 0.0,
+          "ir": 1458.0,
           "is": 0.0,
-          "tva": 1334.24,
+          "tva": 1218.87,
           "cotisations": 4824.13,
           "aides": 3686.88,
-          "revenuDisponible": 15528.51
+          "revenuDisponible": 14185.88
         },
         "11": {
-          "ir": 2273.18,
+          "ir": 8085.0,
           "is": 0.0,
-          "tva": 4567.53,
+          "tva": 4107.68,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 53159.29
+          "revenuDisponible": 47807.32
         },
         "12": {
-          "ir": 990.27,
+          "ir": 3450.0,
           "is": 0.0,
-          "tva": 3482.19,
+          "tva": 3287.57,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 40527.54
+          "revenuDisponible": 38262.43
         },
         "13": {
-          "ir": 13783.45,
+          "ir": 26505.0,
           "is": 0.0,
-          "tva": 7977.34,
+          "tva": 6970.77,
           "cotisations": 30820.82,
           "aides": 425.97,
-          "revenuDisponible": 92844.36
+          "revenuDisponible": 81129.38
         },
         "14": {
-          "ir": 8773.94,
+          "ir": 18220.0,
           "is": 0.0,
-          "tva": 5271.29,
+          "tva": 4523.89,
           "cotisations": 27604.73,
           "aides": 0.0,
-          "revenuDisponible": 61350.04
+          "revenuDisponible": 52651.38
         },
         "15": {
-          "ir": 111546.7,
+          "ir": 150150.0,
           "is": 0.0,
-          "tva": 20166.59,
+          "tva": 17112.17,
           "cotisations": 134003.56,
           "aides": 425.97,
-          "revenuDisponible": 234709.12
+          "revenuDisponible": 199160.24
         },
         "16": {
-          "ir": 0.0,
+          "ir": 1782.0,
           "is": 0.0,
-          "tva": 1460.29,
+          "tva": 1319.29,
           "cotisations": 5896.16,
           "aides": 2352.0,
-          "revenuDisponible": 16995.55
+          "revenuDisponible": 15354.55
         },
         "17": {
-          "ir": 63792.84,
+          "ir": 74650.0,
           "is": 0.0,
-          "tva": 9431.91,
+          "tva": 8572.86,
           "cotisations": 67001.78,
           "aides": 0.0,
-          "revenuDisponible": 109773.47
+          "revenuDisponible": 99775.36
         },
         "18": {
-          "ir": 3893.18,
+          "ir": 12405.0,
           "is": 0.0,
-          "tva": 4325.37,
+          "tva": 3651.89,
           "cotisations": 21440.57,
           "aides": 0.0,
-          "revenuDisponible": 50340.88
+          "revenuDisponible": 42502.54
         },
         "19": {
-          "ir": 127585.69,
+          "ir": 149300.0,
           "is": 0.0,
-          "tva": 18863.83,
+          "tva": 17145.72,
           "cotisations": 134003.56,
           "aides": 0.0,
-          "revenuDisponible": 219546.92
+          "revenuDisponible": 199550.72
         },
         "20": {
-          "ir": 488.15,
+          "ir": 2111.02,
           "is": 0.0,
-          "tva": 1183.21,
+          "tva": 1054.81,
           "cotisations": 5038.8,
           "aides": 1680.0,
-          "revenuDisponible": 13770.84
+          "revenuDisponible": 12276.37
         },
         "21": {
-          "ir": 180.27,
+          "ir": 1290.0,
           "is": 0.0,
-          "tva": 1305.51,
+          "tva": 1217.71,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 15194.22
+          "revenuDisponible": 14172.29
         },
         "22": {
-          "ir": 540.27,
+          "ir": 2250.0,
           "is": 0.0,
-          "tva": 2859.49,
+          "tva": 2724.21,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 33280.24
+          "revenuDisponible": 31705.79
         },
         "23": {
-          "ir": 10074.85,
+          "ir": 20075.0,
           "is": 0.0,
-          "tva": 7213.24,
+          "tva": 6422.0,
           "cotisations": 18760.5,
           "aides": 0.0,
-          "revenuDisponible": 83951.41
+          "revenuDisponible": 74742.5
         },
         "24": {
-          "ir": 5453.57,
+          "ir": 10060.0,
           "is": 0.0,
-          "tva": 2464.38,
+          "tva": 2099.9,
           "cotisations": 13400.36,
           "aides": 0.0,
-          "revenuDisponible": 28681.69
+          "revenuDisponible": 24439.74
         },
         "25": {
-          "ir": 1485.27,
+          "ir": 4770.0,
           "is": 0.0,
-          "tva": 2230.86,
+          "tva": 1970.96,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 25963.87
+          "revenuDisponible": 22939.04
         },
         "26": {
-          "ir": 90.27,
+          "ir": 1125.0,
           "is": 0.0,
-          "tva": 2157.04,
+          "tva": 2075.16,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 25104.69
+          "revenuDisponible": 24151.84
         },
         "27": {
           "ir": 0.0,
@@ -2005,36 +2005,36 @@
           "revenuDisponible": 13393.23
         },
         "28": {
-          "ir": 0.0,
+          "ir": 405.0,
           "is": 0.0,
-          "tva": 736.52,
+          "tva": 704.48,
           "cotisations": 0.0,
           "aides": 4308.52,
-          "revenuDisponible": 8572.0
+          "revenuDisponible": 8199.04
         },
         "29": {
-          "ir": 423.27,
+          "ir": 1938.0,
           "is": 0.0,
-          "tva": 1629.28,
+          "tva": 1509.43,
           "cotisations": 2680.07,
           "aides": 5695.0,
-          "revenuDisponible": 18962.38
+          "revenuDisponible": 17567.5
         },
         "30": {
-          "ir": 360.54,
+          "ir": 2580.0,
           "is": 0.0,
-          "tva": 2531.27,
+          "tva": 2355.66,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 29460.19
+          "revenuDisponible": 27416.34
         },
         "31": {
-          "ir": 0.0,
+          "ir": 3645.0,
           "is": 0.0,
-          "tva": 3867.45,
+          "tva": 3579.05,
           "cotisations": 0.0,
           "aides": 3878.88,
-          "revenuDisponible": 45011.43
+          "revenuDisponible": 41654.83
         }
       }
     },
@@ -2087,220 +2087,220 @@
       },
       "results": {
         "0": {
-          "ir": 596.63,
+          "ir": 2891.27,
           "is": 0.0,
-          "tva": 1157.44,
+          "tva": 975.88,
           "cotisations": 5928.0,
           "aides": 2352.0,
-          "revenuDisponible": 13470.93
+          "revenuDisponible": 11357.85
         },
         "1": {
-          "ir": 14765.48,
+          "ir": 24035.0,
           "is": 0.0,
-          "tva": 3165.75,
+          "tva": 2432.31,
           "cotisations": 25224.2,
           "aides": 0.0,
-          "revenuDisponible": 36844.57
+          "revenuDisponible": 28308.49
         },
         "2": {
-          "ir": 1111.33,
+          "ir": 4295.0,
           "is": 0.0,
-          "tva": 1997.12,
+          "tva": 1745.22,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 23243.55
+          "revenuDisponible": 20311.78
         },
         "3": {
-          "ir": 0.0,
+          "ir": 792.0,
           "is": 0.0,
-          "tva": 992.84,
+          "tva": 930.17,
           "cotisations": 2522.42,
           "aides": 7070.45,
-          "revenuDisponible": 11555.19
+          "revenuDisponible": 10825.86
         },
         "4": {
-          "ir": 517.33,
+          "ir": 2675.0,
           "is": 0.0,
-          "tva": 1569.38,
+          "tva": 1398.66,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 18265.29
+          "revenuDisponible": 16278.34
         },
         "5": {
-          "ir": 3630.99,
+          "ir": 13695.0,
           "is": 0.0,
-          "tva": 3843.27,
+          "tva": 3046.98,
           "cotisations": 23647.69,
           "aides": 851.94,
-          "revenuDisponible": 44729.99
+          "revenuDisponible": 35462.27
         },
         "6": {
-          "ir": 386.32,
+          "ir": 6110.0,
           "is": 0.0,
-          "tva": 3255.99,
+          "tva": 2803.12,
           "cotisations": 17341.64,
           "aides": 3878.88,
-          "revenuDisponible": 37894.93
+          "revenuDisponible": 32624.12
         },
         "7": {
-          "ir": 1925.66,
+          "ir": 7780.0,
           "is": 0.0,
-          "tva": 3408.18,
+          "tva": 2944.97,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 39666.16
+          "revenuDisponible": 34275.03
         },
         "8": {
-          "ir": 11170.96,
+          "ir": 22978.0,
           "is": 0.0,
-          "tva": 4100.26,
+          "tva": 3166.05,
           "cotisations": 29007.83,
           "aides": 0.0,
-          "revenuDisponible": 47720.95
+          "revenuDisponible": 36848.12
         },
         "9": {
-          "ir": 0.0,
+          "ir": 2970.0,
           "is": 0.0,
-          "tva": 2290.36,
+          "tva": 2055.37,
           "cotisations": 9459.08,
           "aides": 8405.88,
-          "revenuDisponible": 26656.44
+          "revenuDisponible": 23921.43
         },
         "10": {
-          "ir": 0.0,
+          "ir": 1782.0,
           "is": 0.0,
-          "tva": 1270.47,
+          "tva": 1129.47,
           "cotisations": 5675.45,
           "aides": 3732.33,
-          "revenuDisponible": 14786.41
+          "revenuDisponible": 13145.41
         },
         "11": {
-          "ir": 2778.32,
+          "ir": 10737.5,
           "is": 0.0,
-          "tva": 4527.56,
+          "tva": 3897.81,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 52694.12
+          "revenuDisponible": 45364.69
         },
         "12": {
-          "ir": 1210.33,
+          "ir": 4565.0,
           "is": 0.0,
-          "tva": 3464.78,
+          "tva": 3199.35,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 40324.89
+          "revenuDisponible": 37235.65
         },
         "13": {
-          "ir": 16846.44,
+          "ir": 34590.0,
           "is": 0.0,
-          "tva": 7304.64,
+          "tva": 5900.71,
           "cotisations": 36259.79,
           "aides": 425.97,
-          "revenuDisponible": 85015.1
+          "revenuDisponible": 68675.47
         },
         "14": {
-          "ir": 10723.7,
+          "ir": 24294.5,
           "is": 0.0,
-          "tva": 4731.58,
+          "tva": 3657.81,
           "cotisations": 32476.16,
           "aides": 0.0,
-          "revenuDisponible": 55068.56
+          "revenuDisponible": 42571.53
         },
         "15": {
-          "ir": 136334.85,
+          "ir": 175845.0,
           "is": 0.0,
-          "tva": 16334.19,
+          "tva": 13208.02,
           "cotisations": 157651.25,
           "aides": 425.97,
-          "revenuDisponible": 190105.68
+          "revenuDisponible": 153721.7
         },
         "16": {
-          "ir": 0.0,
+          "ir": 2178.0,
           "is": 0.0,
-          "tva": 1377.96,
+          "tva": 1205.63,
           "cotisations": 6936.66,
           "aides": 2352.0,
-          "revenuDisponible": 16037.38
+          "revenuDisponible": 14031.71
         },
         "17": {
-          "ir": 77969.03,
+          "ir": 94615.0,
           "is": 0.0,
-          "tva": 7374.71,
+          "tva": 6057.62,
           "cotisations": 78825.62,
           "aides": 0.0,
-          "revenuDisponible": 85830.64
+          "revenuDisponible": 70501.76
         },
         "18": {
-          "ir": 4758.32,
+          "ir": 16137.5,
           "is": 0.0,
-          "tva": 3957.54,
+          "tva": 3057.19,
           "cotisations": 25224.2,
           "aides": 0.0,
-          "revenuDisponible": 46059.94
+          "revenuDisponible": 35581.11
         },
         "19": {
-          "ir": 155938.06,
+          "ir": 189230.0,
           "is": 0.0,
-          "tva": 14749.41,
+          "tva": 12115.25,
           "cotisations": 157651.25,
           "aides": 0.0,
-          "revenuDisponible": 171661.28
+          "revenuDisponible": 141003.5
         },
         "20": {
-          "ir": 596.63,
+          "ir": 2891.27,
           "is": 0.0,
-          "tva": 1104.27,
+          "tva": 922.71,
           "cotisations": 5928.0,
           "aides": 1680.0,
-          "revenuDisponible": 12852.1
+          "revenuDisponible": 10739.02
         },
         "21": {
-          "ir": 220.33,
+          "ir": 1865.0,
           "is": 0.0,
-          "tva": 1302.34,
+          "tva": 1172.21,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 15157.33
+          "revenuDisponible": 13642.79
         },
         "22": {
-          "ir": 660.33,
+          "ir": 3065.0,
           "is": 0.0,
-          "tva": 2849.99,
+          "tva": 2659.73,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 33169.68
+          "revenuDisponible": 30955.27
         },
         "23": {
-          "ir": 12313.7,
+          "ir": 26467.5,
           "is": 0.0,
-          "tva": 6774.14,
+          "tva": 5654.25,
           "cotisations": 22071.18,
           "aides": 0.0,
-          "revenuDisponible": 78840.98
+          "revenuDisponible": 65807.07
         },
         "24": {
-          "ir": 6665.48,
+          "ir": 12965.0,
           "is": 0.0,
-          "tva": 2181.38,
+          "tva": 1682.94,
           "cotisations": 15765.12,
           "aides": 0.0,
-          "revenuDisponible": 25388.02
+          "revenuDisponible": 19586.94
         },
         "25": {
-          "ir": 1815.33,
+          "ir": 6215.0,
           "is": 0.0,
-          "tva": 2204.74,
+          "tva": 1856.63,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 25659.93
+          "revenuDisponible": 21608.37
         },
         "26": {
-          "ir": 110.33,
+          "ir": 1565.0,
           "is": 0.0,
-          "tva": 2155.45,
+          "tva": 2040.35,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 25086.22
+          "revenuDisponible": 23746.65
         },
         "27": {
           "ir": 0.0,
@@ -2311,36 +2311,36 @@
           "revenuDisponible": 13393.23
         },
         "28": {
-          "ir": 0.0,
+          "ir": 495.0,
           "is": 0.0,
-          "tva": 767.72,
+          "tva": 728.55,
           "cotisations": 0.0,
           "aides": 4702.8,
-          "revenuDisponible": 8935.08
+          "revenuDisponible": 8479.25
         },
         "29": {
-          "ir": 517.33,
+          "ir": 2675.0,
           "is": 0.0,
-          "tva": 1624.09,
+          "tva": 1453.37,
           "cotisations": 3153.02,
           "aides": 6196.45,
-          "revenuDisponible": 18902.01
+          "revenuDisponible": 16915.06
         },
         "30": {
-          "ir": 440.66,
+          "ir": 3730.0,
           "is": 0.0,
-          "tva": 2524.93,
+          "tva": 2264.66,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 29386.41
+          "revenuDisponible": 26357.34
         },
         "31": {
-          "ir": 0.0,
+          "ir": 4455.0,
           "is": 0.0,
-          "tva": 3867.45,
+          "tva": 3514.96,
           "cotisations": 0.0,
           "aides": 3878.88,
-          "revenuDisponible": 45011.43
+          "revenuDisponible": 40908.92
         }
       }
     },
@@ -2623,7 +2623,7 @@
         "description": "Scénario pédagogique : instauration d'un revenu universel mensuel de 800€ (9 600€/an) pour tout citoyen majeur, en remplacement du RSA et de la prime d'activité. Maintien des autres prestations (APL, allocations familiales) et du barème progressif de l'IR (qui s'applique désormais sur le revenu total y compris le RU, mais avec un abattement forfaitaire équivalent). Financement par une augmentation de la CSG de 9,7% à 15% et une suppression de niches fiscales. Scénario illustrant les effets d'un filet de sécurité universel.",
         "parameterOverrides": {
           "revenu_universel.montant_mensuel": 800.0,
-          "revenu_universel.remplace_aides": true,
+          "revenu_universel.remplace_aides": 1.0,
           "cotisations.scale": 1.55
         }
       },
@@ -2925,220 +2925,220 @@
       },
       "results": {
         "0": {
-          "ir": 715.95,
+          "ir": 3470.21,
           "is": 0.0,
-          "tva": 1279.37,
+          "tva": 1022.88,
           "cotisations": 6698.64,
           "aides": 2352.0,
-          "revenuDisponible": 12459.04
+          "revenuDisponible": 9961.27
         },
         "1": {
-          "ir": 17718.58,
+          "ir": 28933.1,
           "is": 0.0,
-          "tva": 3145.52,
+          "tva": 2101.19,
           "cotisations": 28503.35,
           "aides": 0.0,
-          "revenuDisponible": 30632.55
+          "revenuDisponible": 20462.36
         },
         "2": {
-          "ir": 1333.6,
+          "ir": 5154.68,
           "is": 0.0,
-          "tva": 2329.79,
+          "tva": 1973.96,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 22688.61
+          "revenuDisponible": 19223.36
         },
         "3": {
-          "ir": 0.0,
+          "ir": 950.4,
           "is": 0.0,
-          "tva": 1080.66,
+          "tva": 992.16,
           "cotisations": 2850.33,
           "aides": 6455.0,
-          "revenuDisponible": 10524.01
+          "revenuDisponible": 9662.11
         },
         "4": {
-          "ir": 620.8,
+          "ir": 3210.68,
           "is": 0.0,
-          "tva": 1837.43,
+          "tva": 1596.25,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 17893.77
+          "revenuDisponible": 15545.07
         },
         "5": {
-          "ir": 4357.19,
+          "ir": 16436.05,
           "is": 0.0,
-          "tva": 4090.06,
+          "tva": 2965.24,
           "cotisations": 26721.89,
           "aides": 0.0,
-          "revenuDisponible": 39830.86
+          "revenuDisponible": 28876.82
         },
         "6": {
-          "ir": 463.58,
+          "ir": 7334.74,
           "is": 0.0,
-          "tva": 3253.76,
+          "tva": 2613.9,
           "cotisations": 19596.05,
           "aides": 0.0,
-          "revenuDisponible": 31686.61
+          "revenuDisponible": 25455.31
         },
         "7": {
-          "ir": 2310.79,
+          "ir": 9337.37,
           "is": 0.0,
-          "tva": 3975.36,
+          "tva": 3321.02,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 38713.85
+          "revenuDisponible": 32341.61
         },
         "8": {
-          "ir": 13405.15,
+          "ir": 27755.81,
           "is": 0.0,
-          "tva": 4266.53,
+          "tva": 2930.15,
           "cotisations": 32778.85,
           "aides": 0.0,
-          "revenuDisponible": 41549.47
+          "revenuDisponible": 28535.19
         },
         "9": {
-          "ir": 0.0,
+          "ir": 3564.0,
           "is": 0.0,
-          "tva": 2017.35,
+          "tva": 1685.46,
           "cotisations": 10688.75,
           "aides": 2352.0,
-          "revenuDisponible": 19645.9
+          "revenuDisponible": 16413.79
         },
         "10": {
-          "ir": 0.0,
+          "ir": 2138.4,
           "is": 0.0,
-          "tva": 1263.66,
+          "tva": 1064.52,
           "cotisations": 6413.25,
           "aides": 1983.0,
-          "revenuDisponible": 12306.09
+          "revenuDisponible": 10366.83
         },
         "11": {
-          "ir": 3333.99,
+          "ir": 12886.71,
           "is": 0.0,
-          "tva": 5276.92,
+          "tva": 4387.34,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 51389.09
+          "revenuDisponible": 42725.95
         },
         "12": {
-          "ir": 1452.4,
+          "ir": 5478.68,
           "is": 0.0,
-          "tva": 4055.29,
+          "tva": 3680.35,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 39492.31
+          "revenuDisponible": 35840.97
         },
         "13": {
-          "ir": 20215.73,
+          "ir": 41781.31,
           "is": 0.0,
-          "tva": 7804.72,
+          "tva": 5796.47,
           "cotisations": 40973.56,
           "aides": 0.0,
-          "revenuDisponible": 76005.99
+          "revenuDisponible": 56448.66
         },
         "14": {
-          "ir": 12868.44,
+          "ir": 29381.16,
           "is": 0.0,
-          "tva": 4975.9,
+          "tva": 3438.18,
           "cotisations": 36698.06,
           "aides": 0.0,
-          "revenuDisponible": 48457.6
+          "revenuDisponible": 33482.6
         },
         "15": {
-          "ir": 163601.82,
+          "ir": 211456.8,
           "is": 0.0,
-          "tva": 14736.96,
+          "tva": 10280.55,
           "cotisations": 178145.91,
           "aides": 0.0,
-          "revenuDisponible": 143515.31
+          "revenuDisponible": 100116.74
         },
         "16": {
-          "ir": 0.0,
+          "ir": 2613.6,
           "is": 0.0,
-          "tva": 1537.8,
+          "tva": 1294.41,
           "cotisations": 7838.42,
           "aides": 2352.0,
-          "revenuDisponible": 14975.78
+          "revenuDisponible": 12605.57
         },
         "17": {
-          "ir": 93562.84,
+          "ir": 87035.52,
           "is": 0.0,
-          "tva": 6273.17,
+          "tva": 6881.02,
           "cotisations": 89072.96,
           "aides": 0.0,
-          "revenuDisponible": 61091.03
+          "revenuDisponible": 67010.5
         },
         "18": {
-          "ir": 5709.99,
+          "ir": 19366.71,
           "is": 0.0,
-          "tva": 4263.8,
+          "tva": 2992.04,
           "cotisations": 28503.35,
           "aides": 0.0,
-          "revenuDisponible": 41522.86
+          "revenuDisponible": 29137.9
         },
         "19": {
-          "ir": 187125.67,
+          "ir": 174071.04,
           "is": 0.0,
-          "tva": 12546.34,
+          "tva": 13762.03,
           "cotisations": 178145.91,
           "aides": 0.0,
-          "revenuDisponible": 122182.08
+          "revenuDisponible": 134021.02
         },
         "20": {
-          "ir": 715.95,
+          "ir": 3470.21,
           "is": 0.0,
-          "tva": 1216.79,
+          "tva": 960.3,
           "cotisations": 6698.64,
           "aides": 1680.0,
-          "revenuDisponible": 11849.62
+          "revenuDisponible": 9351.85
         },
         "21": {
-          "ir": 264.4,
+          "ir": 2238.68,
           "is": 0.0,
-          "tva": 1528.67,
+          "tva": 1344.82,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 14886.93
+          "revenuDisponible": 13096.5
         },
         "22": {
-          "ir": 792.4,
+          "ir": 3678.68,
           "is": 0.0,
-          "tva": 3341.97,
+          "tva": 3073.19,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 32545.63
+          "revenuDisponible": 29928.13
         },
         "23": {
-          "ir": 14776.44,
+          "ir": 31988.76,
           "is": 0.0,
-          "tva": 7476.22,
+          "tva": 5873.36,
           "cotisations": 24940.43,
           "aides": 0.0,
-          "revenuDisponible": 72806.91
+          "revenuDisponible": 57197.45
         },
         "24": {
-          "ir": 7998.58,
+          "ir": 15649.1,
           "is": 0.0,
-          "tva": 2252.36,
+          "tva": 1539.91,
           "cotisations": 17814.59,
           "aides": 0.0,
-          "revenuDisponible": 21934.47
+          "revenuDisponible": 14996.4
         },
         "25": {
-          "ir": 2178.4,
+          "ir": 7458.68,
           "is": 0.0,
-          "tva": 2561.04,
+          "tva": 2069.32,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 24940.56
+          "revenuDisponible": 20152.0
         },
         "26": {
-          "ir": 132.4,
+          "ir": 1878.68,
           "is": 0.0,
-          "tva": 2534.78,
+          "tva": 2372.16,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 24684.82
+          "revenuDisponible": 23101.16
         },
         "27": {
           "ir": 0.0,
@@ -3149,36 +3149,36 @@
           "revenuDisponible": 13189.62
         },
         "28": {
-          "ir": 0.0,
+          "ir": 594.0,
           "is": 0.0,
-          "tva": 830.12,
+          "tva": 774.81,
           "cotisations": 0.0,
           "aides": 3914.24,
-          "revenuDisponible": 8084.12
+          "revenuDisponible": 7545.43
         },
         "29": {
-          "ir": 620.8,
+          "ir": 3210.68,
           "is": 0.0,
-          "tva": 1816.95,
+          "tva": 1575.78,
           "cotisations": 3562.92,
           "aides": 5695.0,
-          "revenuDisponible": 17694.33
+          "revenuDisponible": 15345.62
         },
         "30": {
-          "ir": 528.79,
+          "ir": 4477.37,
           "is": 0.0,
-          "tva": 2963.48,
+          "tva": 2595.78,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 28859.73
+          "revenuDisponible": 25278.85
         },
         "31": {
-          "ir": 0.0,
+          "ir": 5346.0,
           "is": 0.0,
-          "tva": 4190.55,
+          "tva": 3692.71,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 40809.45
+          "revenuDisponible": 35961.29
         }
       }
     },
@@ -3216,220 +3216,220 @@
       },
       "results": {
         "0": {
-          "ir": 507.13,
+          "ir": 2458.06,
           "is": 0.0,
-          "tva": 1164.53,
+          "tva": 1010.16,
           "cotisations": 5928.0,
           "aides": 2352.0,
-          "revenuDisponible": 13553.34
+          "revenuDisponible": 11756.78
         },
         "1": {
-          "ir": 12550.66,
+          "ir": 20494.28,
           "is": 0.0,
-          "tva": 3340.99,
+          "tva": 2712.46,
           "cotisations": 25224.2,
           "aides": 0.0,
-          "revenuDisponible": 38884.15
+          "revenuDisponible": 31569.06
         },
         "2": {
-          "ir": 944.63,
+          "ir": 3651.23,
           "is": 0.0,
-          "tva": 2010.31,
+          "tva": 1796.16,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 23397.06
+          "revenuDisponible": 20904.61
         },
         "3": {
-          "ir": 0.0,
+          "ir": 673.2,
           "is": 0.0,
-          "tva": 944.14,
+          "tva": 890.88,
           "cotisations": 2522.42,
           "aides": 6455.0,
-          "revenuDisponible": 10988.44
+          "revenuDisponible": 10368.5
         },
         "4": {
-          "ir": 439.73,
+          "ir": 2274.23,
           "is": 0.0,
-          "tva": 1575.52,
+          "tva": 1430.37,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 18336.75
+          "revenuDisponible": 16647.4
         },
         "5": {
-          "ir": 3086.34,
+          "ir": 11642.2,
           "is": 0.0,
-          "tva": 3886.37,
+          "tva": 3209.4,
           "cotisations": 23647.69,
           "aides": 851.94,
-          "revenuDisponible": 45231.54
+          "revenuDisponible": 37352.65
         },
         "6": {
-          "ir": 328.37,
+          "ir": 5195.44,
           "is": 0.0,
-          "tva": 3260.58,
+          "tva": 2875.48,
           "cotisations": 17341.64,
           "aides": 3878.88,
-          "revenuDisponible": 37948.29
+          "revenuDisponible": 33466.32
         },
         "7": {
-          "ir": 1636.81,
+          "ir": 6613.97,
           "is": 0.0,
-          "tva": 3431.04,
+          "tva": 3037.23,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 39932.15
+          "revenuDisponible": 35348.8
         },
         "8": {
-          "ir": 9495.32,
+          "ir": 19660.36,
           "is": 0.0,
-          "tva": 4232.84,
+          "tva": 3428.55,
           "cotisations": 29007.83,
           "aides": 0.0,
-          "revenuDisponible": 49264.01
+          "revenuDisponible": 39903.26
         },
         "9": {
-          "ir": 0.0,
+          "ir": 2524.5,
           "is": 0.0,
-          "tva": 2290.36,
+          "tva": 2090.62,
           "cotisations": 9459.08,
           "aides": 8405.88,
-          "revenuDisponible": 26656.44
+          "revenuDisponible": 24331.68
         },
         "10": {
-          "ir": 0.0,
+          "ir": 1514.7,
           "is": 0.0,
-          "tva": 1266.88,
+          "tva": 1147.03,
           "cotisations": 5675.45,
           "aides": 3686.88,
-          "revenuDisponible": 14744.55
+          "revenuDisponible": 13349.7
         },
         "11": {
-          "ir": 2361.58,
+          "ir": 9128.09,
           "is": 0.0,
-          "tva": 4560.54,
+          "tva": 4025.15,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 53077.88
+          "revenuDisponible": 46846.76
         },
         "12": {
-          "ir": 1028.78,
+          "ir": 3880.73,
           "is": 0.0,
-          "tva": 3479.14,
+          "tva": 3253.49,
           "cotisations": 0.0,
           "aides": 0.0,
-          "revenuDisponible": 40492.08
+          "revenuDisponible": 37865.78
         },
         "13": {
-          "ir": 14319.47,
+          "ir": 29595.1,
           "is": 0.0,
-          "tva": 7504.58,
+          "tva": 6295.92,
           "cotisations": 36259.79,
           "aides": 425.97,
-          "revenuDisponible": 87342.13
+          "revenuDisponible": 73275.16
         },
         "14": {
-          "ir": 9115.15,
+          "ir": 20811.65,
           "is": 0.0,
-          "tva": 4858.85,
+          "tva": 3933.39,
           "cotisations": 32476.16,
           "aides": 0.0,
-          "revenuDisponible": 56549.84
+          "revenuDisponible": 45778.8
         },
         "15": {
-          "ir": 115884.62,
+          "ir": 149781.9,
           "is": 0.0,
-          "tva": 17952.28,
+          "tva": 15270.21,
           "cotisations": 157651.25,
           "aides": 425.97,
-          "revenuDisponible": 208937.82
+          "revenuDisponible": 177722.61
         },
         "16": {
-          "ir": 0.0,
+          "ir": 1851.3,
           "is": 0.0,
-          "tva": 1377.96,
+          "tva": 1231.48,
           "cotisations": 6936.66,
           "aides": 2352.0,
-          "revenuDisponible": 16037.38
+          "revenuDisponible": 14332.56
         },
         "17": {
-          "ir": 66273.68,
+          "ir": 61650.16,
           "is": 0.0,
-          "tva": 8300.08,
+          "tva": 8665.91,
           "cotisations": 78825.62,
           "aides": 0.0,
-          "revenuDisponible": 96600.62
+          "revenuDisponible": 100858.31
         },
         "18": {
-          "ir": 4044.58,
+          "ir": 13718.09,
           "is": 0.0,
-          "tva": 4014.02,
+          "tva": 3248.62,
           "cotisations": 25224.2,
           "aides": 0.0,
-          "revenuDisponible": 46717.2
+          "revenuDisponible": 37809.09
         },
         "19": {
-          "ir": 132547.35,
+          "ir": 123300.32,
           "is": 0.0,
-          "tva": 16600.16,
+          "tva": 17331.82,
           "cotisations": 157651.25,
           "aides": 0.0,
-          "revenuDisponible": 193201.24
+          "revenuDisponible": 201716.61
         },
         "20": {
-          "ir": 507.13,
+          "ir": 2458.06,
           "is": 0.0,
-          "tva": 1111.35,
+          "tva": 956.99,
           "cotisations": 5928.0,
           "aides": 1680.0,
-          "revenuDisponible": 12934.52
+          "revenuDisponible": 11137.95
         },
         "21": {
-          "ir": 187.28,
+          "ir": 1585.73,
           "is": 0.0,
-          "tva": 1304.96,
+          "tva": 1194.31,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 15187.76
+          "revenuDisponible": 13899.96
         },
         "22": {
-          "ir": 561.28,
+          "ir": 2605.73,
           "is": 0.0,
-          "tva": 2857.83,
+          "tva": 2696.07,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 33260.89
+          "revenuDisponible": 31378.2
         },
         "23": {
-          "ir": 10466.65,
+          "ir": 22658.71,
           "is": 0.0,
-          "tva": 6920.29,
+          "tva": 5955.61,
           "cotisations": 22071.18,
           "aides": 0.0,
-          "revenuDisponible": 80541.88
+          "revenuDisponible": 69314.5
         },
         "24": {
-          "ir": 5665.66,
+          "ir": 11084.78,
           "is": 0.0,
-          "tva": 2260.49,
+          "tva": 1831.71,
           "cotisations": 15765.12,
           "aides": 0.0,
-          "revenuDisponible": 26308.73
+          "revenuDisponible": 21318.39
         },
         "25": {
-          "ir": 1543.03,
+          "ir": 5283.23,
           "is": 0.0,
-          "tva": 2226.29,
+          "tva": 1930.35,
           "cotisations": 0.0,
           "aides": 1680.0,
-          "revenuDisponible": 25910.68
+          "revenuDisponible": 22466.42
         },
         "26": {
-          "ir": 93.78,
+          "ir": 1330.73,
           "is": 0.0,
-          "tva": 2156.76,
+          "tva": 2058.89,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 25101.46
+          "revenuDisponible": 23962.38
         },
         "27": {
           "ir": 0.0,
@@ -3440,36 +3440,36 @@
           "revenuDisponible": 13393.23
         },
         "28": {
-          "ir": 0.0,
+          "ir": 420.75,
           "is": 0.0,
-          "tva": 736.52,
+          "tva": 703.23,
           "cotisations": 0.0,
           "aides": 4308.52,
-          "revenuDisponible": 8572.0
+          "revenuDisponible": 8184.54
         },
         "29": {
-          "ir": 439.73,
+          "ir": 2274.23,
           "is": 0.0,
-          "tva": 1590.55,
+          "tva": 1445.4,
           "cotisations": 3153.02,
           "aides": 5695.0,
-          "revenuDisponible": 18511.7
+          "revenuDisponible": 16822.35
         },
         "30": {
-          "ir": 374.56,
+          "ir": 3171.47,
           "is": 0.0,
-          "tva": 2530.16,
+          "tva": 2308.86,
           "cotisations": 0.0,
           "aides": 2352.0,
-          "revenuDisponible": 29447.28
+          "revenuDisponible": 26871.67
         },
         "31": {
-          "ir": 0.0,
+          "ir": 3786.75,
           "is": 0.0,
-          "tva": 3867.45,
+          "tva": 3567.83,
           "cotisations": 0.0,
           "aides": 3878.88,
-          "revenuDisponible": 45011.43
+          "revenuDisponible": 41524.3
         }
       }
     },
@@ -4014,7 +4014,7 @@
   "metadata": {
     "version": "v2025.1",
     "reference_year": 2025,
-    "generated_at": "2026-05-15T06:16:14.095747+00:00",
+    "generated_at": "2026-05-15T07:15:34.714380+00:00",
     "openfisca_france_version": "175.0.40",
     "total_scenarios": 14,
     "total_profiles": 32,

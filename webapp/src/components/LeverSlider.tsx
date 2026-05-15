@@ -43,7 +43,7 @@ export function LeverSlider({
   const formatter = useMemo(
     () =>
       new Intl.NumberFormat('fr-FR', {
-        style: 'percent',
+        style: 'decimal',
         signDisplay: 'always',
         maximumFractionDigits: 0,
       }),
@@ -97,7 +97,7 @@ export function LeverSlider({
           {...outputProps}
           className="text-sm font-semibold tabular-nums text-primary"
         >
-          {state.getThumbValueLabel(0)}
+          {state.getThumbValueLabel(0)} %
         </output>
       </div>
 
@@ -119,15 +119,33 @@ export function LeverSlider({
           />
         )}
 
-        {/* Thumb (44×44px touch target) */}
+        {/* Thumb (44×44px touch target, 24px visual) */}
         {!disabled && (
           <div
             {...thumbProps}
-            className="absolute top-1/2 w-11 h-11 bg-primary rounded-full shadow-md cursor-grab active:cursor-grabbing focus:outline-2 focus:outline-offset-2 focus:outline-primary"
+            className="absolute top-1/2 w-6 h-6 bg-primary rounded-full shadow-md cursor-grab active:cursor-grabbing focus:outline-2 focus:outline-offset-2 focus:outline-primary"
             style={{ left: `${pct}%`, transform: 'translate(-50%, -50%)' }}
           >
+            {/* Invisible 44px touch area */}
+            <div className="absolute top-1/2 left-1/2 w-11 h-11 -translate-x-1/2 -translate-y-1/2" />
             {/* Hidden native input for touch screen readers */}
-            <input {...inputProps} ref={inputRef} />
+            <input
+              {...inputProps}
+              ref={inputRef}
+              style={{
+                ...inputProps.style,
+                position: 'absolute',
+                width: '1px',
+                height: '1px',
+                margin: '-1px',
+                padding: '0',
+                overflow: 'hidden',
+                clip: 'rect(0, 0, 0, 0)',
+                whiteSpace: 'nowrap',
+                borderWidth: '0',
+                opacity: 0,
+              }}
+            />
           </div>
         )}
       </div>

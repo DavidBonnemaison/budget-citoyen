@@ -1,17 +1,17 @@
 // webapp/src/components/SliderGroup.tsx
 //
-// Collapsible slider sections with réinitialiser button (D-09, D-14).
-// Decision: native <details> + <summary> for collapsible behavior (no JS needed).
-// Default: IR ménages expanded, others collapsed.
+// Slider sections with réinitialiser button (D-09, D-14).
+// Decision: all 5 levers always visible — only 5 sliders, no collapsing needed.
 
 import { LeverSlider } from './LeverSlider';
 import { LEVER_MAPPINGS } from '../state/index-map';
-import type { FiscalSliderProps } from './LeverSlider';
 
 interface SliderGroupProps {
   disabled: boolean;
   sliderValues: Record<string, number>;
+  advancedValues: Record<string, number[]>;
   onValueChange: (key: string, value: number) => void;
+  onSubSliderChange: (key: string, subIdx: number, value: number) => void;
   onDragEnd: (key: string, value: number) => void;
   onReset: () => void;
   advancedMode: boolean;
@@ -22,63 +22,77 @@ const LEVER_ORDER = ['ir', 'is', 'tva', 'cotisations', 'depenses'];
 export function SliderGroup({
   disabled,
   sliderValues,
+  advancedValues,
   onValueChange,
+  onSubSliderChange,
   onDragEnd,
   onReset,
   advancedMode,
 }: SliderGroupProps) {
   return (
     <section aria-label="Curseurs budgétaires" className="space-y-2">
-      {LEVER_ORDER.map((key, index) => {
+      {LEVER_ORDER.map((key) => {
         const mapping = LEVER_MAPPINGS[key];
         if (!mapping) return null;
 
-        const isFirst = index === 0;
-
         return (
-          <details
+          <div
             key={key}
-            open={isFirst || advancedMode}
-            className="bg-secondary rounded-lg p-4 group"
+            className="bg-secondary rounded-lg p-4"
           >
-            <summary className="text-lg font-semibold text-primary cursor-pointer list-none flex items-center justify-between">
+            <div className="text-lg font-semibold text-primary flex items-center justify-between mb-2">
               <span>{mapping.name}</span>
-              <span className="text-sm text-text-secondary group-open:hidden ml-2 shrink-0">
-                {sliderValues[key] != null && sliderValues[key] !== 0
-                  ? `${sliderValues[key] > 0 ? '+' : ''}${sliderValues[key]} %`
-                  : '0 %'}
+              <span className="text-sm text-text-secondary ml-2 shrink-0">
+                {(() => {
+                  const val = advancedMode && advancedValues[key]
+                    ? advancedValues[key].reduce((s, v, i) => s + v * (LEVER_MAPPINGS[key]?.weights?.[i] ?? 0), 0)
+                    : sliderValues[key] ?? 0;
+                  return val !== 0 ? `${val > 0 ? '+' : ''}${Math.round(val)} %` : '0 %';
+                })()}
               </span>
-            </summary>
-            <div className="mt-4 space-y-4">
-              {/* Main lever slider */}
+            </div>
+            <div className="space-y-4">
+              {/* Main lever slider — read-only weighted average in advanced mode */}
               <LeverSlider
                 label={`Variation (${mapping.name})`}
-                minValue={-30}
-                maxValue={30}
+                minValue={-15}
+                maxValue={15}
                 step={1}
-                value={sliderValues[key]}
+                value={(() => {
+                  if (advancedMode && advancedValues[key]) {
+                    const subs = advancedValues[key];
+                    let ws = 0;
+                    for (let i = 0; i < subs.length; i++) {
+                      ws += subs[i] * (mapping.weights[i] ?? 0);
+                    }
+                    return Math.round(ws);
+                  }
+                  return sliderValues[key];
+                })()}
                 onValueChange={(v) => onValueChange(key, v)}
                 onDragEnd={(v) => onDragEnd(key, v)}
-                disabled={disabled}
+                disabled={disabled || advancedMode}
               />
 
-              {/* Advanced sub-parameter sliders (D-11) */}
+              {/* Advanced sub-parameter sliders */}
               {advancedMode &&
                 mapping.subParams.map((subParam, subIdx) => (
                   <LeverSlider
                     key={subParam}
                     label={subParam}
-                    minValue={-30}
-                    maxValue={30}
+                    minValue={-15}
+                    maxValue={15}
                     step={1}
-                    value={sliderValues[key] * mapping.weights[subIdx]}
-                    onValueChange={(v) => onValueChange(key, v)}
+                    value={
+                      advancedValues[key]?.[subIdx] ?? sliderValues[key]
+                    }
+                    onValueChange={(v) => onSubSliderChange(key, subIdx, v)}
                     onDragEnd={(v) => onDragEnd(key, v)}
                     disabled={disabled}
                   />
                 ))}
             </div>
-          </details>
+          </div>
         );
       })}
 

@@ -36,7 +36,7 @@ Permettre à tout citoyen de comprendre en temps réel l'impact budgétaire et m
 - Projet développé pour les échéances électorales de 2027 en France
 - S'appuie sur l'écosystème open-source de microsimulation : OpenFisca (Python, AGPL) et PolicyEngine (policyengine-core)
 - Utilise le modèle macroéconomique Mésange (Insee/Direction Générale du Trésor) comme référence
-- Le code fiscal sera compilé en WebAssembly depuis Rust (via wasm-pack, wasm-bindgen) pour exécution côté navigateur
+- Le code fiscal est pré-calculé en Python (openfisca-france) en CI puis consommé côté navigateur via un cache de scénarios JSON en TypeScript (O(1) HashMap lookups)
 - Conformité RGAA 4 obligatoire pour l'accessibilité (service public)
 - Conformité RGPD/CNIL via données synthétiques générées par IA (copules, GAN, VAE) avec confidentialité différentielle
 
@@ -45,7 +45,7 @@ Permettre à tout citoyen de comprendre en temps réel l'impact budgétaire et m
 - **Performance** : Latence < 200ms pour l'actualisation des graphiques lors de la manipulation des curseurs
 - **Sécurité** : Aucune donnée personnelle ne quitte le poste client (Privacy by Design)
 - **Accessibilité** : Conformité RGAA 4 (critères 1.1, 1.3, thématiques 3, 8, 11)
-- **Tech stack** : Moteur micro en Rust/WASM, interface web, données en JSON/YAML
+- **Tech stack** : Moteur micro via Python CI (openfisca-france) + runtime TypeScript, interface web, données en JSON/YAML
 - **Licence** : Open source (compatible AGPL d'OpenFisca)
 
 ## Key Decisions
@@ -56,6 +56,7 @@ Permettre à tout citoyen de comprendre en temps réel l'impact budgétaire et m
 | Matrice des chocs pré-calculée plutôt que résolution en temps réel | Modèle Mésange trop lourd pour le temps réel ; interpolation multi-linéaire garantit < 200ms | — Pending |
 | Données synthétiques plutôt que données fiscales réelles | Conformité RGPD/CNIL, impossibilité légale d'utiliser les registres administratifs | — Pending |
 | Fork/adaptation d'OpenFisca ou PolicyEngine pour le moteur de règles | Écosystème mature, Rules as Code, auditable par des non-programmeurs | — Pending |
+| Python pre-compute + TypeScript runtime (Phase 02.1) | Simplification from Rust/WASM: pre-compute openfisca-france scenarios in CI as static JSON, browser does O(1) HashMap lookups | Delivers MICRO-01/02/03/05 (Phase 2 + 02.1) |
 
 ## Evolution
 
@@ -75,4 +76,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-05-11 after initialization*
+*Last updated: 2026-05-15 after Phase 02.1*
