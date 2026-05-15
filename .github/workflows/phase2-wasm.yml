@@ -191,8 +191,8 @@ jobs:
           fi
 
           SCENARIO_COUNT=$(python3 -c "import json; d=json.load(open('$OUTPUT')); print(len(d['scenarios']))")
-          if [ "$SCENARIO_COUNT" -lt 3 ]; then
-            echo "::error file=$OUTPUT,line=1::Scenario pre-compute FAILED: only $SCENARIO_COUNT scenarios (need >= 3)"
+          if [ "$SCENARIO_COUNT" -lt 12 ]; then
+            echo "::error file=$OUTPUT,line=1::Scenario pre-compute FAILED: only $SCENARIO_COUNT scenarios (need >= 12)"
             exit 1
           fi
           echo "PASSED: $SCENARIO_COUNT scenarios pre-computed"
@@ -203,6 +203,29 @@ jobs:
           if [ "$SIZE" -gt 1048576 ]; then
             echo "::warning file=$OUTPUT,line=1::Scenario file exceeds 1MB — consider compression"
           fi
+
+      - name: Validate scenarios JSON Schema
+        run: |
+          SCHEMA="packages/data-pipeline/src/scenarios/schemas/scenarios.schema.json"
+          OUTPUT="packages/data-pipeline/dist/scenarios-v2025.1.json"
+          python3 -c "
+import json, sys
+from jsonschema import Draft202012Validator, ValidationError
+
+with open('$SCHEMA') as f:
+    schema = json.load(f)
+with open('$OUTPUT') as f:
+    doc = json.load(f)
+
+validator = Draft202012Validator(schema)
+errors = list(validator.iter_errors(doc))
+
+if errors:
+    for e in errors:
+        print(f'SCHEMA ERROR: {e.message} at path {\" → \".join(str(p) for p in e.absolute_path) if e.absolute_path else \"root\"}', file=sys.stderr)
+    sys.exit(1)
+print(f'PASSED: scenarios JSON validates against schema ({len(doc[\"scenarios\"])} scenarios, {len(doc[\"scenarios\"][0][\"results\"])} profiles)')
+"
 
       - name: Verify openfisca-france version consistency
         run: |
