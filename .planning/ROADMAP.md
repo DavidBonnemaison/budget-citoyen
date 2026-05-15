@@ -13,7 +13,7 @@ Every phase incorporates its pitfall prevention at the earliest design stage —
 
 ## Phases
 
-- [ ] **Phase 1: Data Foundation & Rules Engine** — OpenFisca-compatible YAML tax rules, synthetic population pipeline (50K profiles, DP ε ≤ 1.0), Mésange shock matrix pre-computation
+- [x] **Phase 1: Data Foundation & Rules Engine** — OpenFisca-compatible YAML tax rules, synthetic population pipeline (50K profiles, DP ε ≤ 1.0), Mésange shock matrix pre-computation
 - [x] **Phase 2: Core Simulation Engines (Hybrid)** — Python CI pre-compute (openfisca-france) + TypeScript runtime engines (O(1) scenario cache, trilinear macro interpolation), bilingual validation against OpenFisca Python reference
 - [ ] **Phase 3: Interactive Simulation Shell (MVP)** — Citizen Explorer UI with sliders, real-time feedback (<200ms), household impact, macro charts, shareable URLs, RGAA 4 core, responsive layout
 - [ ] **Phase 4: Enhanced Data & Expert Mode** — Full 50K profile distributional analysis, expert mode with multi-reform stacking, calculation tree transparency, data exports
