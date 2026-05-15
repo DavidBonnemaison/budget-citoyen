@@ -191,6 +191,57 @@ class TestPipelineIntegration:
         assert dpe_score >= 0.5, f"DPE score {dpe_score} < 0.5"
 
 
+class TestSchemaValidation:
+    """Validates synthetic profiles against synthetic_profile.schema.json (DATA-02).
+
+    Per D-03: All data artifacts must validate against their declared JSON Schema
+    (Draft 2020-12). This test generates profiles via the CI-friendly pipeline and
+    validates each one against the canonical synthetic profile schema.
+    """
+
+    def test_synthetic_profiles_conform_to_schema(self):
+        """Every synthetic profile validates against synthetic_profile.schema.json."""
+        import json
+
+        from jsonschema import Draft202012Validator, ValidationError
+
+        from synthetic_pop import generate_from_insee
+
+        # Load schema
+        schema_path = SRC_DIR / "schemas" / "synthetic_profile.schema.json"
+        assert schema_path.exists(), f"Schema file not found: {schema_path}"
+        with open(schema_path, "r") as f:
+            schema = json.load(f)
+
+        # Verify schema itself is valid
+        Draft202012Validator.check_schema(schema)
+
+        validator = Draft202012Validator(schema)
+
+        # Generate synthetic profiles (CI-friendly)
+        result = generate_from_insee(epochs=CI_EPOCHS, num_rows=CI_NUM_ROWS, seed=42)
+        df = result["synthetic_df"]
+        profiles = df.to_dict(orient="records")
+
+        assert len(profiles) == CI_NUM_ROWS, (
+            f"Expected {CI_NUM_ROWS} profiles, got {len(profiles)}"
+        )
+
+        failures = []
+        for i, profile in enumerate(profiles):
+            errors = list(validator.iter_errors(profile))
+            if errors:
+                failures.append(
+                    f"Profile {i}: {[e.message for e in errors]}"
+                )
+
+        assert len(failures) == 0, (
+            f"{len(failures)}/{len(profiles)} profiles failed validation:\n"
+            + "\n".join(failures[:5])
+            + ("\n..." if len(failures) > 5 else "")
+        )
+
+
 @pytest.mark.slow
 class TestFullScalePipeline:
     """Full-scale pipeline tests (manual only, excluded from CI)."""
