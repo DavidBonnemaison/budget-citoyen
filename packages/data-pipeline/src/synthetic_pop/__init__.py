@@ -7,6 +7,7 @@ SDMetrics quality + privacy evaluation, and JSON export with integrity hashes.
 
 from .preprocess import load_real_data, preprocess_real_data, build_metadata
 from .train import train_synthesizer, generate_synthetic_population
+from .insee_loader import InseeAggregateLoader, build_insee_dataframe
 
 __all__ = [
     "load_real_data",
@@ -14,4 +15,6 @@ __all__ = [
     "build_metadata",
     "train_synthesizer",
     "generate_synthetic_population",
+    "InseeAggregateLoader",
+    "build_insee_dataframe",
 ]
