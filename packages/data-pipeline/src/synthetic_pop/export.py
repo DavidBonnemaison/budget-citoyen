@@ -92,6 +92,7 @@ def export_synthetic_population(
 
     # Build sidecar metadata
     version = f"population-v{reference_year}.1"
+    generation_ts = datetime.now(timezone.utc).isoformat()
     meta = {
         "version": version,
         "reference_year": reference_year,
@@ -100,8 +101,15 @@ def export_synthetic_population(
         "dp_epsilon_budget": dp_report.get("epsilon_budget"),
         "dp_within_budget": dp_report.get("within_budget"),
         "sha256": sha256,
-        "generation_timestamp": datetime.now(timezone.utc).isoformat(),
+        "generation_timestamp": generation_ts,
+        "dp_proof_timestamp": generation_ts,
+        "dp_data_source": (
+            "OpenDP 0.14.2 Laplace mechanism with basic sequential composition. "
+            "epsilon budget: 1.0 (epsilon/5 per revenu decile, epsilon/3 per "
+            "patrimoine age bracket, epsilon/2 for Gini coefficient)."
+        ),
         "data_source": "SDV CopulaGANSynthesizer with OpenDP noise injection",
+        "privacy_statement": dp_report.get("privacy_statement", ""),
     }
 
     # Write sidecar

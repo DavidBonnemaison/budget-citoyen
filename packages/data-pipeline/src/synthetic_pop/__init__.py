@@ -21,7 +21,58 @@ __all__ = [
     "InseeAggregateLoader",
     "build_insee_dataframe",
     "generate_from_insee",
+    "export_with_dp",
 ]
+
+
+def export_with_dp(
+    pipeline_result: dict,
+    output_dir: Optional[str] = None,
+) -> str:
+    """Run DP injection on the synthetic population and export to JSON.
+
+    Takes the output of generate_from_insee() from Plan 04, runs
+    inject_dp_privacy() to add differential privacy noise to
+    aggregate statistics, builds the French-language privacy
+    statement, and exports the complete population-v2025.1.json
+    with SHA-256 hash and .meta.json sidecar per D-11.
+
+    Args:
+        pipeline_result: dict from generate_from_insee() with keys:
+            synthetic_df, quality_report
+        output_dir: Output directory for population JSON.
+
+    Returns:
+        Path to the exported population JSON file.
+    """
+    from .dp_inject import inject_dp_privacy, build_privacy_statement
+    from .export import export_synthetic_population
+
+    synthetic_df = pipeline_result["synthetic_df"]
+
+    # Run DP proof
+    synthetic_df, dp_report = inject_dp_privacy(synthetic_df, epsilon_budget=1.0)
+
+    # Add privacy statement to report
+    privacy_statement = build_privacy_statement(dp_report, reference_year=2025)
+    dp_report["privacy_statement"] = privacy_statement
+
+    # Determine output path
+    if output_dir is None:
+        output_dir = str(
+            Path(__file__).resolve().parent.parent.parent / "dist"
+        )
+
+    dist_path = Path(output_dir)
+    dist_path.mkdir(parents=True, exist_ok=True)
+    output_path = dist_path / "population-v2025.1.json"
+
+    # Export with metadata
+    exported = export_synthetic_population(
+        synthetic_df, dp_report, str(output_path), reference_year=2025,
+    )
+
+    return exported
 
 
 def generate_from_insee(
