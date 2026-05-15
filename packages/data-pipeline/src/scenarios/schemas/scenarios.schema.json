@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://budget-citoyen.fr/schemas/scenarios-v2025.1.schema.json",
+  "title": "Scenarios Pre-Compute Output",
+  "description": "Schema for the scenarios-v2025.1.json output file produced by the pre-compute pipeline.",
+  "type": "object",
+  "required": ["scenarios", "metadata"],
+  "properties": {
+    "scenarios": {
+      "type": "array",
+      "minItems": 12,
+      "items": {
+        "type": "object",
+        "required": ["definition", "results"],
+        "properties": {
+          "definition": {
+            "type": "object",
+            "required": ["id", "name", "description", "parameterOverrides"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^[a-z0-9-]+$", "minLength": 3 },
+              "name": { "type": "string", "minLength": 5 },
+              "description": { "type": "string", "minLength": 20 },
+              "parameterOverrides": { "type": "object" }
+            }
+          },
+          "results": {
+            "type": "object",
+            "minProperties": 32,
+            "additionalProperties": {
+              "type": "object",
+              "required": ["ir", "is", "tva", "cotisations", "aides", "revenuDisponible"],
+              "properties": {
+                "ir": { "type": "number" },
+                "is": { "type": "number", "const": 0.0 },
+                "tva": { "type": "number", "minimum": 0 },
+                "cotisations": { "type": "number", "minimum": 0 },
+                "aides": { "type": "number", "minimum": 0 },
+                "revenuDisponible": { "type": "number", "minimum": 0 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["version", "reference_year", "generated_at", "total_scenarios", "total_profiles"],
+      "properties": {
+        "version": { "type": "string", "const": "v2025.1" },
+        "reference_year": { "type": "integer", "const": 2025 },
+        "generated_at": { "type": "string", "format": "date-time" },
+        "openfisca_france_version": { "type": "string" },
+        "total_scenarios": { "type": "integer", "minimum": 12 },
+        "total_profiles": { "type": "integer", "const": 32 }
+      }
+    }
+  }
+}
