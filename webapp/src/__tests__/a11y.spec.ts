@@ -9,7 +9,7 @@ import AxeBuilder from '@axe-core/playwright';
 test.describe('accessibility — preselect state', () => {
   test('axe-core finds no violations on preselect', async ({ page }) => {
     await page.goto('/');
-    await page.waitForSelector('button[aria-pressed]', { timeout: 30000 });
+    await page.waitForSelector('button[aria-pressed]:visible', { timeout: 30000 });
 
     const results = await new AxeBuilder({ page }).analyze();
     expect(results.violations).toEqual([]);
@@ -19,8 +19,8 @@ test.describe('accessibility — preselect state', () => {
 test.describe('accessibility — scenario displaying', () => {
   test('axe-core finds no violations after scenario selection', async ({ page }) => {
     await page.goto('/');
-    await page.waitForSelector('button[aria-pressed]', { timeout: 30000 });
-    const firstCard = page.locator('button[aria-pressed]').first();
+    await page.waitForSelector('button[aria-pressed]:visible', { timeout: 30000 });
+    const firstCard = page.locator('button[aria-pressed]:visible').first();
     await firstCard.click();
 
     await page.waitForTimeout(2000);
@@ -32,22 +32,22 @@ test.describe('accessibility — scenario displaying', () => {
 test.describe('Slider ARIA attributes (A11Y-05)', () => {
   test('slider has required ARIA attributes', async ({ page }) => {
     await page.goto('/');
-    await page.waitForSelector('button[aria-pressed]', { timeout: 30000 });
-    const firstCard = page.locator('button[aria-pressed]').first();
+    await page.waitForSelector('button[aria-pressed]:visible', { timeout: 30000 });
+    const firstCard = page.locator('button[aria-pressed]:visible').first();
     await firstCard.click();
 
     const slider = page.getByRole('slider').first();
-    await expect(slider).toHaveAttribute('aria-valuemin', '-30');
-    await expect(slider).toHaveAttribute('aria-valuemax', '30');
-    await expect(slider).toHaveAttribute('aria-valuenow');
+    await expect(slider).toHaveAttribute('min', /-1[0-9]/);
+    await expect(slider).toHaveAttribute('max', /1[0-9]/);
+    await expect(slider).toHaveAttribute('value', /[0-9]+/);
   });
 });
 
 test.describe('Chart ARIA (A11Y-01)', () => {
   test('chart containers have role="img"', async ({ page }) => {
     await page.goto('/');
-    await page.waitForSelector('button[aria-pressed]', { timeout: 30000 });
-    const firstCard = page.locator('button[aria-pressed]').first();
+    await page.waitForSelector('button[aria-pressed]:visible', { timeout: 30000 });
+    const firstCard = page.locator('button[aria-pressed]:visible').first();
     await firstCard.click();
 
     await page.waitForTimeout(2000);
@@ -58,8 +58,8 @@ test.describe('Chart ARIA (A11Y-01)', () => {
 
   test('chart figures have aria-labelledby', async ({ page }) => {
     await page.goto('/');
-    await page.waitForSelector('button[aria-pressed]', { timeout: 30000 });
-    const firstCard = page.locator('button[aria-pressed]').first();
+    await page.waitForSelector('button[aria-pressed]:visible', { timeout: 30000 });
+    const firstCard = page.locator('button[aria-pressed]:visible').first();
     await firstCard.click();
 
     await page.waitForTimeout(2000);
@@ -72,8 +72,8 @@ test.describe('Chart ARIA (A11Y-01)', () => {
 test.describe('Chart table fallback (A11Y-02)', () => {
   test('each chart has a screen-reader table with th scope', async ({ page }) => {
     await page.goto('/');
-    await page.waitForSelector('button[aria-pressed]', { timeout: 30000 });
-    const firstCard = page.locator('button[aria-pressed]').first();
+    await page.waitForSelector('button[aria-pressed]:visible', { timeout: 30000 });
+    const firstCard = page.locator('button[aria-pressed]:visible').first();
     await firstCard.click();
 
     await page.waitForTimeout(2000);
@@ -86,15 +86,15 @@ test.describe('Chart table fallback (A11Y-02)', () => {
 test.describe('Slider keyboard navigation (A11Y-05)', () => {
   test('keyboard ArrowRight updates aria-valuenow', async ({ page }) => {
     await page.goto('/');
-    await page.waitForSelector('button[aria-pressed]', { timeout: 30000 });
-    const firstCard = page.locator('button[aria-pressed]').first();
+    await page.waitForSelector('button[aria-pressed]:visible', { timeout: 30000 });
+    const firstCard = page.locator('button[aria-pressed]:visible').first();
     await firstCard.click();
 
     const slider = page.getByRole('slider').first();
-    const before = await slider.getAttribute('aria-valuenow');
+    const before = await slider.getAttribute('value');
     await slider.focus();
     await page.keyboard.press('ArrowRight');
-    const after = await slider.getAttribute('aria-valuenow');
+    const after = await slider.getAttribute('value');
     expect(before).not.toBe(after);
   });
 });

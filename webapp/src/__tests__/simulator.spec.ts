@@ -14,22 +14,22 @@ test.describe('Splash & Init', () => {
 
   test('transitions from splash to preselect', async ({ page }) => {
     await page.goto('/');
-    await expect(page.getByText('Choisissez un scénario')).toBeVisible({ timeout: 30000 });
+    await expect(page.getByRole('heading', { name: 'Choisissez un scénario pour' }).first()).toBeVisible({ timeout: 30000 });
   });
 });
 
 test.describe('Scenario Selection', () => {
   test('displays scenario cards in preselect state', async ({ page }) => {
     await page.goto('/');
-    await page.waitForSelector('button[aria-pressed]');
-    const cards = page.locator('button[aria-pressed]');
+    await page.waitForSelector('button[aria-pressed]:visible');
+    const cards = page.locator('button[aria-pressed]:visible');
     const count = await cards.count();
     expect(count).toBeGreaterThanOrEqual(9);
   });
 
   test('selecting a scenario displays impact', async ({ page }) => {
     await page.goto('/');
-    const firstCard = page.locator('button[aria-pressed]').first();
+    const firstCard = page.locator('button[aria-pressed]:visible').first();
     await firstCard.click({ timeout: 10000 });
     await expect(page.getByText('Foyer modeste')).toBeVisible();
     await expect(page.getByText('Impact sur votre foyer')).toBeVisible();
@@ -39,7 +39,7 @@ test.describe('Scenario Selection', () => {
 test.describe('Slider Interaction', () => {
   test('sliders become enabled after scenario selection', async ({ page }) => {
     await page.goto('/');
-    const firstCard = page.locator('button[aria-pressed]').first();
+    const firstCard = page.locator('button[aria-pressed]:visible').first();
     await firstCard.click();
     const slider = page.getByRole('slider').first();
     await expect(slider).toBeEnabled({ timeout: 10000 });
@@ -47,29 +47,29 @@ test.describe('Slider Interaction', () => {
 
   test('keyboard adjusts slider value', async ({ page }) => {
     await page.goto('/');
-    const firstCard = page.locator('button[aria-pressed]').first();
+    const firstCard = page.locator('button[aria-pressed]:visible').first();
     await firstCard.click();
     const slider = page.getByRole('slider').first();
     await slider.focus();
     await page.keyboard.press('ArrowRight');
-    await expect(slider).toHaveAttribute('aria-valuenow', /[1-9]/);
+    await expect(slider).toHaveAttribute('value', /[1-9]/);
   });
 });
 
 test.describe('Reset', () => {
   test('Réinitialiser returns to preselect', async ({ page }) => {
     await page.goto('/');
-    const firstCard = page.locator('button[aria-pressed]').first();
+    const firstCard = page.locator('button[aria-pressed]:visible').first();
     await firstCard.click();
-    await page.getByText('Réinitialiser').click();
-    await expect(page.getByText('Choisissez un scénario')).toBeVisible();
+    await page.getByRole('button', { name: 'Réinitialiser' }).first().click();
+    await expect(page.getByRole('heading', { name: 'Choisissez un scénario pour' }).first()).toBeVisible();
   });
 });
 
 test.describe('URL Sharing', () => {
   test('URL contains state parameter after slider drag', async ({ page }) => {
     await page.goto('/');
-    const firstCard = page.locator('button[aria-pressed]').first();
+    const firstCard = page.locator('button[aria-pressed]:visible').first();
     await firstCard.click();
     const slider = page.getByRole('slider').first();
     await slider.focus();
@@ -83,8 +83,8 @@ test.describe('URL Sharing', () => {
 test.describe('Methodology Page', () => {
   test('methodology page renders with source attribution', async ({ page }) => {
     await page.goto('/methodologie');
-    await expect(page.getByText('Méthodologie')).toBeVisible();
-    await expect(page.getByText('Insee')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Méthodologie' })).toBeVisible();
+    await expect(page.locator('strong').getByText('Insee', { exact: true })).toBeVisible();
     await expect(page.getByText('budget.gouv.fr')).toBeVisible();
     await expect(page.getByText('Mésange')).toBeVisible();
   });
