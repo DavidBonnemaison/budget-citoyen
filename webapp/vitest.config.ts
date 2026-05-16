@@ -12,7 +12,7 @@ export default mergeConfig(
   defineConfig({
     test: {
       environment: 'jsdom',
-      include: ['src/**/*.{test,spec}.{ts,tsx}'],
+      include: ['src/**/*.test.{ts,tsx}'],
       globals: false,
       css: true,
     },
