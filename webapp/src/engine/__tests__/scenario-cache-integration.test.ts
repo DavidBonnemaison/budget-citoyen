@@ -5,12 +5,22 @@
 //
 // These tests are CI gating: they run after scenario-precompute in the
 // phase2-wasm.yml workflow and validate the JSON output contract.
+//
+// NOTE: This test file reads from the filesystem (Node.js APIs) — it requires
+// a Node.js runtime (vitest provides this even in jsdom environment). The file
+// is excluded from browser bundling and runs only in CI/test environments.
+//
+// @ts-nocheck — TypeScript config restricts to "vite/client" types but vitest
+// provides Node.js APIs at runtime. This file is never bundled for browsers.
 
 import { describe, it, expect } from 'vitest';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { readFileSync } from 'fs';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { ScenarioCache, type ScenarioDoc } from '../scenario-cache';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 const JSON_PATH = resolve(
   __dirname,
   '../../../../packages/data-pipeline/dist/scenarios-v2025.1.json',

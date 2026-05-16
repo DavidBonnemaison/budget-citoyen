@@ -315,3 +315,38 @@ describe('MACRO-05 compliance', () => {
     expect(result).toBeNull();
   });
 });
+
+// ── MACRO-04: Performance benchmark — macro interpolation < 50ms ───────────
+
+describe('MACRO-04 performance', () => {
+  it('100 macro interpolations complete in < 50ms', () => {
+    const matrix = testMatrix();
+    const iterations = 100;
+    const start = performance.now();
+
+    for (let i = 0; i < iterations; i++) {
+      // Rotate through different query points to prevent JIT caching bias
+      const tax = 0.5 + (i % 10) * 0.05;
+      const spend = 0.7 + (i % 6) * 0.05;
+      const horizon = 1.0 + (i % 10) * 0.1;
+      interpolateAtPoint(matrix, tax, spend, horizon);
+    }
+
+    const elapsed = performance.now() - start;
+    const avgMs = elapsed / iterations;
+
+    // MACRO-04: single interpolation < 0.5ms avg, total 100 calls < 50ms
+    expect(elapsed).toBeLessThan(50.0);
+    expect(avgMs).toBeLessThan(0.5);
+  }, 5000);
+
+  it('projectTrajectory 5-year projection completes in < 5ms', () => {
+    const matrix = testMatrix();
+    const start = performance.now();
+
+    projectTrajectory(matrix, 0.75, 0.85, 2);
+
+    const elapsed = performance.now() - start;
+    expect(elapsed).toBeLessThan(5.0);
+  }, 5000);
+});
