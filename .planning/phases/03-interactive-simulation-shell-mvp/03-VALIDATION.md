@@ -5,7 +5,7 @@ status: complete
 nyquist_compliant: true
 wave_0_complete: true
 created: 2026-05-13
-updated: 2026-05-15
+updated: 2026-05-16
 ---
 
 # Phase 3 — Validation Strategy
@@ -20,7 +20,7 @@ updated: 2026-05-15
 |----------|-------|
 | **Framework** | Vitest 4.1.6 (unit/integration) + Playwright 1.60.0 (E2E/a11y) |
 | **Config file** | `vitest.config.ts` + `playwright.config.ts` |
-| **Quick run command** | `npx vitest run src/state/__tests__/` |
+| **Quick run command** | `npx vitest run` (95 tests, excludes .spec.ts via include pattern) |
 | **Full suite command** | `npx vitest run && npx playwright test` |
 | **Estimated runtime** | ~15 seconds (unit) / ~45s (E2E) |
 
@@ -43,11 +43,11 @@ updated: 2026-05-15
 | 03-02-01 | 02 | 2 | UI-02 | — | Interpolation returns valid ScenarioResult with source attribution | unit + e2e | `npx vitest run src/state/__tests__/interpolation.test.ts` | ✅ | ✅ green |
 | 03-03-02 | 03 | 2 | UI-03 | T-03-02 / Vega-Lite spec injection | Charts rendered via pre-defined specs, no user-injectable content | e2e | `npx playwright test src/__tests__/a11y.spec.ts -g "chart containers have role"` | ✅ | ✅ green |
 | 03-05-02 | 05 | 3 | UI-04 | — | Reset button clears sliders to 0%, deselects scenario | e2e | `npx playwright test src/__tests__/simulator.spec.ts -g "Réinitialiser"` | ✅ | ✅ green |
-| 03-02-01 | 02 | 2 | UI-05 | T-03-03 / URL state injection | decodeState validates JSON structure, type-checks, ignores unknown fields | unit + e2e | `npx vitest run src/state/__tests__/url-codec.test.ts` | ✅ | ✅ green |
+| 03-02-01 | 02 | 2 | UI-05 | T-03-03 / URL state injection | decodeState validates JSON structure, type-checks, ignores unknown fields | unit + e2e | `npx vitest run src/state/__tests__/url-codec.test.ts` | ✅ | ⚠️ warning (e2e: URL state not wired) |
 | 03-01-03 | 01 | 1 | UI-06 | — | Touch targets ≥ 44px, no horizontal overflow at device widths | e2e | `npx playwright test src/__tests__/simulator.spec.ts -g "Mobile"` | ✅ | ✅ green |
 | 03-07-01 | 07 | 4 | UI-07 | — | CSS opacity pulse visible during worker computation, resolves when data arrives | e2e | `npx playwright test src/__tests__/simulator.spec.ts -g "Loading Indicator"` | ✅ | ⚠️ warning |
 | 03-07-02 | 07 | 4 | UI-08 | — | /methodologie route renders with data source attribution (Insee, budget.gouv.fr, Mésange) | e2e | `npx playwright test src/__tests__/simulator.spec.ts -g "Methodology"` | ✅ | ✅ green |
-| 03-06-02 | 06 | 3 | A11Y-01 | — | SVG charts have role="img", aria-labelledby pointing to visible figcaption | e2e (a11y) | `npx playwright test src/__tests__/a11y.spec.ts -g "Chart ARIA"` | ✅ | ✅ green |
+| 03-06-02 | 06 | 3 | A11Y-01 | — | SVG charts have role="img", aria-labelledby pointing to visible figcaption | e2e (a11y) | `npx playwright test src/__tests__/a11y.spec.ts -g "Chart ARIA"` | ✅ | ⚠️ warning (e2e: charts not rendering) |
 | 03-06-02 | 06 | 3 | A11Y-02 | — | Adjacent HTML table with `<th scope>` markup exists for each chart | e2e (a11y) | `npx playwright test src/__tests__/a11y.spec.ts -g "Chart table fallback"` | ✅ | ✅ green |
 | 03-03-01 | 03 | 2 | A11Y-03 | — | SVG pattern fills present in chart SVG, deuteranopia-safe color palette used | e2e (a11y) | `npx playwright test src/__tests__/a11y.spec.ts -g "Pattern fills"` | ✅ | ✅ green |
 | 03-05-01 | 05 | 3 | A11Y-04 | — | No animation exceeds 5s (opacity pulse is 300ms CSS transition) | manual | N/A — well under 5s threshold, verified by code review | N/A | ✅ green |
@@ -155,6 +155,48 @@ After fixing the button visibility issue, 6 tests now fail for implementation-le
 
 ---
 
+## Validation Audit 2026-05-16
+
+### Gap Analysis Results
+
+| Metric | Count |
+|--------|-------|
+| Gaps filed | 7 |
+| Resolved (green) | 1 |
+| Escalated (BLOCKER) | 6 |
+| Manual-only (pre-existing) | 2 |
+
+### Gap 1: FILLED — vitest config captures Playwright .spec.ts files
+
+- **Gap type:** test_infrastructure_config (INFRA/HIGH)
+- **Root cause:** `include: ['src/**/*.{test,spec}.{ts,tsx}']` caused vitest to ingest `a11y.spec.ts` and `simulator.spec.ts`, producing 2 false test-file failures (Playwright `test.describe()` is not vitest-compatible).
+- **Fix:** Changed `include` pattern to `['src/**/*.test.{ts,tsx}']` — only `.test.ts` and `.test.tsx` files are now matched by vitest.
+- **Verification:** `npx vitest run` → **9 test files passed, 95 tests green**. Zero `.spec.ts` files in output.
+- **Status:** ✅ green
+
+### Gaps 2-7: ESCALATED — Pre-existing implementation bugs
+
+These 6 gaps require modifying implementation source files (components, pages, hooks), which is outside the auditor's scope. They are documented below for developer action.
+
+| # | Gap ID | Requirement | Root Cause | Files Affected | Playwright Tests Failing |
+|---|--------|-------------|------------|----------------|--------------------------|
+| 2 | A11Y-06 | Color contrast | `ImpactPill` uses `text-text-disabled` (#94A3B8) on `bg-secondary` (#F0F4F8) = 2.31:1 contrast (needs 4.5:1) | `src/components/ImpactPill.tsx` | `a11y.spec.ts:10`, `a11y.spec.ts:20` |
+| 3 | A11Y-06 | Missing `<h1>` | No `<h1>` heading on SimulatorPage | `src/pages/SimulatorPage.tsx` | `a11y.spec.ts:10`, `a11y.spec.ts:20` |
+| 4 | A11Y-01 | Chart ARIA `role="img"` | 0 `[role="img"]` elements found — charts not rendering (`macroResult` may be null, `vega-embed` not called) | `src/components/ChartCell.tsx`, `src/components/ChartGrid.tsx` | `a11y.spec.ts:47`, `a11y.spec.ts:59` |
+| 5 | A11Y-01 | Chart `aria-labelledby` | 0 `[role="img"][aria-labelledby]` elements — same root cause as Gap 4 | `src/components/ChartCell.tsx` | `a11y.spec.ts:47`, `a11y.spec.ts:59` |
+| 6 | A11Y-06 | No `<main>` landmark | `/methodologie` page content outside `<main>` landmark | `src/pages/MethodologyPage.tsx` | `a11y.spec.ts:153` |
+| 7 | UI-05 | URL `state=` parameter | `state=` never appears after slider drag — `useSliderWithUrl` hook may not be wired or `pushState` not called | `src/hooks/useSliderWithUrl.ts`, `src/hooks/useSimulation.ts`, `src/pages/SimulatorPage.tsx` | `simulator.spec.ts:70` |
+
+### Recommendations
+
+- **Gap 2 (Color contrast):** In `ImpactPill.tsx`, change `text-text-disabled` to a darker shade (e.g., `text-gray-700` or `#475569`) to achieve ≥4.5:1 contrast on `bg-secondary` (#F0F4F8). Or change background to a darker shade.
+- **Gap 3 (Missing `<h1>`):** Add an `<h1>` element to `SimulatorPage.tsx` with visible text describing the page purpose.
+- **Gaps 4-5 (Chart ARIA):** Investigate why charts are not rendering. Check that `macroResult` is populated after auto-init and that `vegaEmbed()` is called in `ChartCell`. Ensure rendered SVGs have `role="img"` and `aria-labelledby` pointing to visible `<figcaption>`.
+- **Gap 6 (Missing `<main>`):** Wrap `MethodologyPage.tsx` content in a `<main>` landmark element.
+- **Gap 7 (URL state):** Wire `useSliderWithUrl` hook to call `pushState`/`replaceState` on slider change. Verify the hook is actually invoked in `SimulatorPage` and that the debounced URL update fires after drag-end.
+
+---
+
 ## Validation Sign-Off
 
 - [x] All tasks have `<automated>` verify or Wave 0 dependencies
@@ -164,4 +206,4 @@ After fixing the button visibility issue, 6 tests now fail for implementation-le
 - [x] Feedback latency < 15s
 - [x] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** 3 gaps resolved (1 config, 1 docs, 1 test fix). 95 vitest tests all green. Playwright: 15/21 pass per project; 6 failures are pre-existing implementation bugs (color-contrast, chart rendering, methodology landmarks, URL state tracking) — not caused by this audit. Engine tests (61) now documented in per-task map. Button visibility root cause identified and fixed (dual-panel DOM layout at desktop viewports).
+**Approval:** Audit 2026-05-15: 3 gaps resolved (1 config, 1 docs, 1 test fix). Audit 2026-05-16: 1 gap resolved (vitest include pattern fix eliminating .spec.ts false failures), 6 escalated (pre-existing impl bugs: color-contrast, chart rendering, methodology landmarks, URL state). 95 vitest tests all green. Playwright: 15/21 pass per project; 6 failures are pre-existing implementation bugs — not caused by Nyquist audits. Engine tests (61) documented in per-task map.
