@@ -158,3 +158,20 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 3. Interactive Simulation Shell (MVP) | 0/TBD | Not started | - |
 | 4. Enhanced Data & Expert Mode | 0/TBD | Not started | - |
 | 5. Platform Expansion & Hardening | 0/TBD | Not started | - |
+
+## Backlog
+
+### Phase 999.1: Public services purchasing-power trade-off (BACKLOG)
+
+**Goal:** [Captured for future planning]
+
+When tax cuts increase disposable income but reduce public service funding (healthcare, education),
+users should see both sides — the income gain and the estimated service-level loss. Currently only shows
+income deltas. Needs deficit→service impact mapping and a new visualization showing the net purchasing
+power including public services. For Milestone 2.
+
+**Requirements:** TBD
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (promote with /gsd-review-backlog when ready)
