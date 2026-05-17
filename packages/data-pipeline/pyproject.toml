@@ -37,3 +37,6 @@ minversion = "8.0"
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 pythonpath = ["src"]
+markers = [
+    "slow: marks tests that are slow to run (e.g., CopulaGAN full-scale training)",
+]
