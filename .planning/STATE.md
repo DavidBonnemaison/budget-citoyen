@@ -4,8 +4,8 @@ milestone: v1.0
 milestone_name: milestone
 status: verifying
 stopped_at: Phase 02.2 context gathered
-last_updated: "2026-05-15T18:52:46.354Z"
-last_activity: 2026-05-15
+last_updated: "2026-05-17T14:30:00.000Z"
+last_activity: 2026-05-17
 progress:
   total_phases: 7
   completed_phases: 5
@@ -295,6 +295,7 @@ None yet.
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260515-szz | Fix ROADMAP.md checkboxes and REQUIREMENTS.md false completion markers, if still present | 2026-05-15 | 7cb4577 | [260515-szz-fix-roadmap-md-checkboxes-and-requiremen](./quick/260515-szz-fix-roadmap-md-checkboxes-and-requiremen/) |
+| 260517-jwe | Add Playwright e2e tests for scenario selection and slider interaction + headed script | 2026-05-17 | 48079b2 | [260517-jwe-add-e2e-playwright-tests-that-can-select](./quick/260517-jwe-add-e2e-playwright-tests-that-can-select/) |
 
 ## Deferred Items
 
