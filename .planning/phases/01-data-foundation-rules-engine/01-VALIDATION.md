@@ -49,6 +49,9 @@ created: 2026-05-16
 | 01-05-T1 | 05 | 1 | DATA-01 | T-01-05 | 19 new YAML files + credits expanded to 25 | integration | `pytest tests/test_rules_coverage.py -v` | ✅ | ✅ green |
 | 01-05-T2 | 05 | 1 | DATA-01 | T-01-05 | Cotisations + aides domain expansion | integration | `pytest tests/test_rules_coverage.py::TestYamlParameterFileCount -v` | ✅ | ✅ green |
 | 01-05-T3 | 05 | 1 | DATA-01 | T-01-08 | 32 canonical profiles with 7-dimension coverage | unit | `pytest tests/test_validation.py::TestCanonicalProfiles -v` | ✅ | ✅ green |
+| 01-X1 | 06 | — | DATA-04 | — | Calibrated grid shape, breakpoints, convex hull, export | unit | `pytest tests/test_calibrate.py -v` | ✅ | ✅ green |
+| 01-X2 | 06 | — | DATA-02 | — | INSEE aggregate loader, columns, row count, categoricals | unit | `pytest tests/test_insee_loader.py -v` | ✅ | ✅ green |
+| 01-X3 | 06 | — | DATA-01, MICRO-01 | — | Scenario definitions, precompute pipeline, aides matching | integration | `pytest tests/test_scenario_precompute.py -v` | ✅ | ✅ green |
 
 ---
 
@@ -88,3 +91,26 @@ created: 2026-05-16
 - [x] `nyquist_compliant: true` set in frontmatter
 
 **Approval:** approved 2026-05-16
+
+---
+
+## Validation Audit 2026-05-17
+
+| Metric | Count |
+|--------|-------|
+| Gaps found | 0 (requirements fully covered) |
+| Minor issues | 3 (pytest slow marker unregistered, 3 test files unmapped, audit trail missing) |
+| Resolved | 3 |
+| Escalated | 0 |
+| Nyquist status | COMPLIANT |
+
+**Test results (2026-05-17):**
+- Core suite (conversion, rules_coverage, schema_validation, shock_matrix, validation): **49/49 passed**
+- Supplementary suite (insee_loader, dp_inject, calibrate, scenario_precompute): **41/41 passed**
+- Synthetic population fast tests: **11/11 passed** (3 slow CopulaGAN tests skipped — documented as `@pytest.mark.slow`)
+- **Total fast tests: 101 passed, 0 failed**
+
+**Fixes applied:**
+- Registered `@pytest.mark.slow` marker in `pyproject.toml` to eliminate pytest warning
+- Added Per-Task Map entries for `test_calibrate.py`, `test_insee_loader.py`, `test_scenario_precompute.py`
+- Added this audit trail section
